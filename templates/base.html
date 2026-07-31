@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Hospital Management System{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    
+    <div class="sidebar">
+        <div class="logo">🏥 HMS</div>
+
+        <div class="nav-section">Main</div>
+        <a href="/dashboard" class="nav-item active">Dashboard</a>
+        <a href="#" class="nav-item">Departments</a>
+        <a href="#" class="nav-item">Doctors</a>
+        <a href="#" class="nav-item">Patients</a>
+        <a href="#" class="nav-item">Billing</a>
+        <a href="#" class="nav-item">Reports</a>
+    </div>
+
+  
+    <div class="main">
+        <div class="topbar">
+            <input type="text" class="search" placeholder="Search by patient name...">
+        </div>
+
+        {% block content %}{% endblock %}
+    </div>
+
+</body>
+</html>

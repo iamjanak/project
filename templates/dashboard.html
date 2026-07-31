@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}SwasthaCare{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <div class="dashboard-container">
+
+        <aside class="sidebar">
+            <div class="brand">🏥 SwasthaCare</div>
+
+            <ul class="menu">
+                <li class="{% if active_page == 'dashboard' %}active{% endif %}">
+                    <a href="/dashboard">📊 Dashboard</a>
+                </li>
+
+                <li class="menu-title">Patient Management</li>
+                <li><a href="#">🧑 New Patient Registration</a></li>
+                <li><a href="#">🔄 Patient Follow Up</a></li>
+                <li><a href="#">🏥 Patient Admission</a></li>
+                <li><a href="#">✏️ Patient Information Correction</a></li>
+                <li><a href="#">📄 Patient Reports</a></li>
+
+                <li class="menu-title">Billing</li>
+                <li><a href="#">💳 Patient Billing</a></li>
+                <li><a href="#">💰 Deposit</a></li>
+                <li><a href="#">↩ Refund</a></li>
+                <li><a href="#">🧾 Bill Details</a></li>
+
+                <li class="menu-title">Setup</li>
+                <li><a href="#">🏢 Department Setup</a></li>
+                <li><a href="#">👨‍⚕️ Doctor Setup</a></li>
+                <li><a href="#">🛏 Ward Setup</a></li>
+                <li><a href="#">🚪 Room Setup</a></li>
+                <li><a href="#">🛌 Bed Setup</a></li>
+
+                <li class="menu-title">Reports</li>
+                <li><a href="#">📊 Patient Reports</a></li>
+                <li><a href="#">💵 Billing Reports</a></li>
+                <li><a href="#">📅 Daily Collection</a></li>
+                <li><a href="#">🏥 Department Reports</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
+
+    </div>
+
+</body>
+</html>

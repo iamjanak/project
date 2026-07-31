@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SwasthaCare</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Left Illustration -->
+    <div class="image-box">
+
+        <img src="{{ url_for('static', filename='images/login.png') }}" alt="Hospital Illustration">
+
+    </div>
+
+    <!-- Right Login -->
+    <div class="login-box">
+
+        <div class="login-card">
+
+            <img src="{{ url_for('static', filename='images/logo.png') }}" class="logo" alt="Logo">
+
+            <h2>Welcome Back</h2>
+
+            <p>Please enter your details to continue</p>
+
+            <form method="POST" action="/login">
+
+                <label>User Name</label>
+
+                <input
+                    type="text"
+                    name="username"
+                    placeholder="username"
+                    required
+                >
+
+                <label>Password</label>
+
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="Enter Password"
+                    required
+                >
+
+                <div class="remember">
+
+                    <input
+                        type="checkbox"
+                        id="remember"
+                        name="keep_logged_in"
+                    >
+
+                    <label for="remember">Keep me logged in</label>
+
+                </div>
+
+                <button type="submit">LOGIN</button>
+
+                <p class="signup">
+                    Forgot your password?
+                    <a href="#">Reset Password</a>
+                </p>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

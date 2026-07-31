@@ -1,0 +1,69 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    background: #f5f6fb;
+}
+
+.dashboard-container {
+    display: flex;
+}
+
+.sidebar {
+    width: 270px;
+    height: 100vh;
+    background: white;
+    position: fixed;
+    padding: 25px;
+    overflow-y: auto;
+    border-right: 1px solid #eee;
+}
+
+.brand {
+    font-size: 22px;
+    font-weight: 700;
+    color: #6c5ce7;
+    margin-bottom: 30px;
+}
+
+.menu {
+    list-style: none;
+}
+
+.menu li {
+    margin-bottom: 5px;
+}
+
+.menu a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: #555;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.menu a:hover,
+.menu .active a {
+    background: #6c5ce7;
+    color: white;
+}
+
+.menu-title {
+    margin-top: 25px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: #999;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.main-content {
+    margin-left: 270px;
+    padding: 30px;
+    width: 100%;
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hospital Management System</title>
+   
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+     <!---->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    
+</head>
+<body class="landing">
+
+    <nav class="landing-nav">
+        <div class="logo">🏥 HMS</div>
+        <a href="/login" class="btn-primary">Login</a>
+    </nav>
+
+    <section class="hero">
+        <h1>Hospital Management System</h1>
+        <p>Manage patient registration, doctors, departments, and billing — all in one place.</p>
+        <a href="/login" class="btn-primary">Get Started</a>
+    </section>
+
+    <section class="features">
+        <div class="feature-card">
+            <h3>Patient Registration</h3>
+            <p>Register new and follow-up patients with auto-generated hospital numbers.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Billing</h3>
+            <p>Generate, print, and refund bills for tests and services.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Reports</h3>
+            <p>Track daily registrations, revenue, and department performance.</p>
+        </div>
+    </section>
+
+</body>
+</html>
