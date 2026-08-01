@@ -1,0 +1,227 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    background: #f5f6fb;
+    padding: 30px;
+}
+
+.invoice-box {
+    max-width: 750px;
+    margin: 0 auto;
+    background: white;
+    padding: 30px 35px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+/* Header */
+.invoice-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: relative;
+}
+
+.hospital-logo {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+}
+
+.hospital-info {
+    flex: 1;
+    text-align: center;
+}
+
+.hospital-info h1 {
+    font-size: 22px;
+    color: #1f2a44;
+    margin-bottom: 5px;
+}
+
+.hospital-info p {
+    font-size: 13px;
+    color: #555;
+    line-height: 1.4;
+}
+
+.pan-box {
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: #333;
+}
+
+.divider {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 15px 0;
+}
+
+/* Copy title */
+.copy-title {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.copy-title h3 {
+    font-size: 15px;
+    letter-spacing: 1px;
+}
+
+.copy-title p {
+    font-size: 13px;
+    color: #444;
+}
+
+.patient-type {
+    font-weight: 600;
+}
+
+/* Details table */
+.details-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 13px;
+}
+
+.details-table td {
+    padding: 5px 8px;
+    vertical-align: top;
+}
+
+.details-table td:nth-child(1),
+.details-table td:nth-child(3) {
+    width: 18%;
+    color: #333;
+}
+
+.details-table td:nth-child(2),
+.details-table td:nth-child(4) {
+    width: 32%;
+    color: #111;
+}
+
+/* Charges table */
+.charges-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+    font-size: 13px;
+}
+
+.charges-table thead {
+    background: #6c5ce7;
+    color: white;
+}
+
+.charges-table th,
+.charges-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+}
+
+.charges-table th:nth-child(1),
+.charges-table td:nth-child(1),
+.charges-table th:nth-child(5),
+.charges-table td:nth-child(5) {
+    text-align: center;
+}
+
+.charges-table th:nth-child(6),
+.charges-table td:nth-child(6),
+.charges-table th:nth-child(7),
+.charges-table td:nth-child(7) {
+    text-align: right;
+}
+
+/* Totals */
+.totals-table {
+    width: 260px;
+    margin-left: auto;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.totals-table td {
+    padding: 4px 8px;
+}
+
+.totals-table .value {
+    text-align: right;
+}
+
+.totals-table .grand-total td {
+    font-weight: 700;
+    border-top: 1px solid #333;
+    font-size: 14px;
+}
+
+.in-words {
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.remarks {
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+/* Footer */
+.footer-info {
+    font-size: 13px;
+    color: #333;
+    line-height: 1.6;
+}
+
+.print-time {
+    margin-top: 6px;
+    color: #777;
+}
+
+/* Print button */
+.print-btn-wrapper {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.print-btn-wrapper button {
+    background: #6c5ce7;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.print-btn-wrapper button:hover {
+    background: #5a4bd1;
+}
+
+/* Hide print button when printing */
+@media print {
+    body {
+        background: white;
+        padding: 0;
+    }
+
+    .invoice-box {
+        border: none;
+        max-width: 100%;
+    }
+
+    .no-print {
+        display: none;
+    }
+}

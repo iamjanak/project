@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Doctor List - SwasthaCare{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/add_doctor.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="doctor-page">
+
+    <!-- Top bar: search + Add Doctor button -->
+    <div class="top-bar">
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="Search">
+        </div>
+
+            
+            <a href="{{ url_for('main.doctor_setup') }}">
+               +👨‍⚕️ New Doctor Setup
+            </a>
+            
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrapper">
+        <table class="doc-table">
+            <thead>
+                <tr>
+                    <th>SN</th>
+                    <th>DOC CODE <span class="sort-icon">↕</span></th>
+                    <th>DOCTOR NAME <span class="sort-icon">↕</span></th>
+                    <th>TYPE <span class="sort-icon">↕</span></th>
+                    <th>STATUS</th>
+                    <th>ACTION</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>DOC01</td>
+                    <td>Dr. Ram Sharma</td>
+                    <td>Cardiologist</td>
+                    <td><span class="badge badge-active">Active</span></td>
+                    <td class="action-cell">
+                        <button class="icon-btn edit-btn" title="Edit">✎</button>
+                        <button class="icon-btn delete-btn" title="Delete">🗑</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>DOC02</td>
+                    <td>Dr. Sita Poudel</td>
+                    <td>Dermatologist</td>
+                    <td><span class="badge badge-active">Active</span></td>
+                    <td class="action-cell">
+                        <button class="icon-btn edit-btn" title="Edit">✎</button>
+                        <button class="icon-btn delete-btn" title="Delete">🗑</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>DOC03</td>
+                    <td>Dr. Hari Thapa</td>
+                    <td>Orthopedic</td>
+                    <td><span class="badge badge-inactive">Inactive</span></td>
+                    <td class="action-cell">
+                        <button class="icon-btn edit-btn" title="Edit">✎</button>
+                        <button class="icon-btn delete-btn" title="Delete">🗑</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>DOC04</td>
+                    <td>Dr. Gita Rai</td>
+                    <td>Pediatrician</td>
+                    <td><span class="badge badge-active">Active</span></td>
+                    <td class="action-cell">
+                        <button class="icon-btn edit-btn" title="Edit">✎</button>
+                        <button class="icon-btn delete-btn" title="Delete">🗑</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Footer: show count + results -->
+    <div class="table-footer">
+        <div class="show-select">
+            Show
+            <select>
+                <option>10</option>
+                <option>15</option>
+                <option>25</option>
+                <option>50</option>
+            </select>
+        </div>
+        <div class="results-count">
+            Showing <strong>4</strong> results
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

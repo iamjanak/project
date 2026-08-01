@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}User Setup - SwasthaCare{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/user_setup.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="usersetup-page">
+
+    <!-- Top bar: search + filter + new user button -->
+    <div class="top-bar">
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="Search">
+        </div>
+
+        <div class="top-bar-actions">
+            <button class="filter-btn" title="Filter">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="white">
+                    <path d="M3 4h18l-7 9v6l-4 2v-8L3 4z"/>
+                </svg>
+            </button>
+
+            <a href="{{ url_for('main.add_user') }}" class="new-user-btn">
+    + New User
+</a>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrapper">
+        <table class="user-table">
+            <thead>
+                <tr>
+                    <th>USER <span class="sort-icon">↕</span></th>
+                    <th>TYPE</th>
+                    <th>STATUS</th>
+                    <th>EXPIRY DATE</th>
+                    <th>ACTION</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="#" class="user-link">User 2</a></td>
+                    <td><span class="badge badge-active">Active</span></td>
+                    <td>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+                    <td class="expiry-cell">2026-12-31</td>
+                    <td class="action-cell">
+                        <button class="icon-btn edit-btn" title="Edit">✎</button>
+                        <button class="icon-btn delete-btn" title="Delete">🗑</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="#" class="user-link">User 1</a></td>
+                    <td><span class="badge badge-inactive">Inactive</span></td>
+                    <td>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+                    <td class="expiry-cell">2026-06-15</td>
+                    <td class="action-cell">
+                        <button class="icon-btn edit-btn" title="Edit">✎</button>
+                        <button class="icon-btn delete-btn" title="Delete">🗑</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Footer: show count + results -->
+    <div class="table-footer">
+        <div class="show-select">
+            Show
+            <select>
+                <option>10</option>
+                <option>25</option>
+                <option>50</option>
+            </select>
+        </div>
+        <div class="results-count">
+            Showing <strong>2</strong> results
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Create User
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/user_setup.css') }}">
+
+
+<div class="card form-card">
+
+
+<h2>Create New User</h2>
+
+
+<form>
+
+
+<label>Full Name</label>
+<input type="text" placeholder="Enter full name">
+
+
+<label>Username</label>
+<input type="text" placeholder="Enter username">
+
+
+<label>Password</label>
+<input type="password" placeholder="Enter password">
+
+<label>Confirm Password</label>
+<input type="Confirm password" placeholder="Confirm password">
+
+
+<label>Email</label>
+<input type="email" placeholder="Enter email">
+
+
+<label>Role</label>
+
+<select>
+
+<option>Admin</option>
+<option>Doctor</option>
+<option>Receptionist</option>
+<option>Nurse</option>
+
+</select>
+
+
+
+<label>Status</label>
+
+<select>
+
+<option>Active</option>
+<option>Inactive</option>
+
+</select>
+
+
+
+<button type="submit">
+Save User
+</button>
+
+
+</form>
+
+
+</div>
+
+
+{% endblock %}

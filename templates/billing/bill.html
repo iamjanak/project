@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<title>Bill - {{ bill.bill_no }}</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bill.css') }}">
+
+</head>
+
+
+<body>
+
+<div class="bill-box">
+
+
+    <!-- Header -->
+    <div class="bill-header">
+
+
+        <img src="{{ url_for('static', filename='images/logo.png') }}" 
+             class="hospital-logo" 
+             alt="Logo">
+
+
+        <div class="hospital-info">
+
+            <h1>{{ bill.hospital_name }}</h1>
+
+            <p>
+                {{ bill.hospital_address }}
+            </p>
+
+            <p>
+                Phone No. : 082522686
+            </p>
+
+            <p>
+                Email : swasthacare2063@gmail.com
+            </p>
+
+        </div>
+
+
+
+        <div class="pan-barcode">
+
+            <p class="pan-text">
+                PAN NO.: 302198289
+            </p>
+
+
+            <div class="barcode">
+                {% for i in range(28) %}
+                    <span></span>
+                {% endfor %}
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <div class="section-divider"></div>
+
+
+
+    <!-- Copy Title -->
+
+    <div class="copy-title">
+
+        <p class="line1">
+            PATIENT COPY
+        </p>
+
+
+        <p class="line2">
+            INVOICE 
+        </p>
+
+
+        <p class="line3">
+            Patient Type : {{ bill.patient_type | default("GEN") }}
+        </p>
+
+
+    </div>
+
+
+
+
+    <!-- Patient Details -->
+
+    <table class="info-table">
+
+
+        <tr>
+
+            <td class="label">
+                Hospital ID
+            </td>
+
+            <td class="colon">
+                :
+            </td>
+
+            <td class="value">
+                {{ bill.patient_no }}
+            </td>
+
+
+
+            <td class="label">
+                Bill No
+            </td>
+
+            <td class="colon">
+                :
+            </td>
+
+            <td class="value bold">
+                {{ bill.bill_no }}
+            </td>
+
+        </tr>
+
+
+
+        <tr>
+
+            <td class="label">
+                Name
+            </td>
+
+            <td class="colon">
+                :
+            </td>
+
+            <td class="value bold">
+                {{ bill.patient_name }}
+            </td>
+
+
+
+            <td class="label">
+                Transaction Date
+            </td>
+
+            <td class="colon">
+                :
+            </td>
+
+            <td class="value">
+                {{ bill.transaction_date }}
+            </td>
+
+        </tr>
+
+
+
+        <tr>
+
+            <td class="label">
+                Age/Sex
+            </td>
+
+            <td class="colon">
+                :
+            </td>
+
+            <td class="value">
+                {{ bill.age_gender }}
+            </td>
+
+
+
+            <td class="label">
+                Doctor Name
+            </td>
+
+            <td class="colon">
+                :
+            </td>
+
+            <td class="value">
+                {{ bill.doctor }}
+            </td>
+
+
+        </tr>
+
+
+
+
+        <tr>
+
+
+            <td class="label">
+                Department
+            </td>
+
+            <td class="colon">
+                :
+            </td>
+
+            <td class="value">
+                {{ bill.department }}
+            </td>
+
+
+
+            <td class="label">
+                Payment Type
+            </td>
+
+            <td class="colon">
+                :
+            </td>
+
+            <td class="value">
+                {{ bill.pay_type | default("Cash") }}
+            </td>
+
+
+
+        </tr>
+
+
+    </table>
+
+
+
+    <div class="section-divider"></div>
+
+
+
+
+    <!-- Charges Table -->
+
+
+    <table class="charges-table">
+
+
+        <thead>
+
+            <tr>
+
+                <th>S.No</th>
+
+                <th>Code</th>
+
+                <th class="left">
+                    Particulars
+                </th>
+
+                <th>QTY</th>
+
+                <th>Rate</th>
+
+                <th>Total</th>
+
+
+            </tr>
+
+
+        </thead>
+
+
+
+        <tbody>
+
+
+        {% for item in bill["items"] %}
+
+
+            <tr>
+
+
+                <td>
+                    {{ loop.index }}
+                </td>
+
+
+                <td>
+                    {{ item.code }}
+                </td>
+
+
+                <td class="left">
+                    {{ item.name }}
+                </td>
+
+
+                <td>
+                    {{ item.qty }}
+                </td>
+
+
+                <td>
+                    {{ "%.2f"|format(item.rate) }}
+                </td>
+
+
+                <td>
+                    {{ "%.2f"|format(item.qty * item.rate) }}
+                </td>
+
+
+            </tr>
+
+
+        {% endfor %}
+
+
+
+        </tbody>
+
+
+
+    </table>
+
+
+
+
+    <!-- Totals -->
+
+
+    <table class="totals-table">
+
+
+        <tr>
+
+            <td class="label">
+                Sub Total
+            </td>
+
+            <td class="colon">
+                :
+            </td>
+
+            <td class="value">
+                {{ "%.2f"|format(bill.subtotal) }}
+            </td>
+
+
+        </tr>
+
+
+
+        <tr>
+
+            <td class="label">
+                Discount
+            </td>
+
+            <td class="colon">
+                :
+            </td>
+
+            <td class="value">
+                {{ "%.2f"|format(bill.discount) }}
+            </td>
+
+
+        </tr>
+
+
+
+        <tr class="grand-total">
+
+
+            <td class="label">
+                Total
+            </td>
+
+            <td class="colon">
+                :
+            </td>
+
+            <td class="value">
+                {{ "%.2f"|format(bill.total) }}
+            </td>
+
+
+        </tr>
+
+
+
+    </table>
+
+
+
+
+    <p class="remarks">
+
+        <strong>
+            Remarks :
+        </strong>
+
+        {{ bill.remarks | default("") }}
+
+    </p>
+
+
+
+
+    <div class="section-divider"></div>
+
+
+
+    <div class="footer-info">
+
+
+        <p>
+            Consulting Dr: {{ bill.doctor }}
+        </p>
+
+
+        <p>
+            User: Admin
+        </p>
+
+
+        <p>
+            Printed Date/Time: {{ bill.transaction_date }}
+        </p>
+
+
+    </div>
+
+
+
+    <div class="print-btn-wrapper no-print">
+
+
+        <button onclick="window.print()">
+            🖨 Print Bill
+        </button>
+
+
+    </div>
+
+
+
+</div>
+
+
+</body>
+
+</html>

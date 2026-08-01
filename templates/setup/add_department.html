@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Add Department
+{% endblock %}
+
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/add_department.css') }}">
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="card form-card">
+
+
+<h2>Add Department</h2>
+
+
+<form>
+
+
+<label>Department Code</label>
+<input type="text" placeholder="Enter department code">
+
+
+<label>Department Name</label>
+<input type="text" placeholder="Enter department name">
+
+
+<label>Type of Department</label>
+
+<select>
+
+<option>Clinical</option>
+<option>Bio Chemistry</option>
+<option>Pathology</option>
+<option>Normal</option>
+
+</select>
+
+
+<label>Status</label>
+
+<select>
+
+<option>Active</option>
+<option>Inactive</option>
+
+</select>
+
+
+
+<button type="submit">
+Save Department
+</button>
+
+
+</form>
+
+
+</div>
+
+
+{% endblock %}

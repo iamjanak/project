@@ -1,0 +1,258 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    background: #eef1f7;
+    padding: 30px;
+}
+
+.bill-box {
+    max-width: 720px;
+    margin: 0 auto;
+    background: white;
+    border: 2px solid #333;
+    padding: 20px 30px;
+}
+
+/* Header */
+.bill-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    position: relative;
+}
+
+.hospital-logo {
+    width: 55px;
+    height: 55px;
+    object-fit: contain;
+    border: 1px solid #999;
+    padding: 3px;
+}
+
+.hospital-info {
+    flex: 1;
+    text-align: center;
+}
+
+.hospital-info h1 {
+    font-size: 24px;
+    color: #1a2b4c;
+    font-family: Georgia, serif;
+    margin-bottom: 6px;
+}
+
+.hospital-info p {
+    font-size: 13px;
+    color: #333;
+    line-height: 1.5;
+}
+
+.pan-barcode {
+    text-align: right;
+    min-width: 130px;
+}
+
+.pan-text {
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.barcode {
+    display: flex;
+    justify-content: flex-end;
+    height: 22px;
+    gap: 1px;
+}
+
+.barcode span {
+    display: inline-block;
+    width: 2px;
+    background: #222;
+}
+
+.barcode span:nth-child(3n) {
+    width: 3px;
+}
+
+.section-divider {
+    border-top: 1px solid #999;
+    margin: 12px 0;
+}
+
+/* Copy title */
+.copy-title {
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+.copy-title .line1 {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.copy-title .line2 {
+    font-size: 13px;
+    margin-top: 2px;
+}
+
+.copy-title .line3 {
+    font-size: 13px;
+    font-weight: 700;
+    margin-top: 2px;
+}
+
+/* Info table */
+.info-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.info-table td {
+    padding: 4px 4px;
+    vertical-align: top;
+}
+
+.info-table .label {
+    color: #333;
+    width: 16%;
+}
+
+.info-table .colon {
+    width: 2%;
+    color: #333;
+}
+
+.info-table .value {
+    width: 32%;
+    color: #111;
+}
+
+.info-table .bold {
+    font-weight: 700;
+}
+
+.bs-date {
+    color: #666;
+    font-size: 12px;
+}
+
+/* Charges table */
+.charges-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.charges-table th {
+    border-bottom: 1px solid #333;
+    border-top: 1px solid #333;
+    padding: 6px 6px;
+    text-align: center;
+    font-size: 12px;
+}
+
+.charges-table th.left,
+.charges-table td.left {
+    text-align: left;
+}
+
+.charges-table td {
+    padding: 6px 6px;
+    text-align: center;
+}
+
+/* Totals */
+.totals-table {
+    width: 240px;
+    margin-left: auto;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.totals-table td {
+    padding: 3px 4px;
+}
+
+.totals-table .colon {
+    width: 10px;
+}
+
+.totals-table .value {
+    text-align: right;
+}
+
+.totals-table .grand-total td {
+    font-weight: 700;
+    border-top: 1px solid #333;
+    padding-top: 5px;
+}
+
+.in-words {
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.remarks {
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+/* Footer */
+.footer-info {
+    font-size: 13px;
+    color: #222;
+    line-height: 1.6;
+}
+
+.print-time {
+    margin-top: 4px;
+    color: #666;
+    text-align: center;
+}
+
+/* Print button */
+.print-btn-wrapper {
+    text-align: center;
+    margin-top: 18px;
+}
+
+.print-btn-wrapper button {
+    background: #1a2b4c;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.print-btn-wrapper button:hover {
+    background: #10192e;
+}
+
+@media print {
+    body {
+        background: white;
+        padding: 0;
+    }
+
+    .bill-box {
+        border: none;
+        max-width: 100%;
+    }
+
+    .no-print {
+        display: none;
+    }
+}

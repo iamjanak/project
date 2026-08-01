@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Department List - SwasthaCare{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/department_setup.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="department-page">
+
+    <!-- Top bar: search + Add Department button -->
+    <div class="top-bar">
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="Search">
+        </div>
+
+        <a href="{{ url_for('main.add_department') }}" class="new-btn">
+    + New Department
+</a>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrapper">
+        <table class="dept-table">
+            <thead>
+                <tr>
+                    <th>SN</th>
+                    <th>DEP CODE <span class="sort-icon">↕</span></th>
+                    <th>DEPARTMENT NAME <span class="sort-icon">↕</span></th>
+                    <th>TYPE OF DEPARTMENT <span class="sort-icon">↕</span></th>
+                    <th>STATUS</th>
+                    <th>ACTION</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>ADM01</td>
+                    <td>Admission</td>
+                    <td>Clinical</td>
+                    <td><span class="badge badge-active">Active</span></td>
+                    <td class="action-cell">
+                        <button class="icon-btn edit-btn" title="Edit">✎</button>
+                        <button class="icon-btn delete-btn" title="Delete">🗑</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>ANC00</td>
+                    <td>Anaesthesia and Critical Care</td>
+                    <td>Clinical</td>
+                    <td><span class="badge badge-active">Active</span></td>
+                    <td class="action-cell">
+                        <button class="icon-btn edit-btn" title="Edit">✎</button>
+                        <button class="icon-btn delete-btn" title="Delete">🗑</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>CAD02</td>
+                    <td>Cardiology</td>
+                    <td>Normal</td>
+                    <td><span class="badge badge-inactive">Inactive</span></td>
+                    <td class="action-cell">
+                        <button class="icon-btn edit-btn" title="Edit">✎</button>
+                        <button class="icon-btn delete-btn" title="Delete">🗑</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>AN01</td>
+                    <td>Anaesthesia</td>
+                    <td>Normal</td>
+                    <td><span class="badge badge-active">Active</span></td>
+                    <td class="action-cell">
+                        <button class="icon-btn edit-btn" title="Edit">✎</button>
+                        <button class="icon-btn delete-btn" title="Delete">🗑</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Footer: show count + results -->
+    <div class="table-footer">
+        <div class="show-select">
+            Show
+            <select>
+                <option>10</option>
+                <option>15</option>
+                <option>25</option>
+                <option>50</option>
+            </select>
+        </div>
+        <div class="results-count">
+            Showing <strong>4</strong> results
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

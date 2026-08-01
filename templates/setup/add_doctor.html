@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Add Doctor
+{% endblock %}
+
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/add_doctor.css') }}">
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="card form-card">
+
+
+<h2>Add Doctor</h2>
+
+
+<form method="POST">
+
+
+<label>Doctor Code</label>
+<input type="text" name="doc_code" placeholder="Enter doctor code">
+
+
+<label>Doctor Name</label>
+<input type="text" name="doc_name" placeholder="Enter doctor name">
+
+
+<label>Type</label>
+
+<select name="doc_type">
+
+<option>Cardiologist</option>
+<option>Dermatologist</option>
+<option>Orthopedic</option>
+<option>Pediatrician</option>
+<option>General Physician</option>
+
+</select>
+
+
+<label>Status</label>
+
+<select name="status">
+
+<option>Active</option>
+<option>Inactive</option>
+
+</select>
+
+
+
+<button type="submit">
+Save Doctor
+</button>
+
+
+</form>
+
+
+</div>
+
+
+{% endblock %}

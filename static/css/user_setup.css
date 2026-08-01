@@ -1,0 +1,333 @@
+.usersetup-page {
+    font-family: "Segoe UI", sans-serif;
+}
+
+/* Top bar */
+.top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 8px;
+    padding: 10px 15px;
+    width: 320px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.search-box .search-icon {
+    margin-right: 8px;
+    color: #999;
+}
+
+.search-box input {
+    border: none;
+    outline: none;
+    font-size: 14px;
+    width: 100%;
+}
+
+.top-bar-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-btn {
+    background: #6c5ce7;
+    border: none;
+    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.new-user-btn {
+    background: #6c5ce7;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.new-user-btn:hover,
+.filter-btn:hover {
+    background: #5a4bd1;
+}
+
+/* Table */
+.table-wrapper {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.user-table thead {
+    background: #f1f2f7;
+}
+
+.user-table th {
+    text-align: left;
+    padding: 14px 20px;
+    font-size: 12px;
+    color: #888;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.sort-icon {
+    color: #bbb;
+    margin-left: 4px;
+}
+
+.user-table td {
+    padding: 16px 20px;
+    font-size: 14px;
+    border-top: 1px solid #f0f0f0;
+    vertical-align: middle;
+}
+
+.user-table tbody tr:nth-child(even) {
+    background: #f9f9fc;
+}
+
+.user-link {
+    color: #6c5ce7;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.user-link:hover {
+    text-decoration: underline;
+}
+
+/* Type badges */
+.badge {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.badge-active {
+    background: #e3f9ee;
+    color: #1fa564;
+}
+
+.badge-inactive {
+    background: #fde8ea;
+    color: #e0384c;
+}
+
+/* Status toggle switch */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 42px;
+    height: 22px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.2s;
+    border-radius: 22px;
+}
+
+.slider::before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.2s;
+    border-radius: 50%;
+}
+
+.switch input:checked + .slider {
+    background-color: #6c5ce7;
+}
+
+.switch input:checked + .slider::before {
+    transform: translateX(20px);
+}
+
+/* Expiry date */
+.expiry-cell {
+    color: #555;
+    white-space: nowrap;
+}
+
+/* Action icons */
+.action-cell {
+    display: flex;
+    gap: 12px;
+}
+
+.icon-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.edit-btn {
+    color: #6c5ce7;
+}
+
+.delete-btn {
+    color: #e0384c;
+}
+
+/* Footer */
+.table-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 15px;
+    font-size: 14px;
+    color: #666;
+}
+
+.show-select {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.show-select select {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    outline: none;
+}
+
+
+
+
+.user-page{
+
+padding:20px;
+
+}
+
+
+.page-header{
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+
+}
+
+
+.add-btn{
+
+background:#17b6c5;
+color:white;
+padding:10px 20px;
+border-radius:8px;
+text-decoration:none;
+
+}
+
+
+
+.card{
+
+background:white;
+padding:25px;
+border-radius:12px;
+
+}
+
+
+
+table{
+
+width:100%;
+border-collapse:collapse;
+
+}
+
+
+th,td{
+
+padding:12px;
+border-bottom:1px solid #eee;
+text-align:left;
+
+}
+
+
+
+.form-card{
+
+max-width:600px;
+margin:0 auto;
+
+}
+
+
+
+input,select{
+
+width:100%;
+padding:12px;
+margin-bottom:15px;
+border:1px solid #ddd;
+border-radius:8px;
+
+}
+
+
+button{
+
+background:#17b6c5;
+color:white;
+padding:12px;
+border:none;
+border-radius:8px;
+width:100%;
+
+}
+.new-user-btn {
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}

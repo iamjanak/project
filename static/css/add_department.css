@@ -1,0 +1,93 @@
+.department-page{
+
+padding:20px;
+
+}
+
+
+.page-header{
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+
+}
+
+
+.add-btn{
+
+background:#17b6c5;
+color:white;
+padding:10px 20px;
+border-radius:8px;
+text-decoration:none;
+
+}
+
+
+
+.card{
+
+background:white;
+padding:25px;
+border-radius:12px;
+
+}
+
+
+
+table{
+
+width:100%;
+border-collapse:collapse;
+
+}
+
+
+th,td{
+
+padding:12px;
+border-bottom:1px solid #eee;
+text-align:left;
+
+}
+
+
+
+.form-card{
+
+max-width:600px;
+margin:0 auto;
+
+}
+
+
+
+input,select{
+
+width:100%;
+padding:12px;
+margin-bottom:15px;
+border:1px solid #ddd;
+border-radius:8px;
+
+}
+
+
+button{
+
+background:#17b6c5;
+color:white;
+padding:12px;
+border:none;
+border-radius:8px;
+width:100%;
+
+}
+.new-dept-btn {
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
