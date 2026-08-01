@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+{% block title %}New Patient Registration{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/registration.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-page">
+
+  <div class="page-header">
+    <div>
+      <h2 class="page-title">New Patient Registration</h2>
+      <p class="page-subtitle">Enter patient details to create a new record</p>
+    </div>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="flash-msg flash-msg--{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form class="card form-card" action="{{ url_for('main.patient_registration') }}" method="POST">
+
+    <!-- ===== Personal Information ===== -->
+    <div class="form-section">
+      <h3 class="form-section-title">🧑 Personal Information</h3>
+      <div class="form-grid form-grid--three">
+
+        <div class="form-field form-field--title">
+          <label for="title">Title <span class="required">*</span></label>
+          <select id="title" name="title" required>
+            <option value="" disabled selected>Select title</option>
+            <option value="mr">Mr.</option>
+            <option value="mrs">Mrs.</option>
+            <option value="ms">Ms.</option>
+            <option value="dr">Dr.</option>
+            <option value="master">Master</option>
+            <option value="miss">Miss</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="first_name">First Name <span class="required">*</span></label>
+          <input type="text" id="first_name" name="first_name" placeholder="e.g. Sophie" required>
+        </div>
+
+        <div class="form-field">
+          <label for="last_name">Last Name <span class="required">*</span></label>
+          <input type="text" id="last_name" name="last_name" placeholder="e.g. Turner" required>
+        </div>
+
+        <div class="form-field">
+          <label>Date of Birth <span class="required">*</span></label>
+          <div class="dob-group">
+            <select id="dob_day" name="dob_day" required>
+              <option value="" disabled selected>Day</option>
+              {% for d in range(1, 32) %}<option value="{{ d }}">{{ d }}</option>{% endfor %}
+            </select>
+            <select id="dob_month" name="dob_month" required>
+              <option value="" disabled selected>Month</option>
+              {% for m in ['January','February','March','April','May','June','July','August','September','October','November','December'] %}
+                <option value="{{ loop.index }}">{{ m }}</option>
+              {% endfor %}
+            </select>
+            <select id="dob_year" name="dob_year" required>
+              <option value="" disabled selected>Year</option>
+              {% for y in range(2026, 1919, -1) %}<option value="{{ y }}">{{ y }}</option>{% endfor %}
+            </select>
+          </div>
+          <label class="checkbox-label">
+            <input type="checkbox" id="is_real_dob" name="is_real_dob" checked>
+            Is Real DOB
+          </label>
+        </div>
+
+        <div class="form-field">
+          <label for="age">Age</label>
+          <div class="age-group">
+            <input type="number" id="age" name="age" min="0" max="120" placeholder="e.g. 32">
+            <span class="age-unit">Years</span>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="gender">Gender <span class="required">*</span></label>
+          <select id="gender" name="gender" required>
+            <option value="" disabled selected>Select gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="marital_status">Marital Status</label>
+          <select id="marital_status" name="marital_status">
+            <option value="" disabled selected>Select status</option>
+            <option value="single">Single</option>
+            <option value="married">Married</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="religion">Religion</label>
+          <select id="religion" name="religion">
+            <option value="" disabled selected>Select religion</option>
+            <option value="hindu">Hindu</option>
+            <option value="buddhist">Buddhist</option>
+            <option value="muslim">Muslim</option>
+            <option value="christian">Christian</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="blood_group">Blood Group</label>
+          <select id="blood_group" name="blood_group">
+            <option value="" disabled selected>Select blood group</option>
+            <option>A+</option><option>A-</option>
+            <option>B+</option><option>B-</option>
+            <option>AB+</option><option>AB-</option>
+            <option>O+</option><option>O-</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="national_id">National ID / Citizenship No.</label>
+          <input type="text" id="national_id" name="national_id" placeholder="e.g. 12-34-56-78901">
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== Contact Information ===== -->
+    <div class="form-section">
+      <h3 class="form-section-title">📞 Contact Information</h3>
+      <div class="form-grid">
+
+        <div class="form-field">
+          <label for="phone">Phone Number <span class="required">*</span></label>
+          <input type="tel" id="phone" name="phone" placeholder="e.g. 98XXXXXXXX" required>
+        </div>
+
+        <div class="form-field">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" placeholder="patient@email.com">
+        </div>
+
+        <div class="form-field form-field--wide">
+          <label for="address">Address <span class="required">*</span></label>
+          <input type="text" id="address" name="address" placeholder="Street, City, District" required>
+        </div>
+
+        <div class="form-field">
+          <label for="emergency_contact_name">Emergency Contact Name</label>
+          <input type="text" id="emergency_contact_name" name="emergency_contact_name" placeholder="Relative / Guardian">
+        </div>
+
+        <div class="form-field">
+          <label for="emergency_contact_phone">Emergency Contact Phone</label>
+          <input type="tel" id="emergency_contact_phone" name="emergency_contact_phone" placeholder="e.g. 98XXXXXXXX">
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== Medical Information ===== -->
+    <div class="form-section">
+      <h3 class="form-section-title">🩺 Medical Information</h3>
+      <div class="form-grid">
+
+        <div class="form-field">
+          <label for="department">Department <span class="required">*</span></label>
+          <select id="department" name="department" required>
+            <option value="" disabled selected>Select department</option>
+            <option value="general">General Medicine</option>
+            <option value="cardiology">Cardiology</option>
+            <option value="orthopedics">Orthopedics</option>
+            <option value="pediatrics">Pediatrics</option>
+            <option value="gynecology">Gynecology</option>
+            <option value="emergency">Emergency</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="doctor">Assigned Doctor</label>
+          <select id="doctor" name="doctor_id">
+            <option value="" disabled selected>Select doctor</option>
+            {% for doc in doctors|default([]) %}
+              <option value="{{ doc.id }}">{{ doc.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="visit_type">Visit Type</label>
+          <select id="visit_type" name="visit_type">
+            <option value="outpatient">Outpatient</option>
+            <option value="inpatient">Inpatient</option>
+            <option value="emergency">Emergency</option>
+          </select>
+        </div>
+
+        <div class="form-field form-field--wide">
+          <label for="known_allergies">Known Allergies</label>
+          <input type="text" id="known_allergies" name="known_allergies" placeholder="e.g. Penicillin, Peanuts (leave blank if none)">
+        </div>
+
+        <div class="form-field form-field--wide">
+          <label for="notes">Additional Notes</label>
+          <textarea id="notes" name="notes" rows="3" placeholder="Any additional information about the patient"></textarea>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="reset" class="btn btn--ghost">Clear Form</button>
+      <button type="submit" class="btn btn--primary">✓ Register Patient</button>
+    </div>
+
+  </form>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/registration.js') }}"></script>
+{% endblock %}

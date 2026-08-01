@@ -1,56 +1,189 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{% block title %}SwasthaCare{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
-    {% block extra_css %}{% endblock %}
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
 
-    <div class="dashboard-container">
+{% block content %}
+<div class="dashboard-page">
 
-        <aside class="sidebar">
-            <div class="brand">🏥 SwasthaCare</div>
+  <!-- ===== Row 1: Stat cards + Doctor Schedule ===== -->
+  <div class="dash-grid row-1">
 
-            <ul class="menu">
-                <li class="{% if active_page == 'dashboard' %}active{% endif %}">
-                    <a href="/dashboard">📊 Dashboard</a>
-                </li>
-
-                <li class="menu-title">Patient Management</li>
-                <li><a href="#">🧑 New Patient Registration</a></li>
-                <li><a href="#">🔄 Patient Follow Up</a></li>
-                <li><a href="#">🏥 Patient Admission</a></li>
-                <li><a href="#">✏️ Patient Information Correction</a></li>
-                <li><a href="#">📄 Patient Reports</a></li>
-
-                <li class="menu-title">Billing</li>
-                <li><a href="#">💳 Patient Billing</a></li>
-                <li><a href="#">💰 Deposit</a></li>
-                <li><a href="#">↩ Refund</a></li>
-                <li><a href="#">🧾 Bill Details</a></li>
-
-                <li class="menu-title">Setup</li>
-                <li><a href="#">🏢 Department Setup</a></li>
-                <li><a href="#">👨‍⚕️ Doctor Setup</a></li>
-                <li><a href="#">🛏 Ward Setup</a></li>
-                <li><a href="#">🚪 Room Setup</a></li>
-                <li><a href="#">🛌 Bed Setup</a></li>
-
-                <li class="menu-title">Reports</li>
-                <li><a href="#">📊 Patient Reports</a></li>
-                <li><a href="#">💵 Billing Reports</a></li>
-                <li><a href="#">📅 Daily Collection</a></li>
-                <li><a href="#">🏥 Department Reports</a></li>
-            </ul>
-        </aside>
-
-        <main class="main-content">
-            {% block content %}{% endblock %}
-        </main>
-
+    <div class="card stat-card">
+      <div class="card-header">
+        <span class="card-title">Total Patient</span>
+        <a href="#" class="icon-link">↗</a>
+      </div>
+      <div class="stat-value">{{ total_patients|default(234) }}</div>
+      <div class="sparkline sparkline--bars">
+        {% for i in range(20) %}<span style="height:{{ (i*7) % 26 + 6 }}px"></span>{% endfor %}
+      </div>
     </div>
 
-</body>
-</html>
+    <div class="card stat-card">
+      <div class="card-header">
+        <span class="card-title">Total Doctor</span>
+        <a href="#" class="icon-link">↗</a>
+      </div>
+      <div class="stat-value">{{ total_doctors|default(234) }}</div>
+      <div class="sparkline sparkline--mixed">
+        {% for i in range(20) %}<span style="height:{{ (i*11) % 30 + 4 }}px"></span>{% endfor %}
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="card-header">
+        <span class="card-title">Book Appointment</span>
+        <a href="#" class="icon-link">↗</a>
+      </div>
+      <div class="stat-value">{{ total_appointments|default(234) }}</div>
+      <div class="sparkline sparkline--flat">
+        {% for i in range(20) %}<span class="{{ 'active' if i == 3 }}"></span>{% endfor %}
+      </div>
+    </div>
+
+    <div class="card schedule-card">
+      <div class="card-header">
+        <span class="card-title card-title--light">Doctor Schedules</span>
+        <a href="#" class="icon-link icon-link--light">↗</a>
+      </div>
+      <div class="meeting-card">
+        <div class="meeting-top">
+          <h4>Meeting with Arc Company</h4>
+          <button class="dots-btn">⋯</button>
+        </div>
+        <p class="meeting-time">Time: 02.00 pm &ndash; 04.00 pm</p>
+        <button class="btn-start-meeting">▶ Start Meeting</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== Row 2: Charts + AI assistant ===== -->
+  <div class="dash-grid row-2">
+
+    <div class="card chart-card">
+      <div class="card-header">
+        <span class="card-title">Patient Statistics</span>
+        <select class="week-select">
+          <option>This Week</option>
+          <option>Last Week</option>
+          <option>This Month</option>
+        </select>
+      </div>
+      <canvas id="patientStatsChart" height="180"></canvas>
+    </div>
+
+    <div class="card chart-card">
+      <div class="card-header">
+        <span class="card-title">Total Revenue</span>
+        <a href="#" class="icon-link">↗</a>
+      </div>
+      <div class="legend">
+        <span class="legend-item"><i class="dot dot--income"></i>Income</span>
+        <span class="legend-item"><i class="dot dot--expense"></i>Expense</span>
+        <span class="legend-item"><i class="dot dot--other"></i>Other</span>
+      </div>
+      <canvas id="revenueChart" height="180"></canvas>
+    </div>
+
+    <div class="card assistant-card">
+      <div class="assistant-header">
+        <span class="assistant-brand">🩺 HospitIQ ▾</span>
+      </div>
+      <div class="assistant-avatar">🌀</div>
+      <h4 class="assistant-greeting">Good Morning, {{ current_user_name|default('Doctor') }}</h4>
+      <p class="assistant-sub">How Can I <span class="highlight">Assist You Today?</span></p>
+
+      <div class="assistant-input">
+        <span>✨ Ask me anything about...</span>
+        <span class="assistant-mic">🎤</span>
+      </div>
+      <div class="assistant-tags">
+        <span class="tag">📍 Resource Forecast</span>
+        <span class="tag">🩹 Critical Patient Alert</span>
+      </div>
+
+      <div class="assistant-quick-cards">
+        <button class="quick-card">📋 AI Patient Forecast<small>Predicts admission trends</small></button>
+        <button class="quick-card">🛏️ Bed Utilization<small>Suggests optimal bed allocation</small></button>
+        <button class="quick-card">🩺 Doctor Availability<small>Suggests optimal scheduling</small></button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== Row 3: Recent Patients + Reports ===== -->
+  <div class="dash-grid row-3">
+
+    <div class="card table-card">
+      <div class="card-header">
+        <span class="card-title">Recent Patients</span>
+        <button class="dots-btn">⋮</button>
+      </div>
+      <table class="patients-table">
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Status</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in recent_patients|default([
+              {'date':'Apr 2','name':'Brandie','handle':'@sophie_turner','address':'YollyBox Project','status':'Completed'},
+              {'date':'Apr 3','name':'Esther','handle':'@sophie_turner','address':'Minicam Exploration','status':'In Progress'},
+              {'date':'Apr 6','name':'Bessie','handle':'@sophie_turner','address':'Alexa AI (landing page)','status':'Completed'}
+          ]) %}
+          <tr>
+            <td>{{ p.date }}</td>
+            <td class="patient-name-cell">
+              <span class="avatar-dot"></span>
+              <div>
+                <div class="patient-name">{{ p.name }}</div>
+                <div class="patient-handle">{{ p.handle }}</div>
+              </div>
+            </td>
+            <td>{{ p.address }}</td>
+            <td>
+              <span class="badge badge--{{ 'completed' if p.status == 'Completed' else 'progress' }}">
+                {{ p.status }}
+              </span>
+            </td>
+            <td><button class="btn-receipt">⬇ Receipt.pdf</button></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card reports-card">
+      <div class="card-header">
+        <span class="card-title">Reports</span>
+      </div>
+      <ul class="report-list">
+        {% for r in reports|default([
+            {'title':'Room Cleaning Needed','time':'1 hours Ago'},
+            {'title':'Medication Restock','time':'1 hours Ago'},
+            {'title':'Patient Transport Required','time':'2 hours Ago'}
+        ]) %}
+        <li class="report-item">
+          <span class="report-num">{{ loop.index }}</span>
+          <span class="report-icon">📄</span>
+          <div class="report-text">
+            <div class="report-title">{{ r.title }}</div>
+            <div class="report-time">{{ r.time }}</div>
+          </div>
+          <button class="dots-btn">⋮</button>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

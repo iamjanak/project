@@ -26,6 +26,7 @@ def login_post():
     return "Invalid Username or Password"
 
 
+
 # Dashboard page
 @main.route("/dashboard")
 def dashboard():
@@ -35,10 +36,28 @@ def dashboard():
 
     return render_template(
         "dashboard.html",
+        active_page="dashboard",
         patient_count=348,
         doctor_count=78,
         bill_count=52
     )
+
+
+
+# ==============================
+# Patient Registration Page
+# ==============================
+
+@main.route("/registration")
+def patient_registration():
+
+    if "user" not in session:
+        return redirect("/")
+
+    return render_template(
+        "patient/registration.html"
+    )
+
 
 
 # Logout

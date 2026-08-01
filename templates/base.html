@@ -1,33 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Hospital Management System{% endblock %}</title>
+
+    <title>
+        {% block title %}SwasthaCare{% endblock %}
+    </title>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+    {% block extra_css %}{% endblock %}
 </head>
+
 <body>
 
-    
-    <div class="sidebar">
-        <div class="logo">🏥 HMS</div>
+    <div class="dashboard-container">
 
-        <div class="nav-section">Main</div>
-        <a href="/dashboard" class="nav-item active">Dashboard</a>
-        <a href="#" class="nav-item">Departments</a>
-        <a href="#" class="nav-item">Doctors</a>
-        <a href="#" class="nav-item">Patients</a>
-        <a href="#" class="nav-item">Billing</a>
-        <a href="#" class="nav-item">Reports</a>
-    </div>
+        <!-- Sidebar -->
+        <aside class="sidebar">
 
-  
-    <div class="main">
-        <div class="topbar">
-            <input type="text" class="search" placeholder="Search by patient name...">
-        </div>
+            <div class="brand">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" class="logo" alt="Logo">
+                      <h1 class="company-name">SwasthaCare</h1>
 
-        {% block content %}{% endblock %}
+            </div>
+
+            <ul class="menu">
+
+                <li class="{% if active_page == 'dashboard' %}active{% endif %}">
+                    <a href="/dashboard">📊 Dashboard</a>
+                </li>
+
+
+                <!-- Patient Management -->
+                <li class="menu-title">
+                    Patient Management
+                </li>
+
+                <li>
+                     <a href="/registration">
+                        🧑 New Patient Registration
+                     </a>
+                 </li>
+
+                <li>
+                    <a href="#">🔄 Patient Follow Up</a>
+                </li>
+
+                <li>
+                    <a href="#">🏥 Patient Admission</a>
+                </li>
+
+                <li>
+                    <a href="#">✏️ Patient Information Correction</a>
+                </li>
+
+                <li>
+                    <a href="#">📄 Patient Reports</a>
+                </li>
+
+
+                <!-- Billing -->
+                <li class="menu-title">
+                    Billing
+                </li>
+
+                <li>
+                    <a href="#">💳 Patient Billing</a>
+                </li>
+
+                <li>
+                    <a href="#">💰 Deposit</a>
+                </li>
+
+                <li>
+                    <a href="#">↩ Refund</a>
+                </li>
+
+                <li>
+                    <a href="#">🧾 Bill Details</a>
+                </li>
+
+
+                <!-- Setup -->
+                <li class="menu-title">
+                    Setup
+                </li>
+
+                <li>
+                    <a href="#">🏢 Department Setup</a>
+                </li>
+
+                <li>
+                    <a href="#">👨‍⚕️ Doctor Setup</a>
+                </li>
+
+                <li>
+                    <a href="#">🛏 Ward Setup</a>
+                </li>
+
+                <li>
+                    <a href="#">🚪 Room Setup</a>
+                </li>
+
+                <li>
+                    <a href="#">🛌 Bed Setup</a>
+                </li>
+
+
+                <!-- Reports -->
+                <li class="menu-title">
+                    Reports
+                </li>
+
+                <li>
+                    <a href="#">📊 Patient Reports</a>
+                </li>
+
+                <li>
+                    <a href="#">💵 Billing Reports</a>
+                </li>
+
+                <li>
+                    <a href="#">📅 Daily Collection</a>
+                </li>
+
+                <li>
+                    <a href="#">🏥 Department Reports</a>
+                </li>
+
+            </ul>
+
+        </aside>
+
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            {% block content %}
+
+            {% endblock %}
+
+        </main>
+
     </div>
 
 </body>
+
 </html>
