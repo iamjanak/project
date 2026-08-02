@@ -103,3 +103,50 @@ body {
     letter-spacing:0.5px;
 
 }
+
+.logout-toast {
+
+    position: fixed;
+
+    top: 20px;
+
+    right: 25px;
+
+    background: white;
+
+    padding: 15px 25px;
+
+    border-radius: 10px;
+
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+
+    display: flex;
+
+    gap: 10px;
+
+    align-items: center;
+
+    font-size: 15px;
+
+    transform: translateX(150%);
+
+    transition: 0.4s ease;
+
+    z-index: 9999;
+}
+
+
+.logout-toast.show {
+
+    transform: translateX(0);
+
+}
+
+
+.logout-toast span {
+
+    color: green;
+
+    font-size: 20px;
+
+}

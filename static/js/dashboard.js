@@ -1,64 +1,65 @@
-// Patient Statistics — bar chart
-const patientCtx = document.getElementById('patientStatsChart');
-if (patientCtx) {
-  new Chart(patientCtx, {
-    type: 'bar',
-    data: {
-      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
-      datasets: [{
-        data: [300, 220, 600, 320, 150],
-        backgroundColor: (ctx) => ctx.dataIndex === 2 ? '#6c5ce7' : '#efeaff',
-        borderRadius: 8,
-        maxBarThickness: 40,
-      }]
-    },
-    options: {
-      plugins: { legend: { display: false }, tooltip: { enabled: true } },
-      scales: {
-        y: { beginAtZero: true, grid: { color: '#f0f0f5' }, ticks: { stepSize: 100 } },
-        x: { grid: { display: false } }
-      }
-    }
-  });
-}
+// ==========================================================
+// Hospital Admin Dashboard — revenue chart
+// Renders the bar chart and pins the "Revenue 90k" callout
+// exactly above the highlighted bar, using Chart.js's own
+// computed bar coordinates (so it stays aligned on resize).
+// ==========================================================
 
-// Total Revenue — grouped bar chart (Income / Expense / Other)
-const revenueCtx = document.getElementById('revenueChart');
-if (revenueCtx) {
-  new Chart(revenueCtx, {
-    type: 'bar',
-    data: {
-      labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-      datasets: [
-        {
-          label: 'Income',
-          data: [140473, 200000, 250000, 342200, 500000, 700000, 830451],
-          backgroundColor: '#1e2a4a',
-          borderRadius: 6,
-          stack: 'a'
+document.addEventListener('DOMContentLoaded', function () {
+
+    const hdCtx = document.getElementById('hospitalRevenueChart');
+    if (!hdCtx) return;
+
+    // TODO: swap this for real data passed from the backend,
+    // e.g. render it into a data-* attribute on the canvas and
+    // read it here with JSON.parse(hdCtx.dataset.values).
+    const hdValues = [42, 65, 46, 55, 40, 90, 58, 48];
+    const hdHighlightIndex = hdValues.indexOf(Math.max(...hdValues));
+
+    const hdChart = new Chart(hdCtx, {
+        type: 'bar',
+        data: {
+            labels: ['01', '02', '03', '04', '05', '06', '07', '08'],
+            datasets: [{
+                data: hdValues,
+                backgroundColor: hdValues.map((_, i) =>
+                    i === hdHighlightIndex ? '#6c5ce7' : '#e6e1fb'
+                ),
+                borderRadius: 8,
+                maxBarThickness: 34,
+            }]
         },
-        {
-          label: 'Expense',
-          data: [60000, 80000, 90000, 100000, 120000, 150000, 180000],
-          backgroundColor: '#6c5ce7',
-          borderRadius: 6,
-          stack: 'a'
-        },
-        {
-          label: 'Other',
-          data: [20000, 25000, 30000, 35000, 40000, 45000, 50000],
-          backgroundColor: '#c9c2f7',
-          borderRadius: 6,
-          stack: 'a'
+        options: {
+            plugins: {
+                legend: { display: false },
+                tooltip: { enabled: false }
+            },
+            scales: {
+                y: { display: false, beginAtZero: true },
+                x: {
+                    grid: { display: false },
+                    ticks: { color: '#8a8a99', font: { size: 11 } }
+                }
+            },
+            animation: {
+                onComplete: positionCallout
+            },
+            onResize: () => requestAnimationFrame(positionCallout)
         }
-      ]
-    },
-    options: {
-      plugins: { legend: { display: false } },
-      scales: {
-        y: { display: false, stacked: true },
-        x: { stacked: true, grid: { display: false } }
-      }
+    });
+
+    function positionCallout() {
+        const callout = document.getElementById('hdChartCallout');
+        if (!callout) return;
+
+        const meta = hdChart.getDatasetMeta(0).data[hdHighlightIndex];
+        if (!meta) return;
+
+        callout.style.left = `${meta.x}px`;
+        callout.style.top = `${meta.y - 14}px`;
+
+        const valueEl = callout.querySelector('.hd-callout-value');
+        if (valueEl) valueEl.textContent = `${hdValues[hdHighlightIndex]}k`;
     }
-  });
-}
+
+});

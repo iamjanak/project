@@ -173,9 +173,10 @@ body {
 
 /* Totals */
 .totals-table {
-    width: 240px;
+    width: 260px;
     margin-left: auto;
     border-collapse: collapse;
+    table-layout: fixed;
     font-size: 13px;
     margin-bottom: 10px;
 }
@@ -184,16 +185,24 @@ body {
     padding: 3px 4px;
 }
 
+.totals-table .label {
+    width: 55%;
+    text-align: left;
+}
+
 .totals-table .colon {
-    width: 10px;
+    width: 15px;
+    text-align: center;
 }
 
 .totals-table .value {
+    width: 45%;
     text-align: right;
 }
 
 .totals-table .grand-total td {
     font-weight: 700;
+    font-size: 15px;
     border-top: 1px solid #333;
     padding-top: 5px;
 }

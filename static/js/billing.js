@@ -179,27 +179,85 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('tender_amt').addEventListener('input', recalcReturnAmount);
 
   // ---------- Patient fetch ----------
-  document.getElementById('fetchBtn').addEventListener('click', function () {
-    const patientId = document.getElementById('patient_id').value.trim();
-    if (!patientId) return;
+// ---------- Patient fetch ----------
 
-    fetch(`/api/patient/${encodeURIComponent(patientId)}`)
-      .then((res) => {
-        if (!res.ok) throw new Error('Patient not found');
-        return res.json();
-      })
-      .then(populatePatient)
-      .catch(() => {
-        alert('Patient not found for ID: ' + patientId);
-      });
-  });
+function fetchPatientData() {
 
-  function populatePatient(data) {
-    document.getElementById('patient_name').value = data.name || '';
-    document.getElementById('patient_age_sex').value = `${data.age || '-'} / ${data.sex || '-'}`;
-    document.getElementById('department').value = data.department || '';
-    document.getElementById('credit_due').textContent = (data.credit_due || 0).toFixed(2);
-  }
+    const patientNo = document.getElementById('patient_id').value.trim();
+
+    if (!patientNo) {
+        return;
+    }
+
+
+    fetch(`/fetch_patient/${encodeURIComponent(patientNo)}`)
+
+        .then(response => {
+
+            if (!response.ok) {
+                throw new Error("Patient not found");
+            }
+
+            return response.json();
+
+        })
+
+
+        .then(patient => {
+
+            document.getElementById('patient_name').value =
+                patient.name || "";
+
+
+            document.getElementById('patient_age_sex').value =
+                `${patient.age || "-"} / ${patient.gender || "-"}`;
+
+
+            document.getElementById('department').value =
+                patient.department || "";
+
+
+            document.getElementById('referring_doctor').value =
+                patient.doctor || "";
+
+
+            document.getElementById('credit_due').textContent =
+                "0.00";
+
+        })
+
+
+        .catch(error => {
+
+            alert("Patient not found");
+
+            console.log(error);
+
+        });
+
+}
+
+
+
+// Fetch button click
+document.getElementById('fetchBtn')
+.addEventListener('click', fetchPatientData);
+
+
+
+// Press Enter in Patient ID box
+document.getElementById('patient_id')
+.addEventListener('keypress', function(event) {
+
+    if (event.key === "Enter") {
+
+        event.preventDefault();
+
+        fetchPatientData();
+
+    }
+
+});
 
   // ---------- Save ----------
   document.getElementById('saveBillBtn').addEventListener('click', function () {

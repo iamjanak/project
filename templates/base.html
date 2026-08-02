@@ -45,6 +45,11 @@
                      </a>
                  </li>
 
+                 <li class="{% if active_page == 'patient_list' %}active{% endif %}">
+    <a href="{{ url_for('main.patient_list') }}">
+        👥 Patient List
+    </a>
+</li>
                 <li>
                     <a href="#">🔄 Patient Follow Up</a>
                 </li>
@@ -139,6 +144,12 @@
                 <li>
                     <a href="#">🏥 Department Reports</a>
                 </li>
+                <!-- Logout -->
+                 <li class="logout-menu">
+                 <a href="{{ url_for('main.logout') }}" onclick="showLogoutNotification()">
+                        🚪 Logout
+                 </a>
+                 </li>
 
             </ul>
 
@@ -146,16 +157,83 @@
 
 
         <!-- Main Content -->
-        <main class="main-content">
+       <!-- Main Content -->
+<main class="main-content">
 
-            {% block content %}
 
-            {% endblock %}
+    <!-- Top Header -->
+    <div class="top-header">
 
-        </main>
+        <div class="header-left">
+            <h3>SwasthaCare Hospital</h3>
+        </div>
+
+
+        <div class="header-right">
+
+
+            <!-- Notification -->
+            <div class="notification-icon">
+                🔔
+                <span class="notification-badge">3</span>
+            </div>
+
+
+            <!-- User Profile -->
+            <div class="user-menu">
+
+                <span class="user-name">
+                    Admin
+                </span>
+
+
+                <a href="{{ url_for('main.logout') }}" 
+                   class="logout-btn">
+
+                    Logout
+
+                </a>
+
+            </div>
+
+
+        </div>
 
     </div>
 
+
+
+    {% block content %}
+
+    {% endblock %}
+
+
+</main>
+
+    </div>
+     <div id="logoutToast" class="logout-toast">
+        <span>✓</span>
+        Logged out successfully
+    </div>
+
+    <script>
+
+function showLogoutNotification(){
+
+    const toast = document.getElementById("logoutToast");
+
+    toast.classList.add("show");
+
+
+    setTimeout(function(){
+
+        toast.classList.remove("show");
+
+    },2000);
+
+}
+
+</script>
 </body>
 
 </html>

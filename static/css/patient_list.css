@@ -1,0 +1,350 @@
+/* =========================================================
+   Patient List — admin table style
+   ========================================================= */
+
+:root {
+  --brand:        #6C63E0;
+  --brand-dark:   #5A52D5;
+  --ink:          #1F2937;
+  --ink-soft:     #6B7280;
+  --border:       #E5E7EB;
+  --row-alt:      #F7F8FA;
+  --row-hover:    #EEF0FF;
+  --link:         #4C6FE0;
+}
+
+.dashboard-page {
+  padding: 24px 28px 60px;
+}
+
+/* ---------------------------------------------------------
+   Header
+   --------------------------------------------------------- */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.page-title {
+  margin: 0 0 4px;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.page-subtitle {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 10px 16px;
+  cursor: pointer;
+  text-decoration: none;
+  font-family: inherit;
+}
+
+.btn--primary {
+  background: var(--brand);
+  color: #fff;
+}
+.btn--primary:hover { background: var(--brand-dark); }
+
+.btn svg { width: 14px; height: 14px; }
+
+/* ---------------------------------------------------------
+   Card / table wrapper
+   --------------------------------------------------------- */
+.card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------
+   Toolbar: search + filter + actions dropdown
+   --------------------------------------------------------- */
+.table-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  flex-wrap: wrap;
+}
+
+.search-box {
+  position: relative;
+  width: 240px;
+  max-width: 100%;
+}
+
+.search-box .icon {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 15px;
+  height: 15px;
+  color: var(--ink-soft);
+}
+
+.search-box input {
+  width: 100%;
+  padding: 9px 12px 9px 32px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-family: inherit;
+  color: var(--ink);
+}
+
+.search-box input:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(108, 99, 224, 0.15);
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.icon-btn svg { width: 15px; height: 15px; }
+.icon-btn:hover { background: var(--row-alt); }
+
+/* dropdown */
+.dropdown { position: relative; }
+
+.dropdown-toggle {
+  border-radius: 8px;
+}
+
+.dropdown-toggle svg {
+  width: 12px;
+  height: 12px;
+  transition: transform 0.15s ease;
+}
+
+.dropdown-menu.open + .dropdown-toggle svg,
+.dropdown-toggle.open svg { transform: rotate(180deg); }
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 180px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 12px 28px rgba(31, 41, 55, 0.12);
+  padding: 6px;
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 30;
+}
+
+.dropdown-menu.open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.dropdown-item {
+  display: block;
+  padding: 9px 12px;
+  border-radius: 6px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.dropdown-item:hover { background: var(--row-alt); }
+
+/* ---------------------------------------------------------
+   Table
+   --------------------------------------------------------- */
+.patient-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.patient-table thead th {
+  text-align: left;
+  font-size: 11.5px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  background: var(--row-alt);
+  padding: 12px 20px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.sort-caret {
+  color: #C7CBD4;
+  font-size: 11px;
+}
+
+.patient-table tbody tr {
+  border-bottom: 1px solid var(--border);
+}
+
+.patient-table tbody tr:nth-child(even) { background: var(--row-alt); }
+.patient-table tbody tr:hover { background: var(--row-hover); }
+
+.patient-table tbody td {
+  padding: 14px 20px;
+  font-size: 13.5px;
+  color: var(--ink);
+  vertical-align: middle;
+}
+
+.empty-state {
+  text-align: center;
+  color: var(--ink-soft);
+  padding: 32px 20px !important;
+}
+
+/* patient cell: avatar + name/subtext */
+.patient-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.avatar-0 { background: #E05252; }
+.avatar-1 { background: #8B7BE0; }
+.avatar-2 { background: #4C6FE0; }
+.avatar-3 { background: #2FB07C; }
+.avatar-4 { background: #E0A020; }
+.avatar-5 { background: #E0668F; }
+.avatar-6 { background: #35B0C4; }
+
+.patient-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.patient-name {
+  color: var(--link);
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 14px;
+}
+.patient-name:hover { text-decoration: underline; }
+
+.patient-subtext {
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+/* ---------------------------------------------------------
+   Status toggle (iOS-style switch)
+   --------------------------------------------------------- */
+.status-toggle {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 22px;
+}
+
+.status-toggle .status-checkbox {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: #D6D9E0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.toggle-slider::before {
+  content: "";
+  position: absolute;
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  top: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.status-checkbox:checked + .toggle-slider {
+  background: var(--brand);
+}
+
+.status-checkbox:checked + .toggle-slider::before {
+  transform: translateX(18px);
+}
+
+/* ---------------------------------------------------------
+   Responsive
+   --------------------------------------------------------- */
+@media (max-width: 720px) {
+  .patient-table thead { display: none; }
+  .patient-table tbody tr {
+    display: block;
+    padding: 12px 16px;
+  }
+  .patient-table tbody td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 4px;
+    border: none;
+  }
+  .patient-table tbody td:first-child { padding-top: 0; }
+}

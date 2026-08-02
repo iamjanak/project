@@ -33,7 +33,7 @@
             </p>
 
             <p>
-                Phone No. : 082522686
+                Phone No. : 9863001549
             </p>
 
             <p>
@@ -47,7 +47,7 @@
         <div class="pan-barcode">
 
             <p class="pan-text">
-                PAN NO.: 302198289
+                PAN NO.: 123456789
             </p>
 
 
@@ -263,6 +263,12 @@
 
                 <th>Total</th>
 
+                <th>Disc %</th>
+
+                <th>Disc</th>
+
+                <th>Net Total</th>
+
 
             </tr>
 
@@ -306,7 +312,22 @@
 
 
                 <td>
-                    {{ "%.2f"|format(item.qty * item.rate) }}
+                    {{ "%.2f"|format(item.total) }}
+                </td>
+
+
+                <td>
+                    {{ "%.1f"|format(item.disc_pct) }}
+                </td>
+
+
+                <td>
+                    {{ "%.2f"|format(item.disc_amt) }}
+                </td>
+
+
+                <td>
+                    {{ "%.2f"|format(item.net_total) }}
                 </td>
 
 
@@ -370,11 +391,49 @@
 
 
 
+        <tr>
+
+            <td class="label">
+                Tender Amt
+            </td>
+
+            <td class="colon">
+                :
+            </td>
+
+            <td class="value">
+                {{ "%.2f"|format(bill.tender_amt or 0) }}
+            </td>
+
+
+        </tr>
+
+
+
+        <tr>
+
+            <td class="label">
+                Return Amt
+            </td>
+
+            <td class="colon">
+                :
+            </td>
+
+            <td class="value">
+                {{ "%.2f"|format(bill.return_amt or 0) }}
+            </td>
+
+
+        </tr>
+
+
+
         <tr class="grand-total">
 
 
             <td class="label">
-                Total
+                Grand Total
             </td>
 
             <td class="colon">

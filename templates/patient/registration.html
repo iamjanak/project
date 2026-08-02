@@ -45,15 +45,15 @@
 
         <div class="form-field">
           <label for="first_name">First Name <span class="required">*</span></label>
-          <input type="text" id="first_name" name="first_name" placeholder="e.g. Sophie" required>
+          <input type="text" id="first_name" name="first_name" placeholder="e.g. krish" required>
         </div>
 
         <div class="form-field">
           <label for="last_name">Last Name <span class="required">*</span></label>
-          <input type="text" id="last_name" name="last_name" placeholder="e.g. Turner" required>
+          <input type="text" id="last_name" name="last_name" placeholder="e.g. thapa" required>
         </div>
 
-        <div class="form-field">
+        <!-- <div class="form-field">
           <label>Date of Birth <span class="required">*</span></label>
           <div class="dob-group">
             <select id="dob_day" name="dob_day" required>
@@ -75,15 +75,35 @@
             <input type="checkbox" id="is_real_dob" name="is_real_dob" checked>
             Is Real DOB
           </label>
-        </div>
+        </div> -->
 
-        <div class="form-field">
-          <label for="age">Age</label>
-          <div class="age-group">
-            <input type="number" id="age" name="age" min="0" max="120" placeholder="e.g. 32">
-            <span class="age-unit">Years</span>
-          </div>
-        </div>
+        <!-- Date of Birth -->
+<div class="form-field">
+  <label for="dob">Date of Birth <span class="required">*</span></label>
+  <input 
+      type="text" 
+      id="dob" 
+      name="dob"
+      placeholder="DD/MM/YYYY"
+      maxlength="10"
+      oninput="formatDOB(this)"
+      onchange="calculateAge()"
+      required>
+</div>
+
+
+<!-- Auto Calculated Age -->
+<div class="form-field">
+  <label for="age">Age</label>
+  <div class="age-group">
+    <input 
+        type="number" 
+        id="age" 
+        name="age" 
+        readonly>
+    <span class="age-unit">Years</span>
+  </div>
+</div>
 
         <div class="form-field">
           <label for="gender">Gender <span class="required">*</span></label>

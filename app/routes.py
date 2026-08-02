@@ -1,15 +1,26 @@
-from flask import Blueprint, render_template, request, redirect, session, jsonify
+from flask import Blueprint, render_template, request, redirect, session, jsonify, flash, url_for
+
+from app.models import Patient, Bill, BillItem
+from app.database import db
+from datetime import datetime
+
 
 main = Blueprint("main", __name__)
 
 
-# Login page
+# ==============================
+# Login Page
+# ==============================
+
 @main.route("/")
 def login():
     return render_template("login.html")
 
 
-# Login form submit
+# ==============================
+# Login Submit
+# ==============================
+
 @main.route("/login", methods=["POST"])
 def login_post():
 
@@ -27,7 +38,10 @@ def login_post():
 
 
 
-# Dashboard page
+# ==============================
+# Dashboard
+# ==============================
+
 @main.route("/dashboard")
 def dashboard():
 
@@ -43,38 +57,351 @@ def dashboard():
     )
 
 
-
 # ==============================
-# Patient Registration Page
+# Patient Registration
 # ==============================
 
-@main.route("/registration")
+@main.route("/registration", methods=["GET", "POST"])
 def patient_registration():
 
     if "user" not in session:
         return redirect("/")
 
+
+    if request.method == "POST":
+
+        # Generate patient number
+        year = datetime.now().year
+
+        last_patient = Patient.query.order_by(
+            Patient.id.desc()
+        ).first()
+
+
+        if last_patient:
+            number = last_patient.id + 1
+        else:
+            number = 1
+
+
+        patient_no = f"{year}{number:04d}"
+
+
+        # Combine first and last name
+        full_name = (
+            request.form["first_name"]
+            + " "
+            + request.form["last_name"]
+        )
+
+
+        # Convert DOB from DD/MM/YYYY to YYYY-MM-DD
+        dob_input = request.form.get("dob")
+
+        if dob_input:
+            dob = datetime.strptime(
+                dob_input,
+                "%d/%m/%Y"
+            ).date()
+        else:
+            dob = None
+
+
+
+        patient = Patient(
+
+            patient_no=patient_no,
+
+            full_name=full_name,
+
+            dob=dob,
+
+            age=request.form.get("age"),
+
+            gender=request.form.get("gender"),
+
+            phone=request.form.get("phone"),
+
+            address=request.form.get("address"),
+
+            department=request.form.get("department"),
+
+            doctor=request.form.get("doctor_id")
+
+        )
+
+
+        db.session.add(patient)
+
+        db.session.commit()
+
+
+        flash("Patient registered successfully", "success")
+
+        return redirect("/registration")
+
+
     return render_template(
         "patient/registration.html"
     )
 
-# Billing Page
+
+@main.route("/patients")
+def patient_list():
+
+    if "user" not in session:
+        return redirect("/")
+
+
+    patients = Patient.query.order_by(
+        Patient.id.desc()
+    ).all()
+
+
+    return render_template(
+        "patient/patient_list.html",
+        patients=patients,
+        active_page="patient_list"
+    )
+
+# ==============================
+# Billing
+# ==============================
 @main.route("/billing", methods=["GET", "POST"])
 def billing():
 
     if "user" not in session:
         return redirect("/")
 
+
     if request.method == "POST":
-        # You will handle form later
-        patient = request.form.get("patient_name")
-        amount = request.form.get("amount")
-        print(patient, amount)
+
+        patient_no = request.form.get("patient_id")
+
+        patient = Patient.query.filter_by(
+            patient_no=patient_no
+        ).first()
+
+        if not patient:
+            return "Patient not found"
+
+        # NOTE: Actual bill creation happens via the AJAX call to
+        # /patient/billing/save (see save_bill() below), which handles
+        # bill-number generation, line items, and totals correctly.
+        # This POST branch just re-renders the billing page; remove it
+        # entirely and make this route GET-only if the form no longer
+        # submits here directly.
+        return render_template(
+            "billing/patient_billing.html",
+            active_page="billing"
+        )
+
 
     return render_template(
         "billing/patient_billing.html",
         active_page="billing"
     )
+
+
+
+# ==============================
+# Fetch Patient For Billing
+# ==============================
+
+@main.route("/fetch_patient/<patient_no>")
+def fetch_patient(patient_no):
+
+    if "user" not in session:
+        return jsonify({
+            "error": "Unauthorized"
+        }), 401
+
+
+    patient = Patient.query.filter_by(
+        patient_no=patient_no
+    ).first()
+
+
+    if not patient:
+        return jsonify({
+            "error": "Patient not found"
+        }), 404
+
+
+    return jsonify({
+
+        "patient_no": patient.patient_no,
+        "name": patient.full_name,
+        "age": patient.age,
+        "gender": patient.gender,
+        "department": patient.department,
+        "doctor": patient.doctor
+
+    })
+
+# ==============================
+# Save Patient Bill
+# ==============================
+
+@main.route("/patient/billing/save", methods=["POST"])
+def save_bill():
+
+    if "user" not in session:
+        return jsonify({
+            "error": "Unauthorized"
+        }), 401
+
+
+    data = request.get_json()
+
+
+    patient = Patient.query.filter_by(
+        patient_no=data["patient_id"]
+    ).first()
+
+
+    if not patient:
+        return jsonify({
+            "error": "Patient not found"
+        }), 404
+
+
+    if not data.get("items"):
+        return jsonify({
+            "error": "No items provided"
+        }), 400
+
+
+    try:
+
+        # ==========================
+        # Generate Bill Number
+        # ==========================
+
+        today = datetime.now()
+
+        last_bill = Bill.query.order_by(
+            Bill.id.desc()
+        ).first()
+
+
+        if last_bill:
+            bill_number = last_bill.id + 1
+        else:
+            bill_number = 1
+
+
+        bill_no = (
+            f"CS"
+            f"{today.year}"
+            f"{today.month:02d}"
+            f"{today.day:02d}"
+            f"{bill_number:04d}"
+        )
+
+
+
+        # ==========================
+        # Compute subtotal / discount
+        # from the line items themselves,
+        # so the numbers are always consistent
+        # (gross before discount, and total discount)
+        # ==========================
+
+        computed_subtotal = 0
+        computed_discount = 0
+
+        for item in data["items"]:
+            gross = float(item["price"]) * float(item["qty"])
+            net = float(item["netTotal"])
+
+            computed_subtotal += gross
+            computed_discount += (gross - net)
+
+
+        grand_total = float(data["grand_total"])
+
+
+
+        # ==========================
+        # Create Bill
+        # ==========================
+
+        bill = Bill(
+
+            bill_no=bill_no,
+
+            patient_id=patient.id,
+
+            subtotal=computed_subtotal,
+
+            discount=computed_discount,
+
+            total=grand_total,
+
+            pay_type=data.get("pay_type", "Cash"),
+
+            tender_amt=data.get("tender_amt", 0),
+
+            return_amt=data.get("return_amt", 0),
+
+            remarks=data.get("remarks", "")
+
+        )
+
+
+        db.session.add(bill)
+
+        db.session.flush()
+
+
+
+        for item in data["items"]:
+
+            bill_item = BillItem(
+
+                bill_id=bill.id,
+
+                service_name=item["name"],
+
+                quantity=item["qty"],
+
+                rate=item["price"],
+
+                amount=item["netTotal"]
+
+            )
+
+
+            db.session.add(bill_item)
+
+
+
+        db.session.commit()
+
+
+        return jsonify({
+
+            "success": True,
+
+            "bill_id": bill.id
+
+        })
+
+    except Exception as e:
+
+        db.session.rollback()
+
+        return jsonify({
+
+            "error": str(e)
+
+        }), 500
+
+# ==============================
+# User Setup
+# ==============================
+
 @main.route("/user_setup")
 def user_setup():
 
@@ -85,13 +412,18 @@ def user_setup():
         "setup/user_setup.html"
     )
 
+
 @main.route("/add-user")
 def add_user():
 
     if "user" not in session:
         return redirect("/")
 
-    return render_template("setup/add_user.html")
+    return render_template(
+        "setup/add_user.html"
+    )
+
+
 
 # ==============================
 # Department Setup
@@ -107,9 +439,7 @@ def department_setup():
         "setup/department_setup.html"
     )
 
-# ==============================
-# Add Department
-# ==============================
+
 
 @main.route("/add_department", methods=["GET", "POST"])
 def add_department():
@@ -125,13 +455,15 @@ def add_department():
         status = request.form["status"]
 
 
-        # Database will be connected later
+        # Database connection later
 
 
-        return redirect("/department-setup")
+        return redirect("/department_setup")
 
 
-    return render_template("setup/add_department.html")
+    return render_template(
+        "setup/add_department.html"
+    )
 
 
 
@@ -150,10 +482,6 @@ def doctor_setup():
     )
 
 
-
-# ==============================
-# Add Doctor
-# ==============================
 
 @main.route("/add_doctor", methods=["GET", "POST"])
 def add_doctor():
@@ -182,69 +510,78 @@ def add_doctor():
         "setup/add_doctor.html"
     )
 
+
+
 # ==============================
 # Generate Bill
 # ==============================
-
-@main.route("/generate_bill")
-def generate_bill():
+@main.route("/generate_bill/<int:bill_id>")
+def generate_bill(bill_id):
 
     if "user" not in session:
         return redirect("/")
 
 
-    # Temporary bill data
+    bill = Bill.query.get_or_404(bill_id)
+
+
+    items = []
+
+    for item in bill.items:
+
+        gross = item.rate * item.quantity
+        net = item.amount
+        disc_amt = gross - net
+        disc_pct = (disc_amt / gross * 100) if gross else 0
+
+        items.append({
+            "name": item.service_name,
+            "code": getattr(item, "service_code", ""),
+            "qty": item.quantity,
+            "rate": item.rate,
+            "total": gross,
+            "disc_pct": disc_pct,
+            "disc_amt": disc_amt,
+            "net_total": net
+        })
+
+
     bill_data = {
 
         "hospital_name": "SwasthaCare Hospital",
         "hospital_address": "Kathmandu, Nepal",
 
-        "bill_no": "CS2026-00001",
-        "patient_no": "20260001",
+        "bill_no": bill.bill_no,
 
-        "patient_name": "Test Patient",
-        "age_gender": "25 Yrs / Male",
+        "patient_no": bill.patient.patient_no,
 
-        "doctor": "Dr. Saurab Sharma",
-        "department": "Cardiology",
+        "patient_name": bill.patient.full_name,
 
-        "transaction_date": "2026-08-02",
+        "age_gender": f"{bill.patient.age} Yrs / {bill.patient.gender}",
 
+        "doctor": bill.patient.doctor,
 
-        "items": [
+        "department": bill.patient.department,
 
-            {
-                "name": "Doctor Consultation Charge",
-                "code": "DOC001",
-                "qty": 1,
-                "rate": 500
-            },
+        "transaction_date": bill.bill_date.strftime("%Y-%m-%d")
+            if hasattr(bill, "bill_date") and bill.bill_date else "",
 
-            {
-                "name": "ECG Test",
-                "code": "LAB002",
-                "qty": 1,
-                "rate": 800
-            }
+        "items": items,
 
-        ],
+        "subtotal": bill.subtotal,
 
-        "discount": 0
+        "discount": bill.discount,
 
+        "total": bill.total,
+
+        "pay_type": bill.pay_type,
+
+        "tender_amt": bill.tender_amt,
+
+        "return_amt": bill.return_amt,
+
+        "remarks": bill.remarks
     }
-
-
-    # Calculate total
-
-    subtotal = 0
-
-    for item in bill_data["items"]:
-        subtotal += item["qty"] * item["rate"]
-
-
-    bill_data["subtotal"] = subtotal
-
-    bill_data["total"] = subtotal - bill_data["discount"]
 
 
     return render_template(
@@ -252,8 +589,10 @@ def generate_bill():
         bill=bill_data
     )
 
-
+# ==============================
 # Logout
+# ==============================
+
 @main.route("/logout")
 def logout():
 

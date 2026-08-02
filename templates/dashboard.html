@@ -1,189 +1,211 @@
 {% extends "base.html" %}
-{% block title %}Dashboard{% endblock %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/hospital_dashboard.css') }}">
+{% endblock %}
+
+
 
 {% block content %}
-<div class="dashboard-page">
 
-  <!-- ===== Row 1: Stat cards + Doctor Schedule ===== -->
-  <div class="dash-grid row-1">
+<div class="hd-page">
 
-    <div class="card stat-card">
-      <div class="card-header">
-        <span class="card-title">Total Patient</span>
-        <a href="#" class="icon-link">↗</a>
-      </div>
-      <div class="stat-value">{{ total_patients|default(234) }}</div>
-      <div class="sparkline sparkline--bars">
-        {% for i in range(20) %}<span style="height:{{ (i*7) % 26 + 6 }}px"></span>{% endfor %}
-      </div>
-    </div>
+    <!-- ===== Row 0: Stat cards ===== -->
+    <div class="hd-grid hd-row-0">
 
-    <div class="card stat-card">
-      <div class="card-header">
-        <span class="card-title">Total Doctor</span>
-        <a href="#" class="icon-link">↗</a>
-      </div>
-      <div class="stat-value">{{ total_doctors|default(234) }}</div>
-      <div class="sparkline sparkline--mixed">
-        {% for i in range(20) %}<span style="height:{{ (i*11) % 30 + 4 }}px"></span>{% endfor %}
-      </div>
-    </div>
-
-    <div class="card stat-card">
-      <div class="card-header">
-        <span class="card-title">Book Appointment</span>
-        <a href="#" class="icon-link">↗</a>
-      </div>
-      <div class="stat-value">{{ total_appointments|default(234) }}</div>
-      <div class="sparkline sparkline--flat">
-        {% for i in range(20) %}<span class="{{ 'active' if i == 3 }}"></span>{% endfor %}
-      </div>
-    </div>
-
-    <div class="card schedule-card">
-      <div class="card-header">
-        <span class="card-title card-title--light">Doctor Schedules</span>
-        <a href="#" class="icon-link icon-link--light">↗</a>
-      </div>
-      <div class="meeting-card">
-        <div class="meeting-top">
-          <h4>Meeting with Arc Company</h4>
-          <button class="dots-btn">⋯</button>
+        <div class="card hd-stat-card">
+            <div class="card-header">
+                <span class="card-title">Total Patient</span>
+                <a href="#" class="icon-link">↗</a>
+            </div>
+            <div class="hd-stat-big">{{ total_patients|default(234) }}</div>
+            <div class="hd-sparkline hd-sparkline--bars">
+                {% set heights = [8,14,10,20,14,18,12,30,16,20,12,18,10,16,22,12,16,10] %}
+                {% set accents = [3,7,12] %}
+                {% for h in heights %}
+                    <span style="height:{{ h }}px" class="{{ 'is-accent' if loop.index0 in accents }}"></span>
+                {% endfor %}
+            </div>
         </div>
-        <p class="meeting-time">Time: 02.00 pm &ndash; 04.00 pm</p>
-        <button class="btn-start-meeting">▶ Start Meeting</button>
-      </div>
+
+        <div class="card hd-stat-card">
+            <div class="card-header">
+                <span class="card-title">Total Doctor</span>
+                <a href="#" class="icon-link">↗</a>
+            </div>
+            <div class="hd-stat-big">{{ total_doctors|default(234) }}</div>
+            <div class="hd-sparkline hd-sparkline--bars">
+                {% set heights = [10,20,10,22,12,24,10,18,22,12,20,12,18,22,10,20] %}
+                {% set accents = [1,3,5,8,10,13] %}
+                {% for h in heights %}
+                    <span style="height:{{ h }}px" class="{{ 'is-accent' if loop.index0 in accents }}"></span>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="card hd-stat-card">
+            <div class="card-header">
+                <span class="card-title">Book Appointment</span>
+                <a href="#" class="icon-link">↗</a>
+            </div>
+            <div class="hd-stat-big">{{ total_appointments|default(234) }}</div>
+            <div class="hd-sparkline hd-sparkline--flat">
+                {% for i in range(22) %}
+                    <span class="{{ 'is-cursor' if i == 3 }}"></span>
+                {% endfor %}
+            </div>
+        </div>
+
     </div>
 
-  </div>
+    <!-- ===== Row 1: Revenue overview + Top Doctors ===== -->
+    <div class="hd-grid hd-row-1">
 
-  <!-- ===== Row 2: Charts + AI assistant ===== -->
-  <div class="dash-grid row-2">
+        <div class="card hd-revenue-card">
 
-    <div class="card chart-card">
-      <div class="card-header">
-        <span class="card-title">Patient Statistics</span>
-        <select class="week-select">
-          <option>This Week</option>
-          <option>Last Week</option>
-          <option>This Month</option>
-        </select>
-      </div>
-      <canvas id="patientStatsChart" height="180"></canvas>
+            <div class="hd-revenue-stats">
+                <div class="hd-stat">
+                    <span class="hd-stat-label">Total Revenue</span>
+                    <span class="hd-stat-value">${{ total_revenue|default('25,612') }}k</span>
+                </div>
+                <div class="hd-stat">
+                    <span class="hd-stat-label">Total Profit</span>
+                    <span class="hd-stat-value">${{ total_profit|default('25,612') }}k</span>
+                </div>
+            </div>
+
+            <div class="hd-chart-wrap">
+                <canvas id="hospitalRevenueChart" height="170"></canvas>
+                <div class="hd-chart-callout" id="hdChartCallout">
+                    <span class="hd-callout-label">Revenue</span>
+                    <span class="hd-callout-value">{{ revenue_peak|default('90k') }}</span>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="card hd-doctors-card">
+
+            <div class="card-header">
+                <span class="card-title">Top Doctors</span>
+                <a href="#" class="hd-see-all">See all ↗</a>
+            </div>
+
+            <div class="hd-doctor-list">
+
+                {% for doc in top_doctors|default([
+                    {'name': 'Mr. Mohammad Ali', 'specialty': 'Gynecologist', 'rating': 5, 'reviews': 451, 'photo': None},
+                    {'name': 'Mr. Nasif Nahin', 'specialty': 'Nursing', 'rating': 5, 'reviews': 451, 'photo': None},
+                    {'name': 'Mr. Jamirul Islam', 'specialty': 'Dentist', 'rating': 5, 'reviews': 451, 'photo': None}
+                ]) %}
+
+                {% set initials = (doc.name.split()[1][0] if doc.name.split()|length > 1 else doc.name[0]) | upper %}
+                {% set color_index = loop.index0 % 4 %}
+
+                <div class="hd-doctor-row">
+
+                    <span class="hd-doctor-num">{{ loop.index }}</span>
+
+                    {% if doc.photo %}
+                        <img src="{{ doc.photo }}" alt="{{ doc.name }}" class="hd-doctor-avatar hd-doctor-avatar--photo">
+                    {% else %}
+                        <span class="hd-doctor-avatar hd-avatar-{{ color_index }}">{{ initials }}</span>
+                    {% endif %}
+
+                    <div class="hd-doctor-info">
+                        <span class="hd-doctor-name">{{ doc.name }}</span>
+                        <span class="hd-doctor-specialty">{{ doc.specialty }}</span>
+                        <span class="hd-doctor-rating">
+                            {% for i in range(5) %}<span class="hd-star {{ 'is-filled' if i < doc.rating else '' }}">★</span>{% endfor %}
+                            <span class="hd-review-count">{{ doc.reviews }} reviews</span>
+                        </span>
+                    </div>
+
+                    <a href="#" class="hd-btn-view">View</a>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
     </div>
 
-    <div class="card chart-card">
-      <div class="card-header">
-        <span class="card-title">Total Revenue</span>
-        <a href="#" class="icon-link">↗</a>
-      </div>
-      <div class="legend">
-        <span class="legend-item"><i class="dot dot--income"></i>Income</span>
-        <span class="legend-item"><i class="dot dot--expense"></i>Expense</span>
-        <span class="legend-item"><i class="dot dot--other"></i>Other</span>
-      </div>
-      <canvas id="revenueChart" height="180"></canvas>
+
+    <!-- ===== Row 2: Recent Patient Activity ===== -->
+    <div class="card hd-activity-card">
+
+        <div class="card-header">
+            <span class="card-title">Recent Patient Activity</span>
+            <a href="#" class="hd-see-all">See all ↗</a>
+        </div>
+
+        <div class="hd-activity-list">
+
+            {% for a in recent_activity|default([
+                {'name': 'Mr. Nasif Nahin', 'age': 41, 'disease': 'Allergies & Asthma', 'status': 'Recovered', 'timestamp': '22/03/2021 12:34 AM', 'photo': None},
+                {'name': 'Mr. Nasif Nahin', 'age': 41, 'disease': 'Allergies & Asthma', 'status': 'Recovered', 'timestamp': '22/03/2021 12:34 AM', 'photo': None},
+                {'name': 'Mr. Nasif Nahin', 'age': 41, 'disease': 'Allergies & Asthma', 'status': 'Recovered', 'timestamp': '22/03/2021 12:34 AM', 'photo': None}
+            ]) %}
+
+            {% set initials = (a.name.split()[1][0] if a.name.split()|length > 1 else a.name[0]) | upper %}
+            {% set color_index = loop.index0 % 4 %}
+
+            <div class="hd-activity-row">
+
+                {% if a.photo %}
+                    <img src="{{ a.photo }}" alt="{{ a.name }}" class="hd-patient-avatar hd-patient-avatar--photo">
+                {% else %}
+                    <span class="hd-patient-avatar hd-avatar-{{ color_index }}">{{ initials }}</span>
+                {% endif %}
+
+                <div class="hd-patient-info">
+                    <span class="hd-patient-name">{{ a.name }}</span>
+                    <span class="hd-patient-age">{{ a.age }} Years Old</span>
+                </div>
+
+                <div class="hd-activity-col">
+                    <span class="hd-col-label">Disease</span>
+                    <span class="hd-col-value">{{ a.disease }}</span>
+                </div>
+
+                <div class="hd-activity-col">
+                    <span class="hd-col-label">Status</span>
+                    <span class="hd-col-value hd-col-value--status">{{ a.status }}</span>
+                </div>
+
+                <div class="hd-activity-col hd-activity-col--time">
+                    <span class="hd-col-value">{{ a.timestamp }}</span>
+                </div>
+
+                <button type="button" class="dots-btn">⋯</button>
+
+            </div>
+
+            {% else %}
+
+            <div class="hd-empty">No recent activity</div>
+
+            {% endfor %}
+
+        </div>
+
     </div>
-
-    <div class="card assistant-card">
-      <div class="assistant-header">
-        <span class="assistant-brand">🩺 HospitIQ ▾</span>
-      </div>
-      <div class="assistant-avatar">🌀</div>
-      <h4 class="assistant-greeting">Good Morning, {{ current_user_name|default('Doctor') }}</h4>
-      <p class="assistant-sub">How Can I <span class="highlight">Assist You Today?</span></p>
-
-      <div class="assistant-input">
-        <span>✨ Ask me anything about...</span>
-        <span class="assistant-mic">🎤</span>
-      </div>
-      <div class="assistant-tags">
-        <span class="tag">📍 Resource Forecast</span>
-        <span class="tag">🩹 Critical Patient Alert</span>
-      </div>
-
-      <div class="assistant-quick-cards">
-        <button class="quick-card">📋 AI Patient Forecast<small>Predicts admission trends</small></button>
-        <button class="quick-card">🛏️ Bed Utilization<small>Suggests optimal bed allocation</small></button>
-        <button class="quick-card">🩺 Doctor Availability<small>Suggests optimal scheduling</small></button>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- ===== Row 3: Recent Patients + Reports ===== -->
-  <div class="dash-grid row-3">
-
-    <div class="card table-card">
-      <div class="card-header">
-        <span class="card-title">Recent Patients</span>
-        <button class="dots-btn">⋮</button>
-      </div>
-      <table class="patients-table">
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>Name</th>
-            <th>Address</th>
-            <th>Status</th>
-            <th>Details</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for p in recent_patients|default([
-              {'date':'Apr 2','name':'Brandie','handle':'@sophie_turner','address':'YollyBox Project','status':'Completed'},
-              {'date':'Apr 3','name':'Esther','handle':'@sophie_turner','address':'Minicam Exploration','status':'In Progress'},
-              {'date':'Apr 6','name':'Bessie','handle':'@sophie_turner','address':'Alexa AI (landing page)','status':'Completed'}
-          ]) %}
-          <tr>
-            <td>{{ p.date }}</td>
-            <td class="patient-name-cell">
-              <span class="avatar-dot"></span>
-              <div>
-                <div class="patient-name">{{ p.name }}</div>
-                <div class="patient-handle">{{ p.handle }}</div>
-              </div>
-            </td>
-            <td>{{ p.address }}</td>
-            <td>
-              <span class="badge badge--{{ 'completed' if p.status == 'Completed' else 'progress' }}">
-                {{ p.status }}
-              </span>
-            </td>
-            <td><button class="btn-receipt">⬇ Receipt.pdf</button></td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-
-    <div class="card reports-card">
-      <div class="card-header">
-        <span class="card-title">Reports</span>
-      </div>
-      <ul class="report-list">
-        {% for r in reports|default([
-            {'title':'Room Cleaning Needed','time':'1 hours Ago'},
-            {'title':'Medication Restock','time':'1 hours Ago'},
-            {'title':'Patient Transport Required','time':'2 hours Ago'}
-        ]) %}
-        <li class="report-item">
-          <span class="report-num">{{ loop.index }}</span>
-          <span class="report-icon">📄</span>
-          <div class="report-text">
-            <div class="report-title">{{ r.title }}</div>
-            <div class="report-time">{{ r.time }}</div>
-          </div>
-          <button class="dots-btn">⋮</button>
-        </li>
-        {% endfor %}
-      </ul>
-    </div>
-
-  </div>
 
 </div>
 
+{% endblock %}
+
+
+{% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script src="{{ url_for('static', filename='js/hospital_dashboard.js') }}"></script>
 {% endblock %}

@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+
+{% block title %}
+Patient List
+{% endblock %}
+
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/patient_list.css') }}">
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="dashboard-page">
+
+
+    <div class="page-header">
+
+        <div>
+            <h2 class="page-title">
+                Patient List
+            </h2>
+
+            <p class="page-subtitle">
+                View all registered patients
+            </p>
+        </div>
+
+
+        <a href="{{ url_for('main.patient_registration') }}"
+           class="btn btn--primary">
+
+            + New Patient
+
+        </a>
+
+    </div>
+
+
+
+    <div class="card">
+
+        <!-- Toolbar: search + filter + actions -->
+        <div class="table-toolbar">
+
+            <div class="search-box">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <circle cx="11" cy="11" r="7"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="patientSearch" placeholder="Search">
+            </div>
+
+            <div class="toolbar-actions">
+
+                <button type="button" class="icon-btn" title="Filter">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                    </svg>
+                </button>
+
+                <div class="dropdown" id="actionsDropdown">
+
+                    <button type="button" class="btn btn--primary dropdown-toggle" id="actionsToggle">
+                        Actions
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+
+                    <div class="dropdown-menu" id="actionsMenu">
+
+                        <a href="{{ url_for('main.patient_registration') }}" class="dropdown-item">
+                            New Patient
+                        </a>
+
+                        {# TODO: point this at your export route, e.g. url_for('main.patient_export') #}
+                        <a href="#" class="dropdown-item" id="exportExcelLink">
+                            Export to Excel
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <table class="patient-table" id="patientTable">
+
+
+            <thead>
+
+                <tr>
+
+                    <th>Patients <span class="sort-caret">&#8645;</span></th>
+
+                    <th>Age</th>
+
+                    <th>Gender</th>
+
+                    <th>Phone <span class="sort-caret">&#8645;</span></th>
+
+                    <th>Address</th>
+
+                    <th>Department</th>
+
+                    <th>Doctor</th>
+
+                </tr>
+
+            </thead>
+
+
+
+            <tbody>
+
+
+            {% for patient in patients %}
+
+                {% set initials = (patient.full_name.split()[0][0] ~ (patient.full_name.split()[1][0] if patient.full_name.split()|length > 1 else '')) | upper %}
+                {% set color_index = loop.index0 % 7 %}
+
+                <tr>
+
+                    <td>
+                        <div class="patient-cell">
+
+                            <span class="avatar avatar-{{ color_index }}">
+                                {{ initials }}
+                            </span>
+
+                            <div class="patient-info">
+                                <a href="#" class="patient-name">
+                                        {{ patient.full_name }}
+                                </a>
+                                <span class="patient-subtext">
+                                    {{ patient.patient_no }}
+                                </span>
+                            </div>
+
+                        </div>
+                    </td>
+
+
+                    <td>
+                        {{ patient.age }}
+                    </td>
+
+
+                    <td>
+                        {{ patient.gender }}
+                    </td>
+
+
+                    <td>
+                        {{ patient.phone or 'N/A' }}
+                    </td>
+
+
+                    <td>
+                        {{ patient.address or 'N/A' }}
+                    </td>
+
+
+                    <td>
+                        {{ patient.department or 'N/A' }}
+                    </td>
+
+
+                    <td>
+                        {{ patient.doctor or '-' }}
+                    </td>
+
+
+                </tr>
+
+
+            {% else %}
+
+
+                <tr>
+
+                    <td colspan="7" class="empty-state">
+                        No patients found
+                    </td>
+
+                </tr>
+
+
+            {% endfor %}
+
+
+            </tbody>
+
+
+        </table>
+
+
+    </div>
+
+
+</div>
+
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+    // Dropdown toggle
+    const actionsToggle = document.getElementById('actionsToggle');
+    const actionsMenu = document.getElementById('actionsMenu');
+
+    actionsToggle.addEventListener('click', function (e) {
+        e.stopPropagation();
+        actionsMenu.classList.toggle('open');
+    });
+
+    document.addEventListener('click', function () {
+        actionsMenu.classList.remove('open');
+    });
+
+    // Simple client-side search across the visible table columns
+    const searchInput = document.getElementById('patientSearch');
+    const tableRows = document.querySelectorAll('#patientTable tbody tr');
+
+    searchInput.addEventListener('input', function () {
+        const term = this.value.trim().toLowerCase();
+        tableRows.forEach(function (row) {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(term) ? '' : 'none';
+        });
+    });
+</script>
+{% endblock %}

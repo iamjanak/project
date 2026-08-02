@@ -18,7 +18,7 @@
       <div class="form-field">
         <label for="patient_id">Patient ID / Hospital no.</label>
         <div class="fetch-group">
-          <input type="text" id="patient_id" placeholder="e.g. 83005851">
+          <input type="text" id="patient_id" placeholder="e.g. 20260000">
           <button type="button" id="fetchBtn" class="btn-fetch">Fetch</button>
         </div>
       </div>
@@ -35,7 +35,7 @@
 
       <div class="form-field">
         <label for="rate_type">Rate type</label>
-        <select id="rate_type">
+        <select id="rate_type" name="rate_type">
           <option value="general">GENERAL</option>
           <option value="staff">STAFF</option>
           <option value="insurance">INSURANCE</option>
@@ -50,7 +50,7 @@
 
       <div class="form-field">
         <label for="referring_doctor">Referring doctor</label>
-        <input type="text" id="referring_doctor" placeholder="Doctor name">
+        <input type="text" id="referring_doctor" name="doctor">
       </div>
 
       <div class="form-field">
@@ -102,7 +102,7 @@
 
       <div class="remarks-block">
         <label for="remarks">Remarks</label>
-        <input type="text" id="remarks" placeholder="Optional note for this bill">
+        <input type="text" id="remarks" name="remarks">
       </div>
 
       <div class="summary-card">
@@ -113,7 +113,7 @@
 
         <div class="summary-row">
           <span>Pay type</span>
-          <select id="pay_type">
+          <select id="pay_type" name="pay_type">
             <option value="cash">Cash</option>
             <option value="card">Card</option>
             <option value="insurance">Insurance</option>
@@ -142,11 +142,6 @@
   </div>
 
 </div>
-<script>
-document.getElementById("saveBillBtn").onclick = function(){
-    window.location.href = "{{ url_for('main.generate_bill') }}";
-}
-</script>
 
 <script src="{{ url_for('static', filename='js/billing.js') }}"></script>
 {% endblock %}

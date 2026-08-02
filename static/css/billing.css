@@ -158,10 +158,16 @@
   text-align: left;
 }
 
-.test-table input.cell-input[readonly] {
+.form-field input[readonly] {
   background: #f5f6fa;
+  color: var(--text-main);
+  font-weight: 500;
+   text-transform: uppercase;
+}
+
+.form-field input[readonly]:placeholder-shown {
   color: var(--text-muted);
-  border-color: transparent;
+  font-weight: 400;
 }
 
 .test-table tr[data-state="confirmed"] {
