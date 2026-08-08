@@ -133,6 +133,38 @@ body{
 
 }
 
+/* Flash Messages */
+
+.flash-msg{
+
+    padding:12px 14px;
+
+    border-radius:8px;
+
+    font-size:13.5px;
+
+    margin-bottom:18px;
+
+    text-align:center;
+
+}
+
+.flash-danger{
+
+    background:#fde8ea;
+
+    color:#e0384c;
+
+}
+
+.flash-success{
+
+    background:#e3f9ee;
+
+    color:#1fa564;
+
+}
+
 /* Labels */
 
 label{
@@ -301,39 +333,5 @@ button:hover{
         max-width:360px;
 
     }
-
-}
-/* Logo */
-
-.logo{
-
-    width:20px;
-
-    height:20px;
-
-    object-fit:contain;
-
-    display:block;
-
-    margin:0 auto 10px;
-
-}
-
-
-/* Application Name */
-
-.company-name{
-
-    text-align:center;
-
-    font-size:20px;
-
-    font-weight:700;
-
-    color:#17b6c5;
-
-    margin-bottom:15px;
-
-    letter-spacing:0.5px;
 
 }

@@ -10,11 +10,22 @@
 
 <div class="usersetup-page">
 
-    <!-- Top bar: search + filter + new user button -->
+    <!-- Page title -->
+    <div class="list-header">
+        <div>
+            <h1>User Setup</h1>
+            <p>Manage system users</p>
+        </div>
+    </div>
+
+    <!-- Search + filter + new user -->
     <div class="top-bar">
-        <div class="search-box">
-            <span class="search-icon">🔍</span>
-            <input type="text" placeholder="Search">
+        <div class="search-wrap">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="userSearchInput" placeholder="Search" autocomplete="off">
+                <span class="search-clear" id="userSearchClear" title="Clear">✕</span>
+            </div>
         </div>
 
         <div class="top-bar-actions">
@@ -25,8 +36,8 @@
             </button>
 
             <a href="{{ url_for('main.add_user') }}" class="new-user-btn">
-    + New User
-</a>
+                + New User
+            </a>
         </div>
     </div>
 
@@ -35,49 +46,59 @@
         <table class="user-table">
             <thead>
                 <tr>
-                    <th>USER <span class="sort-icon">↕</span></th>
-                    <th>TYPE</th>
+                    <th>#</th>
+                    <th>USERNAME</th>
+                    <th>FULL NAME</th>
+                    <th>ROLE</th>
                     <th>STATUS</th>
-                    <th>EXPIRY DATE</th>
                     <th>ACTION</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td><a href="#" class="user-link">User 2</a></td>
-                    <td><span class="badge badge-active">Active</span></td>
-                    <td>
-                        <label class="switch">
-                            <input type="checkbox" checked>
-                            <span class="slider"></span>
-                        </label>
-                    </td>
-                    <td class="expiry-cell">2026-12-31</td>
-                    <td class="action-cell">
-                        <button class="icon-btn edit-btn" title="Edit">✎</button>
-                        <button class="icon-btn delete-btn" title="Delete">🗑</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td><a href="#" class="user-link">User 1</a></td>
-                    <td><span class="badge badge-inactive">Inactive</span></td>
-                    <td>
-                        <label class="switch">
-                            <input type="checkbox">
-                            <span class="slider"></span>
-                        </label>
-                    </td>
-                    <td class="expiry-cell">2026-06-15</td>
-                    <td class="action-cell">
-                        <button class="icon-btn edit-btn" title="Edit">✎</button>
-                        <button class="icon-btn delete-btn" title="Delete">🗑</button>
-                    </td>
-                </tr>
+
+                {% if users %}
+
+                    {% for user in users %}
+                    <tr id="user-row-{{ user.id }}"
+                        class="user-row"
+                        data-username="{{ user.username|lower }}"
+                        data-fullname="{{ (user.full_name or '')|lower }}">
+                        <td>{{ loop.index }}</td>
+
+                        <td><a href="#" class="user-link">{{ user.username }}</a></td>
+
+                        <td>{{ user.full_name or '-' }}</td>
+
+                        <td>{{ user.role.name if user.role else '-' }}</td>
+
+                        <td>
+                            {% if user.status == 'Active' %}
+                                <span class="badge badge-active">Active</span>
+                            {% else %}
+                                <span class="badge badge-inactive">Inactive</span>
+                            {% endif %}
+                        </td>
+
+                        <td class="action-cell">
+                            <a href="{{ url_for('main.edit_user', user_id=user.id) }}" class="icon-btn edit-btn" title="Edit">✎</a>
+                            <!-- <button class="icon-btn delete-btn" title="Delete" data-user-id="{{ user.id }}">🗑</button>
+                        </td> -->
+                    </tr>
+                    {% endfor %}
+
+                {% else %}
+
+                    <tr>
+                        <td colspan="6" class="no-users">No users found.</td>
+                    </tr>
+
+                {% endif %}
+
             </tbody>
         </table>
     </div>
 
-    <!-- Footer: show count + results -->
+    <!-- Footer -->
     <div class="table-footer">
         <div class="show-select">
             Show
@@ -88,10 +109,67 @@
             </select>
         </div>
         <div class="results-count">
-            Showing <strong>2</strong> results
+            Showing <strong id="userResultsCount">{{ users|length }}</strong> results
         </div>
     </div>
 
 </div>
+
+<script>
+(function () {
+    const input = document.getElementById('userSearchInput');
+    const clearBtn = document.getElementById('userSearchClear');
+    const resultsCount = document.getElementById('userResultsCount');
+    const rows = Array.from(document.querySelectorAll('.user-row'));
+    const totalCount = rows.length;
+
+    function showAllRows() {
+        rows.forEach(function (row) {
+            row.style.display = '';
+        });
+        if (resultsCount) {
+            resultsCount.textContent = totalCount;
+        }
+        if (clearBtn) {
+            clearBtn.classList.remove('visible');
+        }
+    }
+
+    function resetSearch() {
+        input.value = '';
+        showAllRows();
+        input.focus();
+    }
+
+    input.addEventListener('input', function () {
+        const q = input.value.trim().toLowerCase();
+
+        if (clearBtn) {
+            clearBtn.classList.toggle('visible', input.value.length > 0);
+        }
+
+        if (!q) {
+            showAllRows();
+            return;
+        }
+
+        const matches = rows.filter(function (row) {
+            return row.dataset.username.includes(q) || row.dataset.fullname.includes(q);
+        });
+
+        rows.forEach(function (row) {
+            row.style.display = matches.includes(row) ? '' : 'none';
+        });
+
+        if (resultsCount) {
+            resultsCount.textContent = matches.length;
+        }
+    });
+
+    if (clearBtn) {
+        clearBtn.addEventListener('click', resetSearch);
+    }
+})();
+</script>
 
 {% endblock %}

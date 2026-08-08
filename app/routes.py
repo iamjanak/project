@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, session, jsonify, flash, url_for
 
-from app.models import Patient, Bill, BillItem
-from app.database import db
+from app.models import Patient, Bill, BillItem, Role, User
+from app.database import db 
 from datetime import datetime
 
 
@@ -27,14 +27,31 @@ def login_post():
     username = request.form["username"]
     password = request.form["password"]
 
-    # Temporary login
+    # Temporary hardcoded admin login (kept as a fallback for now)
     if username == "admin" and password == "admin":
 
         session["user"] = username
+        session["role"] = "Admin"
 
         return redirect("/dashboard")
 
-    return "Invalid Username or Password"
+    # Real users created via User Setup
+    user = User.query.filter_by(username=username).first()
+
+    if user and user.check_password(password):
+
+        if user.status != "Active":
+            flash("Your account is inactive. Please contact the administrator.", "danger")
+            return redirect("/")
+
+        session["user"] = user.username
+        session["user_id"] = user.id
+        session["role"] = user.role.name if user.role else None
+
+        return redirect("/dashboard")
+
+    flash("Invalid Username or Password", "danger")
+    return redirect("/")
 
 
 
@@ -402,28 +419,6 @@ def save_bill():
 # User Setup
 # ==============================
 
-@main.route("/user_setup")
-def user_setup():
-
-    if "user" not in session:
-        return redirect("/")
-
-    return render_template(
-        "setup/user_setup.html"
-    )
-
-
-@main.route("/add-user")
-def add_user():
-
-    if "user" not in session:
-        return redirect("/")
-
-    return render_template(
-        "setup/add_user.html"
-    )
-
-
 
 # ==============================
 # Department Setup
@@ -587,6 +582,142 @@ def generate_bill(bill_id):
     return render_template(
         "billing/bill.html",
         bill=bill_data
+    )
+
+# ==============================
+# User Setup List
+# ==============================
+
+@main.route("/user_setup")
+def user_setup():
+
+    if "user" not in session:
+        return redirect("/")
+
+    users = User.query.all()
+
+    return render_template(
+        "setup/user_setup.html",
+        users=users
+    )
+
+@main.route("/add_user", methods=["GET", "POST"])
+def add_user():
+
+    if "user" not in session:
+        return redirect(url_for("main.login"))
+
+    roles = Role.query.all()
+
+    if request.method == "POST":
+
+        full_name = request.form.get("full_name")
+        username = request.form.get("username")
+        password = request.form.get("password")
+        confirm_password = request.form.get("confirm_password")
+        email = request.form.get("email")
+        role_id = request.form.get("role_id")
+        status = request.form.get("status")
+
+        # Password confirmation
+        if password != confirm_password:
+            flash("Passwords do not match", "danger")
+            return redirect(url_for("main.add_user"))
+
+        # Check username
+        existing_user = User.query.filter_by(
+            username=username
+        ).first()
+
+        if existing_user:
+            flash("Username already taken", "danger")
+            return redirect(url_for("main.add_user"))
+
+        # Create user
+        user = User(
+            full_name=full_name,
+            username=username,
+            email=email,
+            role_id=int(role_id),
+            status=status
+        )
+
+        # Hash password
+        user.set_password(password)
+
+        db.session.add(user)
+        db.session.commit()
+
+        flash(
+            "User created successfully!",
+            "success"
+        )
+
+        # Go back to User Setup
+        return redirect(
+            # url_for("main.user_setup")
+        url_for("main.add_user")
+        )
+
+    return render_template(
+        "setup/add_user.html",
+        roles=roles
+    )
+
+@main.route("/edit_user/<int:user_id>", methods=["GET", "POST"])
+def edit_user(user_id):
+
+    if "user" not in session:
+        return redirect("/")
+
+    user = User.query.get_or_404(user_id)
+
+    if request.method == "POST":
+
+        full_name = request.form["full_name"]
+        username = request.form["username"]
+        email = request.form["email"]
+        role_id = request.form["role_id"]
+        status = request.form["status"]
+        password = request.form.get("password")
+        confirm_password = request.form.get("confirm_password")
+
+        # Username taken by someone ELSE
+        existing_user = User.query.filter(
+            User.username == username,
+            User.id != user.id
+        ).first()
+
+        if existing_user:
+            flash("Username already taken", "danger")
+            return redirect(url_for("main.edit_user", user_id=user.id))
+
+        # Password is optional on edit — only update if they typed one
+        if password:
+            if password != confirm_password:
+                flash("Passwords do not match", "danger")
+                return redirect(url_for("main.edit_user", user_id=user.id))
+
+            user.set_password(password)
+
+        user.full_name = full_name
+        user.username = username
+        user.email = email
+        user.role_id = role_id
+        user.status = status
+
+        db.session.commit()
+
+        flash("User updated successfully!", "success")
+
+        return redirect(url_for("main.edit_user", user_id=user.id))
+
+    roles = Role.query.all()
+
+    return render_template(
+         "setup/edit_user.html",
+        user=user,
+        roles=roles
     )
 
 # ==============================
