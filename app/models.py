@@ -248,3 +248,15 @@ try:
     print(Role)
 except:
     print("Role class NOT FOUND")
+
+    # ==============================
+# Department Model
+# ==============================
+class Department(db.Model):
+    __tablename__ = "departments"
+
+    id = db.Column(db.Integer, primary_key=True)
+    dep_code = db.Column(db.String(50), unique=True, nullable=False)
+    department_name = db.Column(db.String(150), nullable=False)
+    dep_type = db.Column(db.String(100), nullable=True)
+    status = db.Column(db.String(20), nullable=False, default="Active")

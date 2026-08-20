@@ -10,21 +10,26 @@
 
 <div class="department-page">
 
-    <!-- Top bar: search + Add Department button -->
+    <!-- Top Bar -->
     <div class="top-bar">
+
         <div class="search-box">
             <span class="search-icon">🔍</span>
-            <input type="text" placeholder="Search">
+            <input type="text" id="departmentSearch" placeholder="Search">
         </div>
 
-        <a href="{{ url_for('main.add_department') }}" class="new-btn">
-    + New Department
-</a>
+        <a href="{{ url_for('main.add_department') }}" class="new-dept-btn">
+            + New Department
+        </a>
+
     </div>
 
-    <!-- Table -->
+
+    <!-- Department Table -->
     <div class="table-wrapper">
+
         <table class="dept-table">
+
             <thead>
                 <tr>
                     <th>SN</th>
@@ -35,71 +40,124 @@
                     <th>ACTION</th>
                 </tr>
             </thead>
-            <tbody>
+
+            <tbody id="departmentTableBody">
+
+                {% for department in departments %}
+
                 <tr>
-                    <td>1</td>
-                    <td>ADM01</td>
-                    <td>Admission</td>
-                    <td>Clinical</td>
-                    <td><span class="badge badge-active">Active</span></td>
+
+                    <!-- Serial Number -->
+                    <td>{{ loop.index }}</td>
+
+                    <!-- Department Code -->
+                    <td>{{ department.dep_code }}</td>
+
+                    <!-- Department Name -->
+                    <td>{{ department.department_name }}</td>
+
+                    <!-- Department Type -->
+                    <td>{{ department.dep_type }}</td>
+
+                    <!-- Status -->
+                    <td>
+                        {% if department.status == "Active" %}
+                            <span class="badge badge-active">
+                                Active
+                            </span>
+                        {% else %}
+                            <span class="badge badge-inactive">
+                                Inactive
+                            </span>
+                        {% endif %}
+                    </td>
+
+                    <!-- Action -->
                     <td class="action-cell">
-                        <button class="icon-btn edit-btn" title="Edit">✎</button>
-                        <button class="icon-btn delete-btn" title="Delete">🗑</button>
+
+                        <a
+                            href="{{ url_for('main.edit_department', dep_id=department.id) }}"
+                            class="icon-btn edit-btn"
+                            title="Edit"
+                        >
+                            ✎
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% else %}
+
+                <!-- No departments -->
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 30px;">
+                        No departments found.
                     </td>
                 </tr>
-                <tr>
-                    <td>2</td>
-                    <td>ANC00</td>
-                    <td>Anaesthesia and Critical Care</td>
-                    <td>Clinical</td>
-                    <td><span class="badge badge-active">Active</span></td>
-                    <td class="action-cell">
-                        <button class="icon-btn edit-btn" title="Edit">✎</button>
-                        <button class="icon-btn delete-btn" title="Delete">🗑</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>CAD02</td>
-                    <td>Cardiology</td>
-                    <td>Normal</td>
-                    <td><span class="badge badge-inactive">Inactive</span></td>
-                    <td class="action-cell">
-                        <button class="icon-btn edit-btn" title="Edit">✎</button>
-                        <button class="icon-btn delete-btn" title="Delete">🗑</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>AN01</td>
-                    <td>Anaesthesia</td>
-                    <td>Normal</td>
-                    <td><span class="badge badge-active">Active</span></td>
-                    <td class="action-cell">
-                        <button class="icon-btn edit-btn" title="Edit">✎</button>
-                        <button class="icon-btn delete-btn" title="Delete">🗑</button>
-                    </td>
-                </tr>
+
+                {% endfor %}
+
             </tbody>
+
         </table>
+
     </div>
 
-    <!-- Footer: show count + results -->
+
+    <!-- Footer -->
     <div class="table-footer">
+
         <div class="show-select">
             Show
-            <select>
-                <option>10</option>
-                <option>15</option>
-                <option>25</option>
-                <option>50</option>
+
+            <select id="showCount">
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
             </select>
+
         </div>
+
         <div class="results-count">
-            Showing <strong>4</strong> results
+
+            Showing
+            <strong>{{ departments|length }}</strong>
+            results
+
         </div>
+
     </div>
 
 </div>
+
+
+<!-- Search -->
+<script>
+
+document.getElementById("departmentSearch").addEventListener("keyup", function () {
+
+    let searchValue = this.value.toLowerCase();
+
+    let rows = document.querySelectorAll(
+        "#departmentTableBody tr"
+    );
+
+    rows.forEach(function (row) {
+
+        let rowText = row.textContent.toLowerCase();
+
+        if (rowText.includes(searchValue)) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+
+    });
+
+});
+
+</script>
 
 {% endblock %}

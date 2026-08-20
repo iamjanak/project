@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, session, jsonify, flash, url_for
 
-from app.models import Patient, Bill, BillItem, Role, User
+from app.models import Patient, Bill, BillItem, Role, User, Department
 from app.database import db 
 from datetime import datetime
 
@@ -423,44 +423,113 @@ def save_bill():
 # ==============================
 # Department Setup
 # ==============================
-
-@main.route("/department_setup")
+@main.route("/department_setup", methods=["GET"])
 def department_setup():
 
     if "user" not in session:
         return redirect("/")
 
-    return render_template(
-        "setup/department_setup.html"
-    )
+    departments = Department.query.order_by(
+        Department.id.desc()
+    ).all()
 
+    return render_template(
+        "setup/department_setup.html",
+        departments=departments
+    )
 
 
 @main.route("/add_department", methods=["GET", "POST"])
 def add_department():
+    if "user" not in session:
+        return redirect("/")
+
+    if request.method == "POST":
+
+        dep_code = request.form.get("dep_code")
+        department_name = request.form.get("department_name")
+        dep_type = request.form.get("dep_type")
+        status = request.form.get("status")
+
+        # Check duplicate department code
+        existing_department = Department.query.filter_by(
+            dep_code=dep_code
+        ).first()
+
+        if existing_department:
+            flash("Department code already exists.", "error")
+            return render_template("setup/add_department.html")
+
+        # Create department
+        department = Department(
+            dep_code=dep_code,
+            department_name=department_name,
+            dep_type=dep_type,
+            status=status
+        )
+
+        db.session.add(department)
+        db.session.commit()
+
+        flash("Department added successfully.", "success")
+
+        return redirect(url_for("main.add_department"))
+
+    return render_template("setup/add_department.html")
+
+@main.route("/department/edit/<int:dep_id>", methods=["GET", "POST"])
+def edit_department(dep_id):
 
     if "user" not in session:
         return redirect("/")
 
+    # Get the actual department from database
+    department = Department.query.get_or_404(dep_id)
 
     if request.method == "POST":
 
-        department_name = request.form["department_name"]
-        description = request.form["description"]
-        status = request.form["status"]
+        dep_code = request.form.get("dep_code", "").strip()
+        department_name = request.form.get("department_name", "").strip()
+        dep_type = request.form.get("dep_type", "").strip()
+        status = request.form.get("status", "").strip()
 
+        # Validation
+        if not dep_code or not department_name or not dep_type or not status:
+            flash("All department fields are required.", "error")
+            return render_template(
+                "setup/edit_department.html",
+                department=department
+            )
 
-        # Database connection later
+        # Check duplicate department code
+        existing_department = Department.query.filter(
+            Department.dep_code == dep_code,
+            Department.id != dep_id
+        ).first()
 
+        if existing_department:
+            flash("Department code already exists.", "error")
+            return render_template(
+                "setup/edit_department.html",
+                department=department
+            )
 
-        return redirect("/department_setup")
+        # Update department
+        department.dep_code = dep_code
+        department.department_name = department_name
+        department.dep_type = dep_type
+        department.status = status
 
+        db.session.commit()
+
+        flash("Department updated successfully!", "success")
+
+        return redirect(url_for("main.department_setup"))
 
     return render_template(
-        "setup/add_department.html"
+        "setup/edit_department.html",
+        department=department
     )
-
-
 
 # ==============================
 # Doctor Setup

@@ -1,93 +1,115 @@
-.department-page{
-
-padding:20px;
-
+.form-card {
+    background: white;
+    border-radius: 10px;
+    padding: 30px;
+    max-width: 520px;
+    margin: 0 auto;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    font-family: "Segoe UI", sans-serif;
 }
 
-
-.page-header{
-
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:20px;
-
+.form-card h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 20px;
 }
 
-
-.add-btn{
-
-background:#17b6c5;
-color:white;
-padding:10px 20px;
-border-radius:8px;
-text-decoration:none;
-
+.form-card form {
+    display: flex;
+    flex-direction: column;
 }
 
-
-
-.card{
-
-background:white;
-padding:25px;
-border-radius:12px;
-
+.form-card label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    margin-top: 16px;
+    margin-bottom: 6px;
 }
 
-
-
-table{
-
-width:100%;
-border-collapse:collapse;
-
+.form-card input,
+.form-card select {
+    padding: 10px 14px;
+    border: 1px solid #e0e0e6;
+    background: #f9f9fc;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: "Segoe UI", sans-serif;
+    color: #333;
+    outline: none;
+    transition: border-color 0.15s ease, background 0.15s ease;
 }
 
-
-th,td{
-
-padding:12px;
-border-bottom:1px solid #eee;
-text-align:left;
-
+.form-card input:focus,
+.form-card select:focus {
+    border-color: #17b6c5;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(23, 182, 197, 0.12);
 }
 
-
-
-.form-card{
-
-max-width:600px;
-margin:0 auto;
-
+.form-card button[type="submit"] {
+    margin-top: 26px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: none;
+    background: #17b6c5;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease;
 }
 
-
-
-input,select{
-
-width:100%;
-padding:12px;
-margin-bottom:15px;
-border:1px solid #ddd;
-border-radius:8px;
-
+.form-card button[type="submit"]:hover {
+    background: #139aa7;
 }
 
+/* ==============================
+   Success / Error Popup
+   ============================== */
+.flash-message {
+    width: fit-content;
+    min-width: 280px;
+    max-width: 450px;
 
-button{
+    margin: 0 auto 20px auto;
+    padding: 12px 20px;
 
-background:#17b6c5;
-color:white;
-padding:12px;
-border:none;
-border-radius:8px;
-width:100%;
+    border-radius: 8px;
 
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+
+    animation: messageSlideDown 0.3s ease-out;
 }
-.new-dept-btn {
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+
+/* Success */
+.flash-message.success {
+    background: #eaf8ef;
+    color: #1f7a3f;
+    border: 1px solid #28a745;
+}
+
+/* Error */
+.flash-message.error {
+    background: #fdecec;
+    color: #b42318;
+    border: 1px solid #dc3545;
+}
+
+/* Animation */
+@keyframes messageSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

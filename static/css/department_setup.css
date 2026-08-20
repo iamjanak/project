@@ -125,14 +125,22 @@
     background: none;
     cursor: pointer;
     font-size: 16px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    transition: background 0.15s ease;
+}
+
+.icon-btn:hover {
+    background: #f1f2f7;
 }
 
 .edit-btn {
     color: #17b6c5;
-}
-
-.delete-btn {
-    color: #e0384c;
 }
 
 /* Footer */
@@ -156,4 +164,128 @@
     border-radius: 6px;
     border: 1px solid #ddd;
     outline: none;
+}
+
+/* --- Add / Edit Department Form --- */
+
+.page-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #333;
+}
+
+.back-btn {
+    text-decoration: none;
+    color: #555;
+    background: #f1f2f7;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.15s ease;
+}
+
+.back-btn:hover {
+    background: #e4e5ec;
+}
+
+.form-wrapper {
+    background: white;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 24px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group-full {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 6px;
+}
+
+.required {
+    color: #e0384c;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 10px 14px;
+    border: 1px solid #e0e0e6;
+    background: #f9f9fc;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: "Segoe UI", sans-serif;
+    color: #333;
+    outline: none;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #17b6c5;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(23, 182, 197, 0.12);
+}
+
+.form-group textarea {
+    resize: vertical;
+    font-family: inherit;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 28px;
+    border-top: 1px solid #f0f0f0;
+    padding-top: 20px;
+}
+
+.cancel-btn {
+    padding: 10px 22px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: white;
+    color: #555;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.cancel-btn:hover {
+    background: #f1f2f7;
+}
+
+.save-btn {
+    padding: 10px 22px;
+    border-radius: 8px;
+    border: none;
+    background: #17b6c5;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.save-btn:hover {
+    background: #139aa7;
 }

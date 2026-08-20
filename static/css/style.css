@@ -42,7 +42,7 @@ body {
     display: block;
     padding: 10px;
     text-decoration: none;
-    color: #555;
+    color: #3c3c3c;
     border-radius: 8px;
     font-size: 14px;
 }
@@ -149,4 +149,45 @@ body {
 
     font-size: 20px;
 
+}
+
+html {
+    scroll-behavior: auto;
+}
+
+body {
+    margin: 0;
+}
+
+.menu a.dashboard-link {
+    font-size: 18px;   /* change this to whatever size you want */
+     display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 0;
+            padding: 12px 14px;
+            font-size: 17px;
+            color: #3d3c3c;
+            text-transform: uppercase;
+            font-weight: 700;
+            cursor: pointer;
+            user-select: none;
+            border-radius: 12px;
+        
+}
+.menu a.dashboard-link {
+    font-size: 18px;   /* change this to whatever size you want */
+    display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 0;
+            padding: 12px 12px;
+            font-size: 14px;
+            color: #999;
+            text-transform: uppercase;
+            font-weight: 700;
+            cursor: pointer;
+            user-select: none;
+            border-radius: 8px;
+        
 }

@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit Department
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/add_department.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="card form-card">
+
+    <h2>Edit Department</h2>
+
+    <form method="POST" action="{{ url_for('main.edit_department', dep_id=department.id) }}">
+
+        <!-- Department Code -->
+        <label for="dep_code">Department Code</label>
+
+        <input
+            type="text"
+            id="dep_code"
+            name="dep_code"
+            value="{{ department.dep_code }}"
+            placeholder="Enter department code"
+            required
+        >
+
+
+        <!-- Department Name -->
+        <label for="department_name">Department Name</label>
+
+        <input
+            type="text"
+            id="department_name"
+            name="department_name"
+            value="{{ department.department_name }}"
+            placeholder="Enter department name"
+            required
+        >
+
+
+        <!-- Department Type -->
+        <label for="dep_type">Type of Department</label>
+
+        <select
+            id="dep_type"
+            name="dep_type"
+            required
+        >
+
+            <option value="">Select Department Type</option>
+
+            <option value="Clinical"
+                {% if department.dep_type == "Clinical" %}selected{% endif %}>
+                Clinical
+            </option>
+
+            <option value="Bio Chemistry"
+                {% if department.dep_type == "Bio Chemistry" %}selected{% endif %}>
+                Bio Chemistry
+            </option>
+
+            <option value="Pathology"
+                {% if department.dep_type == "Pathology" %}selected{% endif %}>
+                Pathology
+            </option>
+
+            <option value="Normal"
+                {% if department.dep_type == "Normal" %}selected{% endif %}>
+                Normal
+            </option>
+
+        </select>
+
+
+        <!-- Status -->
+        <label for="status">Status</label>
+
+        <select
+            id="status"
+            name="status"
+            required
+        >
+
+            <option value="Active"
+                {% if department.status == "Active" %}selected{% endif %}>
+                Active
+            </option>
+
+            <option value="Inactive"
+                {% if department.status == "Inactive" %}selected{% endif %}>
+                Inactive
+            </option>
+
+        </select>
+
+
+        <!-- Save -->
+        <button type="submit">
+            Update Department
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}

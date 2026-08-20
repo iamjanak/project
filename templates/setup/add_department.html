@@ -1,68 +1,74 @@
 {% extends "base.html" %}
 
-
 {% block title %}
 Add Department
 {% endblock %}
-
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/add_department.css') }}">
 {% endblock %}
 
-
 {% block content %}
-
 
 <div class="card form-card">
 
+    <!-- Success / Error Message -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <!-- <div class="flash-message {{ category }}">
+                    {{ message }}
+                </div> -->
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 
-<h2>Add Department</h2>
+    <h2>Add Department</h2>
 
+    <form method="POST" action="{{ url_for('main.add_department') }}">
 
-<form>
+        <!-- Department Code -->
+        <label for="dep_code">Department Code</label>
+        <input
+            type="text"
+            id="dep_code"
+            name="dep_code"
+            placeholder="Enter department code"
+            required
+        >
 
+        <!-- Department Name -->
+        <label for="department_name">Department Name</label>
+        <input
+            type="text"
+            id="department_name"
+            name="department_name"
+            placeholder="Enter department name"
+            required
+        >
 
-<label>Department Code</label>
-<input type="text" placeholder="Enter department code">
+        <!-- Type of Department -->
+        <label for="dep_type">Type of Department</label>
+        <select id="dep_type" name="dep_type" required>
+            <option value="">Select Department Type</option>
+            <option value="Clinical">Clinical</option>
+            <option value="Bio Chemistry">Bio Chemistry</option>
+            <option value="Pathology">Pathology</option>
+            <option value="Normal">Normal</option>
+        </select>
 
+        <!-- Status -->
+        <label for="status">Status</label>
+        <select id="status" name="status" required>
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+        </select>
 
-<label>Department Name</label>
-<input type="text" placeholder="Enter department name">
+        <!-- Save -->
+        <button type="submit">Save Department</button>
 
-
-<label>Type of Department</label>
-
-<select>
-
-<option>Clinical</option>
-<option>Bio Chemistry</option>
-<option>Pathology</option>
-<option>Normal</option>
-
-</select>
-
-
-<label>Status</label>
-
-<select>
-
-<option>Active</option>
-<option>Inactive</option>
-
-</select>
-
-
-
-<button type="submit">
-Save Department
-</button>
-
-
-</form>
-
+    </form>
 
 </div>
-
 
 {% endblock %}
