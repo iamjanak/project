@@ -1,865 +1,1093 @@
-<!DOCTYPE html>
-<html lang="en">
+    <!DOCTYPE html>
+    <html lang="en">
 
-<head>
+    <head>
 
-    <meta charset="UTF-8">
+        <meta charset="UTF-8">
 
-    <title>
-        {% block title %}SwasthaCare{% endblock %}
-    </title>
+        <title>
+            {% block title %}SwasthaCare{% endblock %}
+        </title>
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/style.css') }}">
+        <link rel="stylesheet"
+            href="{{ url_for('static', filename='css/style.css') }}">
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/dashboard.css') }}">
+        <link rel="stylesheet"
+            href="{{ url_for('static', filename='css/dashboard.css') }}">
 
-    {% block extra_css %}{% endblock %}
+        {% block extra_css %}{% endblock %}
 
-    <style>
+        <style>
 
-        /* ==========================================
-           FLASH MESSAGE
-           ========================================== */
+            /* ==========================================
+            FLASH MESSAGE
+            ========================================== */
 
-        .flash-container {
+            .flash-container {
 
-            position: fixed;
+                position: fixed;
 
-            top: 85px;
+                top: 85px;
 
-            left: calc(50% + 135px);
+                left: calc(50% + 135px);
 
-            transform: translateX(-50%);
+                transform: translateX(-50%);
 
-            z-index: 9999;
+                z-index: 9999;
 
-            display: flex;
+                display: flex;
 
-            flex-direction: column;
+                flex-direction: column;
 
-            align-items: center;
+                align-items: center;
 
-            gap: 10px;
+                gap: 10px;
 
-            width: max-content;
+                width: max-content;
 
-            pointer-events: none;
-        }
-
-
-        .flash-message {
-
-            min-width: 320px;
-
-            max-width: 500px;
-
-            padding: 13px 22px;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            gap: 10px;
-
-            border-radius: 8px;
-
-            font-size: 14px;
-
-            font-weight: 500;
-
-            box-shadow:
-                0 5px 18px rgba(0, 0, 0, 0.15);
-
-            animation: flashSlideDown 0.35s ease;
-        }
-
-
-        .flash-message.success {
-
-            background-color: #eaf8ef;
-
-            color: #207a3e;
-
-            border: 1px solid #35a853;
-        }
-
-
-        .flash-message.error {
-
-            background-color: #fdecec;
-
-            color: #b42318;
-
-            border: 1px solid #dc3545;
-        }
-
-
-        .flash-message.warning {
-
-            background-color: #fff7e6;
-
-            color: #9a6700;
-
-            border: 1px solid #f0ad4e;
-        }
-
-
-        .flash-icon {
-
-            font-size: 18px;
-
-            font-weight: bold;
-        }
-
-
-        @keyframes flashSlideDown {
-
-            from {
-
-                opacity: 0;
-
-                transform: translateY(-20px);
+                pointer-events: none;
             }
 
-            to {
+
+            .flash-message {
+
+                min-width: 320px;
+
+                max-width: 500px;
+
+                padding: 13px 22px;
+
+                display: flex;
+
+                align-items: center;
+
+                justify-content: center;
+
+                gap: 10px;
+
+                border-radius: 8px;
+
+                font-size: 14px;
+
+                font-weight: 500;
+
+                box-shadow:
+                    0 5px 18px rgba(0, 0, 0, 0.15);
+
+                animation: flashSlideDown 0.35s ease;
+            }
+
+
+            .flash-message.success {
+
+                background-color: #eaf8ef;
+
+                color: #207a3e;
+
+                border: 1px solid #35a853;
+            }
+
+
+            .flash-message.error {
+
+                background-color: #fdecec;
+
+                color: #b42318;
+
+                border: 1px solid #dc3545;
+            }
+
+
+            .flash-message.warning {
+
+                background-color: #fff7e6;
+
+                color: #9a6700;
+
+                border: 1px solid #f0ad4e;
+            }
+
+
+            .flash-icon {
+
+                font-size: 18px;
+
+                font-weight: bold;
+            }
+
+
+            @keyframes flashSlideDown {
+
+                from {
+
+                    opacity: 0;
+
+                    transform: translateY(-20px);
+                }
+
+                to {
+
+                    opacity: 1;
+
+                    transform: translateY(0);
+                }
+            }
+
+
+            /* ==========================================
+            PAGE CONTENT LOADING
+            ========================================== */
+
+            #page-content {
 
                 opacity: 1;
 
-                transform: translateY(0);
+                transition: opacity 0.12s ease;
             }
-        }
 
 
-        /* ==========================================
-           PAGE CONTENT LOADING
-           ========================================== */
+            #page-content.loading {
 
-        #page-content {
-
-            opacity: 1;
-
-            transition: opacity 0.12s ease;
-        }
+                opacity: 0.65;
+            }
 
 
-        #page-content.loading {
+            /* ==========================================
+            LOGOUT TOAST
+            ========================================== */
 
-            opacity: 0.65;
-        }
+            .logout-toast {
 
+                position: fixed;
 
-        /* ==========================================
-           LOGOUT TOAST
-           ========================================== */
+                top: 20px;
 
-        .logout-toast {
+                right: 25px;
 
-            position: fixed;
+                background: white;
 
-            top: 20px;
+                padding: 15px 25px;
 
-            right: 25px;
+                border-radius: 10px;
 
-            background: white;
+                box-shadow:
+                    0 5px 20px rgba(0,0,0,0.15);
 
-            padding: 15px 25px;
+                display: flex;
 
-            border-radius: 10px;
+                gap: 10px;
 
-            box-shadow:
-                0 5px 20px rgba(0,0,0,0.15);
+                align-items: center;
 
-            display: flex;
+                font-size: 15px;
 
-            gap: 10px;
+                transform: translateX(150%);
 
-            align-items: center;
+                transition: 0.4s ease;
 
-            font-size: 15px;
-
-            transform: translateX(150%);
-
-            transition: 0.4s ease;
-
-            z-index: 99999;
-        }
+                z-index: 99999;
+            }
 
 
-        .logout-toast.show {
+            .logout-toast.show {
 
-            transform: translateX(0);
-        }
-
-
-        .logout-toast span {
-
-            color: green;
-
-            font-size: 20px;
-        }
+                transform: translateX(0);
+            }
 
 
-        /* ==========================================
-           COLLAPSIBLE SIDEBAR SECTIONS
-           ========================================== */
+            .logout-toast span {
 
-        .menu-group {
-            margin-top: 10px;
-        }
+                color: green;
 
-        .menu-group .menu-title {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin: 0;
-            padding: 10px 12px;
-            font-size: 14px;
-            color: #999;
-            text-transform: uppercase;
-            font-weight: 700;
-            cursor: pointer;
-            user-select: none;
-            border-radius: 8px;
-        }
-
-        .menu-group .menu-title:hover {
-            background: #f5f6fb;
-        }
-
-        .menu-group .chevron {
-            width: 14px;
-            height: 14px;
-            stroke: #999;
-            transition: transform 0.2s ease;
-            flex-shrink: 0;
-        }
-
-        .menu-group.open .chevron {
-            transform: rotate(180deg);
-        }
-
-        .menu-group .submenu {
-            list-style: none;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.25s ease;
-        }
-
-        .menu-group.open .submenu {
-            max-height: 600px;
-        }
-
-        .menu-group .submenu li {
-            margin-bottom: 3px;
-        }
-
-    </style>
-
-</head>
+                font-size: 20px;
+            }
 
 
-<body>
+            /* ==========================================
+            COLLAPSIBLE SIDEBAR SECTIONS
+            ========================================== */
+
+            .menu-group {
+                margin-top: 10px;
+            }
+
+            .menu-group .menu-title {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin: 0;
+                padding: 10px 12px;
+                font-size: 14px;
+                color: #999;
+                text-transform: uppercase;
+                font-weight: 700;
+                cursor: pointer;
+                user-select: none;
+                border-radius: 8px;
+            }
+
+            .menu-group .menu-title:hover {
+                background: #f5f6fb;
+            }
+
+            .menu-group .chevron {
+                width: 14px;
+                height: 14px;
+                stroke: #999;
+                transition: transform 0.2s ease;
+                flex-shrink: 0;
+            }
+
+            .menu-group.open .chevron {
+                transform: rotate(180deg);
+            }
+
+            .menu-group .submenu {
+                list-style: none;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.25s ease;
+            }
+
+            .menu-group.open .submenu {
+                max-height: 600px;
+            }
+
+            .menu-group .submenu li {
+                margin-bottom: 3px;
+            }
+
+        </style>
+
+    </head>
 
 
-<div class="dashboard-container">
+    <body>
 
 
-    <!-- ==========================================
-         SIDEBAR
-         ========================================== -->
+    <div class="dashboard-container">
 
-    <aside class="sidebar">
 
-        <div class="brand">
+        <!-- ==========================================
+            SIDEBAR
+            ========================================== -->
 
-            <img
-                src="{{ url_for('static', filename='images/logo.png') }}"
-                class="logo"
-                alt="Logo"
+        <aside class="sidebar">
+
+            <div class="brand">
+
+                <img
+                    src="{{ url_for('static', filename='images/logo.png') }}"
+                    class="logo"
+                    alt="Logo"
+                >
+
+                <h1 class="company-name">
+                    SwasthaCare
+                </h1>
+
+            </div>
+
+
+
+            <ul class="menu">
+
+
+                <!-- Dashboard -->
+
+                <li class="{% if active_page == 'dashboard' %}active{% endif %}">
+        <a href="/dashboard" class="dashboard-link">
+            📊 Dashboard
+        </a>
+    </li>
+
+
+                <!-- ==================================
+                    PATIENT MANAGEMENT
+                    ================================== -->
+
+                <li class="menu-group">
+
+                    <div class="menu-title" onclick="toggleMenuGroup(this)">
+                        <span>Patient Management</span>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+
+                    <ul class="submenu">
+
+                        <li>
+                            <a href="/registration">
+                                🧑 New Patient Registration
+                            </a>
+                        </li>
+
+                        <li class="{% if active_page == 'patient_list' %}active{% endif %}">
+                            <a href="{{ url_for('main.patient_list') }}">
+                                👥 Patient List
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#">
+                                🔄 Patient Follow Up
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#">
+                                🏥 Patient Admission
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#">
+                                ✏️ Patient Information Correction
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#">
+                                📄 Patient Reports
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </li>
+
+
+                <!-- ==================================
+                    BILLING
+                    ================================== -->
+
+                <li class="menu-group">
+
+                    <div class="menu-title" onclick="toggleMenuGroup(this)">
+                        <span>Billing</span>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+
+                    <ul class="submenu">
+
+                        <li>
+                            <a href="{{ url_for('main.billing') }}">
+                                💳 Patient Billing
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#">
+                                💰 Deposit
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#">
+                                ↩ Refund
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#">
+                                🧾 Bill Details
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </li>
+
+
+                <!-- ==================================
+                    SETUP
+                    ================================== -->
+
+                <li class="menu-group">
+
+                    <div class="menu-title" onclick="toggleMenuGroup(this)">
+                        <span>Setup</span>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+
+                    <ul class="submenu">
+
+                        <li>
+                            <a href="{{ url_for('main.user_setup') }}">
+                                👤 User Setup
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ url_for('main.doctor_setup') }}">
+                                👨‍⚕️ Doctor Setup
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ url_for('main.department_setup') }}">
+                                🏢 Department Setup
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#">
+                                🧪 Test Setup
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#">
+                                🛏 Ward Setup
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#">
+                                🚪 Room Setup
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#">
+                                🛌 Bed Setup
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </li>
+
+
+            <!-- ==================================
+        REPORTS
+    ================================== -->
+
+    <li class="menu-group">
+
+        <div class="menu-title" onclick="toggleMenuGroup(this)">
+            <span>Reports</span>
+
+            <svg
+                class="chevron"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
             >
-
-            <h1 class="company-name">
-                SwasthaCare
-            </h1>
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
 
         </div>
 
 
+        <ul class="submenu">
 
-        <ul class="menu">
-
-
-            <!-- Dashboard -->
-
-            <li class="{% if active_page == 'dashboard' %}active{% endif %}">
-    <a href="/dashboard" class="dashboard-link">
-        📊 Dashboard
+            <!-- Patient Report -->
+            <li class="{% if active_page == 'patient_report' %}active{% endif %}">
+    <a href="{{ url_for('main.patient_report') }}" data-normal-nav="true">
+        📋 Patient Report
     </a>
 </li>
 
 
-            <!-- ==================================
-                 PATIENT MANAGEMENT
-                 ================================== -->
+            <!-- Billing Reports -->
+            <li>
 
-            <li class="menu-group">
-
-                <div class="menu-title" onclick="toggleMenuGroup(this)">
-                    <span>Patient Management</span>
-                    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
-                </div>
-
-                <ul class="submenu">
-
-                    <li>
-                        <a href="/registration">
-                            🧑 New Patient Registration
-                        </a>
-                    </li>
-
-                    <li class="{% if active_page == 'patient_list' %}active{% endif %}">
-                        <a href="{{ url_for('main.patient_list') }}">
-                            👥 Patient List
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="#">
-                            🔄 Patient Follow Up
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="#">
-                            🏥 Patient Admission
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="#">
-                            ✏️ Patient Information Correction
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="#">
-                            📄 Patient Reports
-                        </a>
-                    </li>
-
-                </ul>
-
-            </li>
-
-
-            <!-- ==================================
-                 BILLING
-                 ================================== -->
-
-            <li class="menu-group">
-
-                <div class="menu-title" onclick="toggleMenuGroup(this)">
-                    <span>Billing</span>
-                    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
-                </div>
-
-                <ul class="submenu">
-
-                    <li>
-                        <a href="{{ url_for('main.billing') }}">
-                            💳 Patient Billing
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="#">
-                            💰 Deposit
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="#">
-                            ↩ Refund
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="#">
-                            🧾 Bill Details
-                        </a>
-                    </li>
-
-                </ul>
-
-            </li>
-
-
-            <!-- ==================================
-                 SETUP
-                 ================================== -->
-
-            <li class="menu-group">
-
-                <div class="menu-title" onclick="toggleMenuGroup(this)">
-                    <span>Setup</span>
-                    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
-                </div>
-
-                <ul class="submenu">
-
-                    <li>
-                        <a href="{{ url_for('main.user_setup') }}">
-                            👤 User Setup
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="{{ url_for('main.doctor_setup') }}">
-                            👨‍⚕️ Doctor Setup
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="{{ url_for('main.department_setup') }}">
-                            🏢 Department Setup
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="#">
-                            🧪 Test Setup
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="#">
-                            🛏 Ward Setup
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="#">
-                            🚪 Room Setup
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="#">
-                            🛌 Bed Setup
-                        </a>
-                    </li>
-
-                </ul>
-
-            </li>
-
-
-            <!-- ==================================
-                 REPORTS
-                 ================================== -->
-
-            <li class="menu-group">
-
-                <div class="menu-title" onclick="toggleMenuGroup(this)">
-                    <span>Reports</span>
-                    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
-                </div>
-
-                <ul class="submenu">
-
-                    <li>
-                        <a href="#">
-                            📊 Patient Reports
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="#">
-                            💵 Billing Reports
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="#">
-                            📅 Daily Collection
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="#">
-                            🏥 Department Reports
-                        </a>
-                    </li>
-
-                </ul>
-
-            </li>
-
-
-            <!-- ==================================
-                 LOGOUT
-                 ================================== -->
-
-            <li class="logout-menu">
-
-                <a
-                    href="{{ url_for('main.logout') }}"
-                >
-                    🚪 Logout
+                <a href="#">
+                    💵 Billing Reports
                 </a>
 
             </li>
 
 
+            <!-- Daily Collection -->
+            <li>
+
+                <a href="#">
+                    📅 Daily Collection
+                </a>
+
+            </li>
+
+
+            <!-- Department Reports -->
+            <li>
+
+                <a href="#">
+                    🏥 Department Reports
+                </a>
+
+            </li>
+
         </ul>
 
-    </aside>
+    </li>
 
+                <!-- ==================================
+                    LOGOUT
+                    ================================== -->
 
-    <!-- ==========================================
-         MAIN CONTENT
-         ========================================== -->
-
-    <main class="main-content">
-
-
-        <!-- ======================================
-             TOP HEADER
-             ====================================== -->
-
-        <div class="top-header">
-
-            <div class="header-left">
-
-                <h3>
-                    SwasthaCare Hospital
-                </h3>
-
-            </div>
-
-
-            <div class="header-right">
-
-
-                <!-- Notification -->
-
-                <div class="notification-icon">
-
-                    🔔
-
-                    <span class="notification-badge">
-                        3
-                    </span>
-
-                </div>
-
-
-                <!-- User -->
-
-                <div class="user-menu">
-
-                    <span class="user-name">
-                        Admin
-                    </span>
-
+                <li class="logout-menu">
 
                     <a
                         href="{{ url_for('main.logout') }}"
-                        class="logout-btn"
                     >
-                        Logout
+                        🚪 Logout
                     </a>
+
+                </li>
+
+
+            </ul>
+
+        </aside>
+
+
+        <!-- ==========================================
+            MAIN CONTENT
+            ========================================== -->
+
+        <main class="main-content">
+
+
+            <!-- ======================================
+                TOP HEADER
+                ====================================== -->
+
+            <div class="top-header">
+
+                <div class="header-left">
+
+                    <h3>
+                        SwasthaCare Hospital
+                    </h3>
+
+                </div>
+
+
+                <div class="header-right">
+
+
+                    <!-- Notification -->
+
+                    <div class="notification-icon">
+
+                        🔔
+
+                        <span class="notification-badge">
+                            3
+                        </span>
+
+                    </div>
+
+
+                    <!-- User -->
+
+                    <div class="user-menu">
+
+                        <span class="user-name">
+                            Admin
+                        </span>
+
+
+                        <a
+                            href="{{ url_for('main.logout') }}"
+                            class="logout-btn"
+                        >
+                            Logout
+                        </a>
+
+                    </div>
 
                 </div>
 
             </div>
 
-        </div>
+
+            <!-- ======================================
+                FLASH MESSAGE
+                ====================================== -->
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+
+                {% if messages %}
+
+                    <div class="flash-container">
+
+                        {% for category, message in messages %}
+
+                            <div class="flash-message {{ category }}">
+
+                                <span class="flash-icon">
+
+                                    {% if category == "success" %}
+
+                                        ✓
+
+                                    {% elif category == "error" %}
+
+                                        !
+
+                                    {% else %}
+
+                                        !
+
+                                    {% endif %}
+
+                                </span>
 
 
-        <!-- ======================================
-             FLASH MESSAGE
-             ====================================== -->
+                                <span>
+                                    {{ message }}
+                                </span>
 
-        {% with messages = get_flashed_messages(with_categories=true) %}
+                            </div>
 
-            {% if messages %}
+                        {% endfor %}
 
-                <div class="flash-container">
+                    </div>
 
-                    {% for category, message in messages %}
+                {% endif %}
 
-                        <div class="flash-message {{ category }}">
-
-                            <span class="flash-icon">
-
-                                {% if category == "success" %}
-
-                                    ✓
-
-                                {% elif category == "error" %}
-
-                                    !
-
-                                {% else %}
-
-                                    !
-
-                                {% endif %}
-
-                            </span>
+            {% endwith %}
 
 
-                            <span>
-                                {{ message }}
-                            </span>
+            <!-- ======================================
+                PAGE CONTENT
+                ====================================== -->
 
-                        </div>
+            <div id="page-content">
 
-                    {% endfor %}
+                {% block content %}
 
-                </div>
+                {% endblock %}
 
-            {% endif %}
-
-        {% endwith %}
+            </div>
 
 
-        <!-- ======================================
-             PAGE CONTENT
-             ====================================== -->
+        </main>
 
-        <div id="page-content">
-
-            {% block content %}
-
-            {% endblock %}
-
-        </div>
+    </div>
 
 
-    </main>
+    <!-- ==========================================
+        LOGOUT TOAST
+        ========================================== -->
 
-</div>
+    <div id="logoutToast" class="logout-toast">
 
+        <span>
+            ✓
+        </span>
 
-<!-- ==========================================
-     LOGOUT TOAST
-     ========================================== -->
+        Logged out successfully
 
-<div id="logoutToast" class="logout-toast">
-
-    <span>
-        ✓
-    </span>
-
-    Logged out successfully
-
-</div>
+    </div>
 
 
-<!-- ==========================================
-     COLLAPSIBLE SIDEBAR SECTIONS
-     ========================================== -->
+    <!-- ==========================================
+        COLLAPSIBLE SIDEBAR SECTIONS
+        ========================================== -->
 
-<script>
+    <script>
 
-function toggleMenuGroup(titleEl) {
-    const group = titleEl.closest('.menu-group');
-    group.classList.toggle('open');
-}
-
-document.addEventListener("DOMContentLoaded", function () {
-
-    // Auto-open whichever section contains the currently active link,
-    // so the user lands on a page and sees it highlighted, expanded.
-    const activeLink =
-        document.querySelector('.menu-group .submenu a.active, .menu-group .submenu li.active a');
-
-    if (activeLink) {
-        const group = activeLink.closest('.menu-group');
-        if (group) {
-            group.classList.add('open');
-        }
+    function toggleMenuGroup(titleEl) {
+        const group = titleEl.closest('.menu-group');
+        group.classList.toggle('open');
     }
 
-});
+    document.addEventListener("DOMContentLoaded", function () {
 
-</script>
+        // Auto-open whichever section contains the currently active link,
+        // so the user lands on a page and sees it highlighted, expanded.
+        const activeLink =
+            document.querySelector('.menu-group .submenu a.active, .menu-group .submenu li.active a');
 
-
-<!-- ==========================================
-     AJAX PAGE NAVIGATION
-     ========================================== -->
-
-<script>
-
-document.addEventListener("DOMContentLoaded", function () {
-
-    const pageContent =
-        document.getElementById("page-content");
-
-
-    /*
-     * ==========================================
-     * Sync page-specific stylesheets
-     *
-     * Each page's extra-css template block links
-     * live in head, not inside #page-content, so
-     * when we swap only #page-content via AJAX,
-     * those stylesheets never get loaded. This
-     * pulls any NEW link rel=stylesheet tags found
-     * in the fetched page's head into our real
-     * head, skipping ones that are already present.
-     * ==========================================
-     */
-
-    function syncStylesheets(newDocument) {
-
-        const newLinks =
-            newDocument.querySelectorAll(
-                'head link[rel="stylesheet"]'
-            );
-
-
-        newLinks.forEach(function (newLink) {
-
-            const href = newLink.getAttribute("href");
-
-            if (!href) {
-                return;
+        if (activeLink) {
+            const group = activeLink.closest('.menu-group');
+            if (group) {
+                group.classList.add('open');
             }
+        }
+
+    });
+
+    </script>
 
 
-            const alreadyLoaded =
-                document.querySelector(
-                    'head link[rel="stylesheet"][href="' +
-                    href +
-                    '"]'
+    <!-- ==========================================
+        AJAX PAGE NAVIGATION
+        ========================================== -->
+
+    <script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const pageContent =
+            document.getElementById("page-content");
+
+
+        /*
+        * ==========================================
+        * Sync page-specific stylesheets
+        *
+        * Each page's extra-css template block links
+        * live in head, not inside #page-content, so
+        * when we swap only #page-content via AJAX,
+        * those stylesheets never get loaded. This
+        * pulls any NEW link rel=stylesheet tags found
+        * in the fetched page's head into our real
+        * head, skipping ones that are already present.
+        * ==========================================
+        */
+
+        function syncStylesheets(newDocument) {
+
+            const newLinks =
+                newDocument.querySelectorAll(
+                    'head link[rel="stylesheet"]'
                 );
 
 
-            if (!alreadyLoaded) {
+            newLinks.forEach(function (newLink) {
 
-                const linkTag =
-                    document.createElement("link");
+                const href = newLink.getAttribute("href");
 
-                linkTag.rel = "stylesheet";
-                linkTag.href = href;
-
-                document.head.appendChild(linkTag);
-            }
-
-        });
-
-    }
+                if (!href) {
+                    return;
+                }
 
 
-    /*
-     * Sidebar navigation
-     */
-
-    document.querySelectorAll(".menu a").forEach(function (link) {
-
-        link.addEventListener("click", async function (event) {
-
-            const url = this.href;
+                const alreadyLoaded =
+                    document.querySelector(
+                        'head link[rel="stylesheet"][href="' +
+                        href +
+                        '"]'
+                    );
 
 
-            /*
-             * Ignore:
-             *
-             * 1. # links
-             * 2. logout
-             * 3. external links
-             */
+                if (!alreadyLoaded) {
 
-            if (
-                !url ||
-                url.endsWith("#") ||
-                this.closest(".logout-menu") ||
-                this.target === "_blank"
-            ) {
+                    const linkTag =
+                        document.createElement("link");
 
-                return;
-            }
+                    linkTag.rel = "stylesheet";
+                    linkTag.href = href;
+
+                    document.head.appendChild(linkTag);
+                }
+
+            });
+
+        }
 
 
-            /*
-             * Only handle same website links
-             */
+        /*
+        * Sidebar navigation
+        */
 
-            if (
-                new URL(url).origin !== window.location.origin
-            ) {
+        document.querySelectorAll(".menu a").forEach(function (link) {
 
-                return;
-            }
+            link.addEventListener("click", async function (event) {
 
-
-            /*
-             * Stop normal browser reload
-             */
-
-            event.preventDefault();
-
-
-            try {
-
-                pageContent.classList.add("loading");
+                const url = this.href;
 
 
                 /*
-                 * Request the new Flask page
-                 */
+                * Ignore:
+                *
+                * 1. # links
+                * 2. logout
+                * 3. external links
+                */
+
+                if (
+                    !url ||
+                    url.endsWith("#") ||
+                    this.closest(".logout-menu") ||
+                    this.target === "_blank"
+                ) {
+
+                    return;
+                }
+
+
+                /*
+                * Only handle same website links
+                */
+
+                if (
+                    new URL(url).origin !== window.location.origin
+                ) {
+
+                    return;
+                }
+
+
+                /*
+                * Stop normal browser reload
+                */
+
+                event.preventDefault();
+
+
+                try {
+
+                    pageContent.classList.add("loading");
+
+
+                    /*
+                    * Request the new Flask page
+                    */
+
+                    const response =
+                        await fetch(url, {
+
+                            method: "GET",
+
+                            headers: {
+
+                                "X-Requested-With":
+                                    "XMLHttpRequest"
+
+                            }
+
+                        });
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            "Page could not be loaded."
+                        );
+
+                    }
+
+
+                    /*
+                    * Get returned HTML
+                    */
+
+                    const html =
+                        await response.text();
+
+
+                    /*
+                    * Convert response into DOM
+                    */
+
+                    const parser =
+                        new DOMParser();
+
+
+                    const newDocument =
+                        parser.parseFromString(
+                            html,
+                            "text/html"
+                        );
+
+
+                    /*
+                    * Find the page content
+                    */
+
+                    const newContent =
+                        newDocument.querySelector(
+                            "#page-content"
+                        );
+
+
+                    if (!newContent) {
+
+                        /*
+                        * If the page doesn't contain
+                        * our content wrapper, use
+                        * normal navigation.
+                        */
+
+                        window.location.href = url;
+
+                        return;
+                    }
+
+
+                    /*
+                    * Load this page's specific CSS
+                    * (extra_css block) before swapping
+                    * content, so styles are ready.
+                    */
+
+                    syncStylesheets(newDocument);
+
+
+                    /*
+                    * Replace ONLY page content
+                    */
+
+                    pageContent.innerHTML =
+                        newContent.innerHTML;
+
+
+                    /*
+                    * Update browser URL
+                    */
+
+                    window.history.pushState(
+                        {},
+                        "",
+                        url
+                    );
+
+
+                    /*
+                    * Update page title
+                    */
+
+                    const newTitle =
+                        newDocument.querySelector("title");
+
+                    if (newTitle) {
+
+                        document.title =
+                            newTitle.textContent;
+                    }
+
+
+                    /*
+                    * Update active sidebar item
+                    */
+
+                    document
+                        .querySelectorAll(".menu li")
+                        .forEach(function (item) {
+
+                            item.classList.remove("active");
+
+                        });
+
+
+                    const currentLink =
+                        document.querySelector(
+                            '.menu a[href="' +
+                            url.replace(
+                                window.location.origin,
+                                ""
+                            ) +
+                            '"]'
+                        );
+
+
+                    if (currentLink) {
+
+                        currentLink
+                            .parentElement
+                            .classList
+                            .add("active");
+
+
+                        const parentGroup =
+                            currentLink.closest(".menu-group");
+
+                        if (parentGroup) {
+
+                            parentGroup.classList.add("open");
+                        }
+                    }
+
+
+                    /*
+                    * Scroll main content to top
+                    * without browser page reload.
+                    */
+
+                    document
+                        .querySelector(".main-content")
+                        .scrollTop = 0;
+
+
+                    /*
+                    * Run scripts that were included
+                    * inside the newly loaded content.
+                    */
+
+                    executeScripts(pageContent);
+
+
+                } catch (error) {
+
+                    console.error(error);
+
+
+                    /*
+                    * If AJAX fails, use normal
+                    * Flask navigation.
+                    */
+
+                    window.location.href = url;
+
+                } finally {
+
+                    setTimeout(function () {
+
+                        pageContent.classList.remove(
+                            "loading"
+                        );
+
+                    }, 100);
+
+                }
+
+            });
+
+        });
+
+
+        /*
+        * Browser Back / Forward buttons
+        */
+
+        window.addEventListener(
+            "popstate",
+            function () {
+
+                loadPage(
+                    window.location.href
+                );
+
+            }
+        );
+
+
+        /*
+        * Load a page using AJAX
+        */
+
+        async function loadPage(url) {
+
+            try {
 
                 const response =
-                    await fetch(url, {
-
-                        method: "GET",
-
-                        headers: {
-
-                            "X-Requested-With":
-                                "XMLHttpRequest"
-
-                        }
-
-                    });
-
+                    await fetch(url);
 
                 if (!response.ok) {
 
                     throw new Error(
-                        "Page could not be loaded."
+                        "Navigation failed"
                     );
 
                 }
 
 
-                /*
-                 * Get returned HTML
-                 */
-
                 const html =
                     await response.text();
 
-
-                /*
-                 * Convert response into DOM
-                 */
 
                 const parser =
                     new DOMParser();
@@ -872,10 +1100,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     );
 
 
-                /*
-                 * Find the page content
-                 */
-
                 const newContent =
                     newDocument.querySelector(
                         "#page-content"
@@ -884,52 +1108,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 if (!newContent) {
 
-                    /*
-                     * If the page doesn't contain
-                     * our content wrapper, use
-                     * normal navigation.
-                     */
-
-                    window.location.href = url;
+                    window.location.reload();
 
                     return;
                 }
 
 
                 /*
-                 * Load this page's specific CSS
-                 * (extra_css block) before swapping
-                 * content, so styles are ready.
-                 */
+                * Load this page's specific CSS
+                * before swapping content.
+                */
 
                 syncStylesheets(newDocument);
 
-
-                /*
-                 * Replace ONLY page content
-                 */
 
                 pageContent.innerHTML =
                     newContent.innerHTML;
 
 
-                /*
-                 * Update browser URL
-                 */
-
-                window.history.pushState(
-                    {},
-                    "",
-                    url
-                );
-
-
-                /*
-                 * Update page title
-                 */
-
                 const newTitle =
                     newDocument.querySelector("title");
+
 
                 if (newTitle) {
 
@@ -938,63 +1137,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
 
-                /*
-                 * Update active sidebar item
-                 */
-
-                document
-                    .querySelectorAll(".menu li")
-                    .forEach(function (item) {
-
-                        item.classList.remove("active");
-
-                    });
-
-
-                const currentLink =
-                    document.querySelector(
-                        '.menu a[href="' +
-                        url.replace(
-                            window.location.origin,
-                            ""
-                        ) +
-                        '"]'
-                    );
-
-
-                if (currentLink) {
-
-                    currentLink
-                        .parentElement
-                        .classList
-                        .add("active");
-
-
-                    const parentGroup =
-                        currentLink.closest(".menu-group");
-
-                    if (parentGroup) {
-
-                        parentGroup.classList.add("open");
-                    }
-                }
-
-
-                /*
-                 * Scroll main content to top
-                 * without browser page reload.
-                 */
-
-                document
-                    .querySelector(".main-content")
-                    .scrollTop = 0;
-
-
-                /*
-                 * Run scripts that were included
-                 * inside the newly loaded content.
-                 */
-
                 executeScripts(pageContent);
 
 
@@ -1002,222 +1144,102 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 console.error(error);
 
-
-                /*
-                 * If AJAX fails, use normal
-                 * Flask navigation.
-                 */
-
-                window.location.href = url;
-
-            } finally {
-
-                setTimeout(function () {
-
-                    pageContent.classList.remove(
-                        "loading"
-                    );
-
-                }, 100);
-
-            }
-
-        });
-
-    });
-
-
-    /*
-     * Browser Back / Forward buttons
-     */
-
-    window.addEventListener(
-        "popstate",
-        function () {
-
-            loadPage(
-                window.location.href
-            );
-
-        }
-    );
-
-
-    /*
-     * Load a page using AJAX
-     */
-
-    async function loadPage(url) {
-
-        try {
-
-            const response =
-                await fetch(url);
-
-            if (!response.ok) {
-
-                throw new Error(
-                    "Navigation failed"
-                );
-
-            }
-
-
-            const html =
-                await response.text();
-
-
-            const parser =
-                new DOMParser();
-
-
-            const newDocument =
-                parser.parseFromString(
-                    html,
-                    "text/html"
-                );
-
-
-            const newContent =
-                newDocument.querySelector(
-                    "#page-content"
-                );
-
-
-            if (!newContent) {
-
                 window.location.reload();
 
-                return;
             }
-
-
-            /*
-             * Load this page's specific CSS
-             * before swapping content.
-             */
-
-            syncStylesheets(newDocument);
-
-
-            pageContent.innerHTML =
-                newContent.innerHTML;
-
-
-            const newTitle =
-                newDocument.querySelector("title");
-
-
-            if (newTitle) {
-
-                document.title =
-                    newTitle.textContent;
-            }
-
-
-            executeScripts(pageContent);
-
-
-        } catch (error) {
-
-            console.error(error);
-
-            window.location.reload();
 
         }
 
-    }
+
+        /*
+        * Execute scripts inside newly loaded
+        * page content.
+        */
+
+        function executeScripts(container) {
+
+            const scripts =
+                container.querySelectorAll(
+                    "script"
+                );
 
 
-    /*
-     * Execute scripts inside newly loaded
-     * page content.
-     */
+            scripts.forEach(function (oldScript) {
 
-    function executeScripts(container) {
-
-        const scripts =
-            container.querySelectorAll(
-                "script"
-            );
+                const newScript =
+                    document.createElement("script");
 
 
-        scripts.forEach(function (oldScript) {
+                Array.from(
+                    oldScript.attributes
+                ).forEach(function (attribute) {
 
-            const newScript =
-                document.createElement("script");
+                    newScript.setAttribute(
+                        attribute.name,
+                        attribute.value
+                    );
+
+                });
 
 
-            Array.from(
-                oldScript.attributes
-            ).forEach(function (attribute) {
+                newScript.textContent =
+                    oldScript.textContent;
 
-                newScript.setAttribute(
-                    attribute.name,
-                    attribute.value
+
+                oldScript.parentNode.replaceChild(
+                    newScript,
+                    oldScript
                 );
 
             });
 
-
-            newScript.textContent =
-                oldScript.textContent;
-
-
-            oldScript.parentNode.replaceChild(
-                newScript,
-                oldScript
-            );
-
-        });
-
-    }
-
-});
-
-</script>
-
-
-<!-- ==========================================
-     FLASH MESSAGE AUTO HIDE
-     ========================================== -->
-
-<script>
-
-setTimeout(function () {
-
-    const messages =
-        document.querySelectorAll(
-            ".flash-message"
-        );
-
-
-    messages.forEach(function (message) {
-
-        message.style.transition =
-            "opacity 0.4s ease, transform 0.4s ease";
-
-
-        message.style.opacity = "0";
-
-
-        message.style.transform =
-            "translateY(-20px)";
-
-
-        setTimeout(function () {
-
-            message.remove();
-
-        }, 400);
+        }
 
     });
 
-}, 3000);
-
-</script>
+    </script>
 
 
-</body>
+    <!-- ==========================================
+        FLASH MESSAGE AUTO HIDE
+        ========================================== -->
 
-</html>
+    <script>
+
+    setTimeout(function () {
+
+        const messages =
+            document.querySelectorAll(
+                ".flash-message"
+            );
+
+
+        messages.forEach(function (message) {
+
+            message.style.transition =
+                "opacity 0.4s ease, transform 0.4s ease";
+
+
+            message.style.opacity = "0";
+
+
+            message.style.transform =
+                "translateY(-20px)";
+
+
+            setTimeout(function () {
+
+                message.remove();
+
+            }, 400);
+
+        });
+
+    }, 3000);
+
+    </script>
+
+
+    </body>
+
+    </html>

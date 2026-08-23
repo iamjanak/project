@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Invoice - {{ bill.bill_no }}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bill_invoice.css') }}">
+</head>
+<body>
+
+<div class="invoice-box">
+
+    <!-- Header -->
+    <div class="invoice-header">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" class="hospital-logo" alt="Logo">
+
+
+        
+        <div class="hospital-info">
+            <h1>SwasthaCare Hospital Pvt. Ltd</h1>
+            <p>{{ hospital.address | default("Tulsipur-5, Dang") }}</p>
+            <p>Phone No. : {{ hospital.phone | default("082522686") }}</p>
+            <p>Email : {{ hospital.email | default("swasthacare2063@gmail.com") }}</p>
+        </div>
+
+        <div class="pan-box">
+            PAN No.: {{ hospital.pan | default("302198289") }}
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Copy Type -->
+    <div class="copy-title">
+        <h3>PATIENT COPY</h3>
+        <p>INVOICE (COPY OF ORIGINAL) (Print No: {{ bill.print_no | default(1) }})</p>
+        <p class="patient-type">Patient Type : {{ bill.patient_type | default("GEN") }}</p>
+    </div>
+
+    <!-- Patient / Bill Details -->
+    <table class="details-table">
+        <tr>
+            <td><strong>Hospital ID</strong></td>
+            <td>{{ patient.hospital_id }}</td>
+            <td><strong>Pan No</strong></td>
+            <td>{{ bill.pan_no }}</td>
+        </tr>
+        <tr>
+            <td><strong>Name</strong></td>
+            <td>{{ patient.name }}</td>
+            <td><strong>Bill No</strong></td>
+            <td>{{ bill.bill_no }}</td>
+        </tr>
+        <tr>
+            <td><strong>Cust. PAN No.</strong></td>
+            <td>{{ patient.cust_pan | default("-") }}</td>
+            <td><strong>Transaction Date</strong></td>
+            <td>{{ bill.transaction_date }}</td>
+        </tr>
+        <tr>
+            <td><strong>Age/Sex</strong></td>
+            <td>{{ patient.age }} / {{ patient.sex }}</td>
+            <td><strong>Doctor Name</strong></td>
+            <td>{{ bill.doctor_name }}</td>
+        </tr>
+        <tr>
+            <td><strong>Address</strong></td>
+            <td>{{ patient.address }}</td>
+            <td><strong>Department/Bed No</strong></td>
+            <td>{{ bill.department }}</td>
+        </tr>
+        <tr>
+            <td><strong>Phone</strong></td>
+            <td>{{ patient.phone }}</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><strong>Scheme</strong></td>
+            <td>{{ patient.scheme | default("-") }}</td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+
+    <!-- Charges Table -->
+    <table class="charges-table">
+        <thead>
+            <tr>
+                <th>S.No</th>
+                <th>HS Code</th>
+                <th>Particulars</th>
+                <th>Item Code</th>
+                <th>QTY</th>
+                <th>Rate</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in bill.items %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ item.hs_code | default("") }}</td>
+                <td>{{ item.particulars }}</td>
+                <td>{{ item.item_code }}</td>
+                <td>{{ item.qty }}</td>
+                <td>{{ "%.2f"|format(item.rate) }}</td>
+                <td>{{ "%.2f"|format(item.qty * item.rate) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Totals -->
+    <table class="totals-table">
+        <tr>
+            <td class="label">Sub Total</td>
+            <td class="value">{{ "%.2f"|format(bill.sub_total) }}</td>
+        </tr>
+        <tr>
+            <td class="label">Discount</td>
+            <td class="value">{{ "%.2f"|format(bill.discount | default(0)) }}</td>
+        </tr>
+        <tr class="grand-total">
+            <td class="label">Total</td>
+            <td class="value">{{ "%.2f"|format(bill.total) }}</td>
+        </tr>
+    </table>
+
+    <p class="in-words">In Words [NPR] {{ bill.total_in_words }} Only</p>
+
+    <p class="remarks"><strong>Remarks :</strong> {{ bill.remarks | default("") }}</p>
+
+    <hr class="divider">
+
+    <div class="footer-info">
+        <p>Consulting Dr: {{ bill.doctor_name }}</p>
+        <p>User: {{ bill.created_by }}</p>
+        <p>Re-print By: {{ bill.reprint_by | default("") }}</p>
+        <p class="print-time">Printed Date/Time: {{ bill.printed_datetime }}</p>
+    </div>
+
+    <button type="button" class="print-btn" onclick="window.print()">
+            🖨 Print / Save as PDF
+        </button>
+
+
+</div>
+
+</body>
+</html>

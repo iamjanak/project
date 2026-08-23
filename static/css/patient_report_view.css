@@ -1,0 +1,349 @@
+/* ==========================================
+   PATIENT REPORT — PROFESSIONAL / PRINT
+   Formal document styling: letterhead,
+   numbered sections, sign-off block.
+   ========================================== */
+
+:root {
+    --doc-ink: #1a2332;
+    --doc-muted: #64748b;
+    --doc-accent: #0f766e;
+    --doc-border: #d7dde3;
+    --doc-bg: #eef1f4;
+}
+
+.pr-doc-wrapper {
+    padding: 10px 4px 40px;
+}
+
+/* ---------- Toolbar (hidden on print) ---------- */
+
+.pr-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.back-btn {
+    text-decoration: none;
+    font-size: 14px;
+    color: var(--doc-accent);
+    border: 1px solid var(--doc-accent);
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.back-btn:hover {
+    background: var(--doc-accent);
+    color: #fff;
+}
+
+.print-btn {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--doc-ink);
+    border: none;
+    padding: 9px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.print-btn:hover {
+    opacity: 0.9;
+}
+
+/* ---------- Document sheet ---------- */
+
+.pr-document {
+    max-width: 850px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid var(--doc-border);
+    border-radius: 4px;
+    padding: 46px 56px 40px;
+    box-shadow: 0 1px 3px rgba(16, 24, 40, 0.06);
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--doc-ink);
+}
+
+/* ---------- Letterhead ---------- */
+
+.pr-letterhead {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.pr-letterhead-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.pr-letterhead-logo {
+    width: 46px;
+    height: 46px;
+    object-fit: contain;
+}
+
+.pr-letterhead-brand h1 {
+    margin: 0;
+    font-size: 21px;
+    letter-spacing: 0.01em;
+}
+
+.pr-letterhead-brand span {
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--doc-muted);
+}
+
+.pr-letterhead-meta {
+    text-align: right;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    color: var(--doc-muted);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    white-space: nowrap;
+}
+
+.pr-rule {
+    border: none;
+    border-top: 2px solid var(--doc-ink);
+    margin: 18px 0 26px;
+}
+
+/* ---------- Summary band ---------- */
+
+.pr-summary-band {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    background: var(--doc-bg);
+    padding: 18px 22px;
+    border-radius: 4px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.pr-summary-label {
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--doc-muted);
+}
+
+.pr-summary-name {
+    margin: 4px 0 0;
+    font-size: 24px;
+}
+
+.pr-summary-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.pr-tag {
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--doc-accent);
+    background: #fff;
+    border: 1px solid var(--doc-border);
+    padding: 6px 12px;
+    border-radius: 999px;
+}
+
+/* ---------- Sections ---------- */
+
+.pr-section {
+    margin-bottom: 26px;
+}
+
+.pr-section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--doc-ink);
+    margin: 0 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--doc-border);
+}
+
+.pr-section-number {
+    font-size: 11px;
+    color: #fff;
+    background: var(--doc-accent);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* ---------- Data tables ---------- */
+
+.pr-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14.5px;
+}
+
+.pr-table th,
+.pr-table td {
+    text-align: left;
+    padding: 10px 14px;
+    border: 1px solid var(--doc-border);
+    vertical-align: top;
+}
+
+.pr-table th {
+    width: 18%;
+    font-family: Arial, sans-serif;
+    font-size: 11.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--doc-muted);
+    background: #fafbfc;
+}
+
+.pr-table td {
+    width: 32%;
+    color: var(--doc-ink);
+}
+
+/* ---------- Sign-off ---------- */
+
+.pr-signoff {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    margin-top: 46px;
+}
+
+.pr-signoff-line {
+    flex: 1;
+}
+
+.pr-signoff-line span {
+    display: block;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--doc-muted);
+    margin-bottom: 34px;
+}
+
+.pr-signature-space {
+    border-top: 1px solid var(--doc-ink);
+}
+
+.pr-disclaimer {
+    margin-top: 34px;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    color: var(--doc-muted);
+    text-align: center;
+    line-height: 1.5;
+}
+
+/* ---------- Print styles ---------- */
+
+@media print {
+
+    /* Hide the app chrome defined in base.html —
+       sidebar, top header, flash messages, toasts —
+       so only the document itself prints. */
+
+    .sidebar,
+    .top-header,
+    .flash-container,
+    .logout-toast,
+    .pr-toolbar {
+        display: none !important;
+    }
+
+    /* base.html lays the app out as a sidebar + main
+       content grid/flex; reclaim that space so the
+       document isn't squeezed into the leftover width. */
+
+    .dashboard-container {
+        display: block !important;
+    }
+
+    .main-content {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+    }
+
+    .pr-doc-wrapper {
+        padding: 0 !important;
+    }
+
+    .pr-document {
+        box-shadow: none;
+        border: none;
+        max-width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+
+    body {
+        background: #fff;
+    }
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 720px) {
+
+    .pr-document {
+        padding: 28px 20px;
+    }
+
+    .pr-letterhead {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .pr-letterhead-meta {
+        text-align: left;
+    }
+
+    .pr-table th {
+        width: 30%;
+    }
+
+    .pr-table,
+    .pr-table tbody,
+    .pr-table tr {
+        display: block;
+        width: 100%;
+    }
+
+    .pr-signoff {
+        flex-direction: column;
+        gap: 30px;
+    }
+}

@@ -1,0 +1,379 @@
+/* =========================================
+   Patient Report Page
+========================================= */
+
+.patient-report-page {
+    width: 100%;
+    padding: 24px 28px;
+    box-sizing: border-box;
+}
+
+
+/* =========================================
+   Top Bar
+========================================= */
+
+.patient-report-page .top-bar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+
+/* =========================================
+   Search Box
+========================================= */
+
+.patient-report-page .search-box {
+    width: 320px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+
+    background: #ffffff;
+
+    border: 1px solid #d9dee7;
+    border-radius: 8px;
+
+    padding: 0 14px;
+
+    box-sizing: border-box;
+}
+
+
+.patient-report-page .search-icon {
+    font-size: 17px;
+    margin-right: 9px;
+}
+
+
+.patient-report-page .search-box input {
+    width: 100%;
+
+    border: none;
+    outline: none;
+
+    font-size: 14px;
+
+    background: transparent;
+}
+
+
+.patient-report-page .search-box input::placeholder {
+    color: #9aa1ad;
+}
+
+
+/* =========================================
+   Page Title
+========================================= */
+
+.patient-report-page .page-title {
+    font-size: 22px;
+    font-weight: 600;
+
+    color: #1f2937;
+}
+
+
+/* =========================================
+   Table Wrapper
+========================================= */
+
+.patient-report-page .table-wrapper {
+    width: 100%;
+
+    background: #ffffff;
+
+    border: 1px solid #e2e6ed;
+    border-radius: 10px;
+
+    overflow-x: auto;
+}
+
+
+/* =========================================
+   Patient Table
+========================================= */
+
+.patient-report-page .patient-table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    min-width: 1000px;
+}
+
+
+/* =========================================
+   Table Header
+========================================= */
+
+.patient-report-page .patient-table thead {
+    background: #f7f8fa;
+}
+
+
+.patient-report-page .patient-table th {
+    padding: 15px 16px;
+
+    text-align: left;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    color: #5f6877;
+
+    white-space: nowrap;
+
+    border-bottom: 1px solid #e2e6ed;
+}
+
+
+/* =========================================
+   Sort Icon
+========================================= */
+
+.patient-report-page .sort-icon {
+    margin-left: 5px;
+
+    font-size: 13px;
+
+    color: #8c95a3;
+}
+
+
+/* =========================================
+   Table Body
+========================================= */
+
+.patient-report-page .patient-table td {
+    padding: 15px 16px;
+
+    font-size: 14px;
+
+    color: #343b47;
+
+    border-bottom: 1px solid #edf0f4;
+
+    white-space: nowrap;
+}
+
+
+.patient-report-page .patient-table tbody tr {
+    transition: background 0.2s ease;
+}
+
+
+.patient-report-page .patient-table tbody tr:hover {
+    background: #fafbfc;
+}
+
+
+.patient-report-page .patient-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* =========================================
+   Status Badge
+========================================= */
+
+.patient-report-page .badge {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-width: 62px;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+
+.patient-report-page .badge-active {
+    background: #e8f7ee;
+    color: #21864b;
+}
+
+
+.patient-report-page .badge-inactive {
+    background: #fcebec;
+    color: #c53d46;
+}
+
+
+/* =========================================
+   Action
+========================================= */
+
+.patient-report-page .action-cell {
+    text-align: center;
+}
+
+
+.patient-report-page .view-btn {
+    width: 34px;
+    height: 34px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    text-decoration: none;
+
+    border: 1px solid #dce1e8;
+    border-radius: 7px;
+
+    background: #ffffff;
+
+    font-size: 16px;
+
+    transition: all 0.2s ease;
+}
+
+
+.patient-report-page .view-btn:hover {
+    background: #f3f6fa;
+
+    border-color: #c7ced8;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================
+   No Data
+========================================= */
+
+.patient-report-page .no-data {
+    text-align: center !important;
+
+    padding: 35px !important;
+
+    color: #8b94a3 !important;
+
+    font-size: 14px !important;
+}
+
+
+/* =========================================
+   Footer
+========================================= */
+
+.patient-report-page .table-footer {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 16px 4px;
+}
+
+
+/* =========================================
+   Show Select
+========================================= */
+
+.patient-report-page .show-select {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    font-size: 13px;
+
+    color: #687180;
+}
+
+
+.patient-report-page .show-select select {
+    height: 32px;
+
+    padding: 0 28px 0 10px;
+
+    border: 1px solid #d8dde5;
+
+    border-radius: 6px;
+
+    background: #ffffff;
+
+    color: #3f4754;
+
+    outline: none;
+
+    cursor: pointer;
+}
+
+
+/* =========================================
+   Results Count
+========================================= */
+
+.patient-report-page .results-count {
+    font-size: 13px;
+
+    color: #7a8390;
+}
+
+
+.patient-report-page .results-count strong {
+    color: #333b47;
+
+    font-weight: 600;
+}
+
+
+/* =========================================
+   Responsive
+========================================= */
+
+@media (max-width: 900px) {
+
+    .patient-report-page {
+        padding: 18px;
+    }
+
+    .patient-report-page .top-bar {
+        gap: 15px;
+    }
+
+    .patient-report-page .search-box {
+        width: 260px;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .patient-report-page .top-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .patient-report-page .search-box {
+        width: 100%;
+    }
+
+    .patient-report-page .page-title {
+        font-size: 20px;
+    }
+
+    .patient-report-page .table-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+}

@@ -16,8 +16,8 @@
     display: flex;
     align-items: center;
     background: white;
-    border-radius: 8px;
-    padding: 10px 15px;
+    border-radius: 4px;
+    padding: 2px 12px;
     width: 320px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
@@ -250,4 +250,30 @@ width:100%;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+}
+
+/* Save Doctor Button */
+
+.form-card button[type="submit"] {
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.form-card button[type="submit"]:hover {
+    background-color: #168383;
+    color: #ffffffa2;
+}
+
+.back-btn {
+    display: inline-block;
+    text-decoration: none;
+    color: #333;
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 15px;
+    transition: color 0.2s ease;
+}
+
+.back-btn:hover {
+    color: #2563eb;
 }

@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 
-{% block title %}Doctor List - SwasthaCare{% endblock %}
+{% block title %}Patient Report - SwasthaCare{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/add_doctor.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/patient_report.css') }}">
 {% endblock %}
 
 {% block content %}
 
-<div class="doctor-page">
+<div class="patient-report-page">
 
     <!-- =========================
          Top Bar
@@ -21,49 +21,59 @@
 
             <input
                 type="text"
-                placeholder="Search"
-                id="doctorSearch"
+                placeholder="Search Patient"
+                id="patientSearch"
             >
         </div>
 
-        <!-- New Doctor -->
-        <a href="{{ url_for('main.add_doctor') }}">
-            +👨‍⚕️ New Doctor Setup
-        </a>
+        <!-- Page Title -->
+        <div class="page-title">
+            Patient Report
+        </div>
 
     </div>
 
 
     <!-- =========================
-         Doctor Table
+         Patient Report Table
     ========================== -->
     <div class="table-wrapper">
 
-        <table class="doc-table">
+        <table class="patient-table">
 
             <thead>
 
                 <tr>
 
-                    <th>SN</th>
+                    <th>
+                        SN
+                    </th>
 
                     <th>
-                        DOC CODE
+                        PATIENT NO
                         <span class="sort-icon">↕</span>
                     </th>
 
                     <th>
-                        DOCTOR NAME
+                        PATIENT NAME
                         <span class="sort-icon">↕</span>
                     </th>
 
                     <th>
-                        SPECIALIZATION
+                        AGE
+                    </th>
+
+                    <th>
+                        GENDER
+                    </th>
+
+                    <th>
+                        DEPARTMENT
                         <span class="sort-icon">↕</span>
                     </th>
 
                     <th>
-                        Department
+                        DOCTOR
                         <span class="sort-icon">↕</span>
                     </th>
 
@@ -80,9 +90,9 @@
             </thead>
 
 
-            <tbody id="doctorTableBody">
+            <tbody id="patientTableBody">
 
-                {% for doctor in doctors %}
+                {% for patient in patients %}
 
                 <tr>
 
@@ -92,31 +102,54 @@
                     </td>
 
 
-                    <!-- Doctor Code -->
+                    <!-- Patient Number -->
                     <td>
-                        {{ doctor.doc_code }}
+                        {{ patient.patient_no }}
                     </td>
 
 
-                    <!-- Doctor Name -->
+                    <!-- Patient Name -->
                     <td>
-                        {{ doctor.doc_name }}
+                        {{ patient.full_name }}
                     </td>
 
 
-                    <!-- Specialization -->
+                    <!-- Age -->
                     <td>
-                        {{ doctor.specialization }}
+                        {{ patient.age }}
                     </td>
 
+
+                    <!-- Gender -->
                     <td>
-                        {{ doctor.department.department_name }}
+                        {{ patient.gender }}
                     </td>
+
+
+                    <!-- Department -->
+                    <td>
+                        {% if patient.department %}
+                            {{ patient.department.department_name }}
+                        {% else %}
+                            Not Assigned
+                        {% endif %}
+                    </td>
+
+
+                    <!-- Doctor -->
+                    <td>
+                        {% if patient.doctor %}
+                            {{ patient.doctor.doc_name }}
+                        {% else %}
+                            Not Assigned
+                        {% endif %}
+                    </td>
+
 
                     <!-- Status -->
                     <td>
 
-                        {% if doctor.status == "Active" %}
+                        {% if patient.status == "Active" %}
 
                             <span class="badge badge-active">
                                 Active
@@ -136,17 +169,13 @@
                     <!-- Action -->
                     <td class="action-cell">
 
-                        <!-- Edit -->
                         <a
-                            href="{{ url_for('main.edit_doctor', doctor_id=doctor.id) }}"
-                            class="icon-btn edit-btn"
-                            title="Edit"
+                            href="{{ url_for('main.patient_report_view', patient_id=patient.id) }}"
+                            class="view-btn"
+                            title="View Patient Report"
                         >
-                            ✎
+                            👁
                         </a>
-
-
-                       
 
                     </td>
 
@@ -155,14 +184,14 @@
 
                 {% else %}
 
-                <!-- No Doctors -->
+                <!-- No Patients -->
                 <tr>
 
                     <td
-                        colspan="6"
-                        style="text-align: center;"
+                        colspan="9"
+                        class="no-data"
                     >
-                        No doctors found
+                        No patients found
                     </td>
 
                 </tr>
@@ -184,14 +213,14 @@
         <!-- Show -->
         <div class="show-select">
 
-            Show
+            <span>Show</span>
 
-            <select>
+            <select id="showEntries">
 
-                <option>10</option>
-                <option>15</option>
-                <option>25</option>
-                <option>50</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
 
             </select>
 
@@ -202,7 +231,7 @@
         <div class="results-count">
 
             Showing
-            <strong>{{ doctors|length }}</strong>
+            <strong>{{ patients|length }}</strong>
             results
 
         </div>
@@ -217,17 +246,20 @@
 ========================== -->
 <script>
 
-    const searchInput = document.getElementById("doctorSearch");
+document.addEventListener("DOMContentLoaded", function () {
+
+    const searchInput =
+        document.getElementById("patientSearch");
+
+    const rows =
+        document.querySelectorAll(
+            "#patientTableBody tr"
+        );
 
     searchInput.addEventListener("keyup", function () {
 
         const searchValue =
-            this.value.toLowerCase();
-
-        const rows =
-            document.querySelectorAll(
-                "#doctorTableBody tr"
-            );
+            this.value.toLowerCase().trim();
 
         rows.forEach(function (row) {
 
@@ -247,6 +279,8 @@
         });
 
     });
+
+});
 
 </script>
 

@@ -6,6 +6,8 @@
 {% endblock %}
 
 {% block content %}
+
+
 <div class="dashboard-page">
 
   <div class="page-header">
@@ -194,28 +196,44 @@
       <h3 class="form-section-title">🩺 Medical Information</h3>
       <div class="form-grid">
 
-        <div class="form-field">
-          <label for="department">Department <span class="required">*</span></label>
-          <select id="department" name="department" required>
-            <option value="" disabled selected>Select department</option>
-            <option value="general">General Medicine</option>
-            <option value="cardiology">Cardiology</option>
-            <option value="orthopedics">Orthopedics</option>
-            <option value="pediatrics">Pediatrics</option>
-            <option value="gynecology">Gynecology</option>
-            <option value="emergency">Emergency</option>
-          </select>
-        </div>
+       <div class="form-field">
+    <label for="department">
+        Department <span class="required">*</span>
+    </label>
 
-        <div class="form-field">
-          <label for="doctor">Assigned Doctor</label>
-          <select id="doctor" name="doctor_id">
-            <option value="" disabled selected>Select doctor</option>
-            {% for doc in doctors|default([]) %}
-              <option value="{{ doc.id }}">{{ doc.name }}</option>
-            {% endfor %}
-          </select>
-        </div>
+    <select id="department" name="department" required>
+        <option value="" disabled selected>
+            Select department
+        </option>
+
+        {% for department in departments %}
+            <option value="{{ department.id }}">
+                {{ department.department_name }}
+            </option>
+        {% endfor %}
+    </select>
+</div>
+
+      <div class="form-field">
+    <label for="doctor">
+        Assigned Doctor
+    </label>
+
+    <select id="doctor" name="doctor_id">
+        <option value="" disabled selected>
+            Select doctor
+        </option>
+
+        {% for doc in doctors %}
+            <option
+                value="{{ doc.id }}"
+                data-department="{{ doc.department_id }}"
+            >
+                {{ doc.doc_name }}
+            </option>
+        {% endfor %}
+    </select>
+</div>
 
         <div class="form-field">
           <label for="visit_type">Visit Type</label>
@@ -226,15 +244,7 @@
           </select>
         </div>
 
-        <div class="form-field form-field--wide">
-          <label for="known_allergies">Known Allergies</label>
-          <input type="text" id="known_allergies" name="known_allergies" placeholder="e.g. Penicillin, Peanuts (leave blank if none)">
-        </div>
 
-        <div class="form-field form-field--wide">
-          <label for="notes">Additional Notes</label>
-          <textarea id="notes" name="notes" rows="3" placeholder="Any additional information about the patient"></textarea>
-        </div>
 
       </div>
     </div>
@@ -247,6 +257,51 @@
   </form>
 
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const departmentSelect = document.getElementById("department");
+    const doctorSelect = document.getElementById("doctor");
+
+    // Store all doctor options
+    const doctorOptions = Array.from(
+        doctorSelect.querySelectorAll("option[data-department]")
+    );
+
+    departmentSelect.addEventListener("change", function () {
+
+        const selectedDepartment = this.value;
+
+        // Clear doctor dropdown
+        doctorSelect.innerHTML = "";
+
+        // Default option
+        const defaultOption = document.createElement("option");
+        defaultOption.value = "";
+        defaultOption.textContent = "Select doctor";
+        defaultOption.disabled = true;
+        defaultOption.selected = true;
+
+        doctorSelect.appendChild(defaultOption);
+
+        // Add only doctors belonging to selected department
+        doctorOptions.forEach(function (option) {
+
+            if (
+                option.dataset.department === selectedDepartment
+            ) {
+                doctorSelect.appendChild(
+                    option.cloneNode(true)
+                );
+            }
+
+        });
+
+    });
+
+});
+</script>
 
 <script src="{{ url_for('static', filename='js/registration.js') }}"></script>
 {% endblock %}

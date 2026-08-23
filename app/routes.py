@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, session, jsonify, flash, url_for
 
-from app.models import Patient, Bill, BillItem, Role, User, Department
+from app.models import Patient, Bill, BillItem, Role, User, Department, Doctor
 from app.database import db 
 from datetime import datetime
 
@@ -77,42 +77,33 @@ def dashboard():
 # ==============================
 # Patient Registration
 # ==============================
-
 @main.route("/registration", methods=["GET", "POST"])
 def patient_registration():
 
     if "user" not in session:
         return redirect("/")
 
-
     if request.method == "POST":
 
-        # Generate patient number
         year = datetime.now().year
 
         last_patient = Patient.query.order_by(
             Patient.id.desc()
         ).first()
 
-
         if last_patient:
             number = last_patient.id + 1
         else:
             number = 1
 
-
         patient_no = f"{year}{number:04d}"
 
-
-        # Combine first and last name
         full_name = (
-            request.form["first_name"]
+            request.form.get("first_name", "")
             + " "
-            + request.form["last_name"]
+            + request.form.get("last_name", "")
         )
 
-
-        # Convert DOB from DD/MM/YYYY to YYYY-MM-DD
         dob_input = request.form.get("dob")
 
         if dob_input:
@@ -123,45 +114,48 @@ def patient_registration():
         else:
             dob = None
 
-
-
         patient = Patient(
-
             patient_no=patient_no,
-
             full_name=full_name,
-
             dob=dob,
-
             age=request.form.get("age"),
-
             gender=request.form.get("gender"),
-
             phone=request.form.get("phone"),
-
             address=request.form.get("address"),
-
             department=request.form.get("department"),
-
             doctor=request.form.get("doctor_id")
-
         )
 
-
         db.session.add(patient)
-
         db.session.commit()
-
 
         flash("Patient registered successfully", "success")
 
-        return redirect("/registration")
+        return redirect(url_for("main.patient_registration"))
 
+    # Load departments
+    departments = Department.query.filter_by(
+        status="Active"
+    ).order_by(
+        Department.department_name.asc()
+    ).all()
+
+    # Load active doctors
+    doctors = Doctor.query.filter_by(
+        status="Active"
+    ).order_by(
+        Doctor.doc_name.asc()
+    ).all()
 
     return render_template(
-        "patient/registration.html"
+        "patient/registration.html",
+        departments=departments,
+        doctors=doctors
     )
 
+# ==============================
+# Patient List
+# ==============================
 
 @main.route("/patients")
 def patient_list():
@@ -169,11 +163,9 @@ def patient_list():
     if "user" not in session:
         return redirect("/")
 
-
     patients = Patient.query.order_by(
         Patient.id.desc()
     ).all()
-
 
     return render_template(
         "patient/patient_list.html",
@@ -534,47 +526,170 @@ def edit_department(dep_id):
 # ==============================
 # Doctor Setup
 # ==============================
+# ==============================
+# Doctor Setup
+# ==============================
 
-@main.route("/doctor_setup")
+@main.route("/doctor-setup")
 def doctor_setup():
 
     if "user" not in session:
         return redirect("/")
 
+    doctors = Doctor.query.order_by(
+        Doctor.id.desc()
+    ).all()
+
     return render_template(
-        "setup/doctor_setup.html"
+        "setup/doctor_setup.html",
+        doctors=doctors
     )
 
 
+# ==============================
+# Add Doctor
+# ==============================
 
-@main.route("/add_doctor", methods=["GET", "POST"])
+@main.route("/add-doctor", methods=["GET", "POST"])
 def add_doctor():
 
     if "user" not in session:
         return redirect("/")
 
-
     if request.method == "POST":
 
-        doctor_name = request.form["doctor_name"]
-        specialization = request.form["specialization"]
-        department = request.form["department"]
-        phone = request.form["phone"]
-        email = request.form["email"]
-        status = request.form["status"]
+        doc_code = request.form.get("doc_code")
+        doc_name = request.form.get("doc_name")
+        department_id = request.form.get("department_id")
+        specialization = request.form.get("specialization")
+        email = request.form.get("email")
+        phone = request.form.get("phone")
+        status = request.form.get("status")
 
+        # Check duplicate doctor code
+        existing_doctor = Doctor.query.filter_by(
+            doc_code=doc_code
+        ).first()
 
-        # Database connection later
+        if existing_doctor:
 
+            flash(
+                "Doctor code already exists.",
+                "error"
+            )
 
-        return redirect("/doctor_setup")
+            departments = Department.query.order_by(
+                Department.id.desc()
+            ).all()
 
+            return render_template(
+                "setup/add_doctor.html",
+                departments=departments
+            )
+
+        # Create doctor
+        doctor = Doctor(
+            doc_code=doc_code,
+            doc_name=doc_name,
+            department_id=department_id,
+            specialization=specialization,
+            email=email,
+            phone=phone,
+            status=status
+        )
+
+        db.session.add(doctor)
+        db.session.commit()
+
+        flash(
+            "Doctor added successfully!",
+            "success"
+        )
+
+        return redirect(
+            url_for("main.doctor_setup")
+        )
+
+    # Get departments from database
+    departments = Department.query.order_by(
+        Department.id.desc()
+    ).all()
 
     return render_template(
-        "setup/add_doctor.html"
+        "setup/add_doctor.html",
+        departments=departments
     )
 
 
+# ==============================
+# Edit Doctor
+# ==============================
+
+@main.route(
+    "/edit-doctor/<int:doctor_id>",
+    methods=["GET", "POST"]
+)
+def edit_doctor(doctor_id):
+
+    if "user" not in session:
+        return redirect("/")
+
+    doctor = Doctor.query.get_or_404(
+        doctor_id
+    )
+
+    if request.method == "POST":
+
+        doctor.doc_code = request.form.get(
+            "doc_code"
+        )
+
+        doctor.doc_name = request.form.get(
+            "doc_name"
+        )
+
+        doctor.department_id = request.form.get(
+            "department_id"
+        )
+
+        doctor.specialization = request.form.get(
+            "specialization"
+        )
+
+        doctor.email = request.form.get(
+            "email"
+        )
+
+        doctor.phone = request.form.get(
+            "phone"
+        )
+
+
+        doctor.status = request.form.get(
+            "status"
+        )
+
+        db.session.commit()
+
+        flash(
+            "Doctor edited successfully!",
+            "success"
+        )
+
+        return redirect(
+            url_for("main.doctor_setup")
+        )
+
+    # Get departments from database
+    departments = Department.query.order_by(
+        Department.id.desc()
+    ).all()
+
+    return render_template(
+        "setup/edit_doctor.html",
+        doctor=doctor,
+        departments=departments
+    )
 
 # ==============================
 # Generate Bill
@@ -788,6 +903,34 @@ def edit_user(user_id):
         user=user,
         roles=roles
     )
+
+# ==============================
+# Patient Reports
+# ==============================
+@main.route("/patient-report")
+def patient_report():
+
+    patients = Patient.query.all()
+
+    return render_template(
+        "reports/patient_report.html",
+        patients=patients,
+        active_page="patient_report"
+    )
+
+
+@main.route("/patient-report/<int:patient_id>")
+def patient_report_view(patient_id):
+
+    patient = Patient.query.get_or_404(patient_id)
+
+    return render_template(
+        "reports/patient_report_view.html",
+        patient=patient,
+        active_page="patient_report"
+    )
+
+
 
 # ==============================
 # Logout

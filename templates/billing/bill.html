@@ -12,10 +12,15 @@
 
 <body>
 
-<div class="bill-box">
+<div class="bill-page">
 
+    <a href="{{ url_for('main.billing') }}" class="back-btn no-print">
+        ← Back to Billing
+    </a>
 
-    <!-- Header -->
+    <div class="bill-box">
+
+        <!-- Header -->
     <div class="bill-header">
 
 
@@ -23,7 +28,7 @@
              class="hospital-logo" 
              alt="Logo">
 
-
+             
         <div class="hospital-info">
 
             <h1>{{ bill.hospital_name }}</h1>
@@ -496,14 +501,15 @@
     <div class="print-btn-wrapper no-print">
 
 
-        <button onclick="window.print()">
-            🖨 Print Bill
+        <button type="button" class="print-btn" onclick="window.print()">
+            🖨 Print / Save as PDF
         </button>
 
+        
 
     </div>
 
-
+    </div>
 
 </div>
 

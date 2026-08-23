@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block title %}Patient Report - SwasthaCare{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/patient_report_view.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="pr-doc-wrapper">
+
+    <div class="pr-toolbar">
+
+        <a href="{{ url_for('main.patient_report') }}" class="back-btn">
+            ← Back to Patient Reports
+        </a>
+
+        <button type="button" class="print-btn" onclick="window.print()">
+            🖨 Print / Save as PDF
+        </button>
+
+    </div>
+
+
+    <div class="pr-document">
+
+        <!-- ==============================
+             LETTERHEAD
+             ============================== -->
+
+        <div class="pr-letterhead">
+
+            <div class="pr-letterhead-brand">
+
+                <img
+                    src="{{ url_for('static', filename='images/logo.png') }}"
+                    alt="SwasthaCare"
+                    class="pr-letterhead-logo"
+                >
+
+                <div>
+                    <h1>SwasthaCare Hospital</h1>
+                    <span>Patient Medical Report</span>
+                </div>
+
+            </div>
+
+            <div class="pr-letterhead-meta">
+                <span>Report No. PR-{{ "%05d"|format(patient.id) if patient.id else "00000" }}</span>
+                <span>Generated {{ now.strftime("%d %b %Y") if now else "" }}</span>
+            </div>
+
+        </div>
+
+        <hr class="pr-rule">
+
+
+        <!-- ==============================
+             PATIENT SUMMARY BAND
+             ============================== -->
+
+        <div class="pr-summary-band">
+
+            <div>
+                <span class="pr-summary-label">Patient</span>
+                <h2 class="pr-summary-name">{{ patient.full_name }}</h2>
+            </div>
+
+            <div class="pr-summary-tags">
+                <span class="pr-tag">No. {{ patient.patient_no }}</span>
+                <span class="pr-tag">{{ patient.gender }}</span>
+                <span class="pr-tag">{{ patient.age }} yrs</span>
+            </div>
+
+        </div>
+
+
+        <!-- ==============================
+             SECTION: PERSONAL DETAILS
+             ============================== -->
+
+        <section class="pr-section">
+
+            <h3 class="pr-section-title">
+                <span class="pr-section-number">01</span>
+                Personal Details
+            </h3>
+
+            <table class="pr-table">
+                <tbody>
+                    <tr>
+                        <th>Full Name</th>
+                        <td>{{ patient.full_name }}</td>
+                        <th>Date of Birth</th>
+                        <td>{{ patient.dob }}</td>
+                    </tr>
+                    <tr>
+                        <th>Age</th>
+                        <td>{{ patient.age }}</td>
+                        <th>Gender</th>
+                        <td>{{ patient.gender }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </section>
+
+
+        <!-- ==============================
+             SECTION: CONTACT DETAILS
+             ============================== -->
+
+        <section class="pr-section">
+
+            <h3 class="pr-section-title">
+                <span class="pr-section-number">02</span>
+                Contact Details
+            </h3>
+
+            <table class="pr-table">
+                <tbody>
+                    <tr>
+                        <th>Phone</th>
+                        <td>{{ patient.phone }}</td>
+                        <th>Address</th>
+                        <td>{{ patient.address }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </section>
+
+
+        <!-- ==============================
+             SECTION: CARE ASSIGNMENT
+             ============================== -->
+
+        <section class="pr-section">
+
+            <h3 class="pr-section-title">
+                <span class="pr-section-number">03</span>
+                Care Assignment
+            </h3>
+
+            <table class="pr-table">
+                <tbody>
+                    <tr>
+                        <th>Department</th>
+                        <td>{{ patient.department }}</td>
+                        <th>Attending Doctor</th>
+                        <td>{{ patient.doctor }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </section>
+
+
+        <!-- ==============================
+             FOOTER / SIGN-OFF
+             ============================== -->
+
+        <div class="pr-signoff">
+
+            <div class="pr-signoff-line">
+                <span>Prepared by</span>
+                <div class="pr-signature-space"></div>
+            </div>
+
+            <div class="pr-signoff-line">
+                <span>Authorized signature</span>
+                <div class="pr-signature-space"></div>
+            </div>
+
+        </div>
+
+        <p class="pr-disclaimer">
+            This report is system-generated by SwasthaCare Hospital Management System
+            and reflects patient records at the time of generation.
+        </p>
+
+    </div>
+
+</div>
+
+{% endblock %}

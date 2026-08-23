@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-Add Doctor
+Edit Doctor
 {% endblock %}
 
 {% block extra_css %}
@@ -16,9 +16,9 @@ Add Doctor
         ← Back
     </a>
 
-    <h2>Add Doctor</h2>
+    <h2>Edit Doctor</h2>
 
-    <form method="POST" action="{{ url_for('main.add_doctor') }}">
+    <form method="POST">
 
         <!-- Doctor Code -->
         <label for="doc_code">Doctor Code</label>
@@ -26,7 +26,7 @@ Add Doctor
             type="text"
             id="doc_code"
             name="doc_code"
-            placeholder="Enter doctor code"
+            value="{{ doctor.doc_code }}"
             required
         >
 
@@ -36,68 +36,106 @@ Add Doctor
             type="text"
             id="doc_name"
             name="doc_name"
-            placeholder="Enter doctor name"
+            value="{{ doctor.doc_name }}"
             required
         >
 
         <!-- Department -->
         <label for="department_id">Department</label>
+
         <select
             id="department_id"
             name="department_id"
             required
         >
+
             <option value="">Select Department</option>
 
             {% for department in departments %}
-                <option value="{{ department.id }}">
+
+                <option
+                    value="{{ department.id }}"
+                    {% if department.id == doctor.department_id %}
+                        selected
+                    {% endif %}
+                >
                     {{ department.department_name }}
                 </option>
+
             {% endfor %}
 
         </select>
 
         <!-- Specialization -->
-        <label for="specialization">Specialization</label>
+        <label for="specialization">
+            Specialization
+        </label>
+
         <input
             type="text"
             id="specialization"
             name="specialization"
-            placeholder="Enter doctor specialization"
+            value="{{ doctor.specialization }}"
             required
         >
 
         <!-- Email -->
-        <label for="email">Email</label>
+        <label for="email">
+            Email
+        </label>
+
         <input
             type="email"
             id="email"
             name="email"
-            placeholder="Enter doctor email"
+            value="{{ doctor.email or '' }}"
         >
 
         <!-- Phone -->
-        <label for="phone">Phone</label>
+        <label for="phone">
+            Phone
+        </label>
+
         <input
             type="text"
             id="phone"
             name="phone"
-            placeholder="Enter doctor phone"
+            value="{{ doctor.phone or '' }}"
         >
 
         <!-- Status -->
-        <label for="status">Status</label>
+        <label for="status">
+            Status
+        </label>
+
         <select
             id="status"
             name="status"
             required
         >
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
+
+            <option
+                value="Active"
+                {% if doctor.status == "Active" %}
+                    selected
+                {% endif %}
+            >
+                Active
+            </option>
+
+            <option
+                value="Inactive"
+                {% if doctor.status == "Inactive" %}
+                    selected
+                {% endif %}
+            >
+                Inactive
+            </option>
+
         </select>
 
         <button type="submit">
-            Save Doctor
+            Update Doctor
         </button>
 
     </form>

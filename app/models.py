@@ -260,3 +260,34 @@ class Department(db.Model):
     department_name = db.Column(db.String(150), nullable=False)
     dep_type = db.Column(db.String(100), nullable=True)
     status = db.Column(db.String(20), nullable=False, default="Active")
+class Doctor(db.Model):
+    __tablename__ = "doctors"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    doc_code = db.Column(db.String(50), nullable=False)
+
+    doc_name = db.Column(db.String(100), nullable=False)
+
+    department_id = db.Column(
+        db.Integer,
+        db.ForeignKey("departments.id"),
+        nullable=False
+    )
+
+    specialization = db.Column(db.String(100))
+
+    email = db.Column(db.String(100))
+
+    phone = db.Column(db.String(20))
+
+    status = db.Column(
+        db.String(20),
+        nullable=False,
+        default="Active"
+    )
+
+    department = db.relationship(
+        "Department",
+        backref="doctors"
+    )
