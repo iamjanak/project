@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit Test - SwasthaCare
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/edit_test.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="edit-test-page">
+
+    <!-- ==========================================
+         PAGE HEADER
+         ========================================== -->
+
+    <div class="edit-test-header">
+
+        <div class="edit-test-heading">
+
+            <h2>
+                Edit Test
+            </h2>
+
+            <p>
+                Update laboratory test information
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         FORM CARD
+         ========================================== -->
+
+    <div class="edit-test-card">
+
+        <form method="POST">
+
+            <!-- Test Code -->
+
+            <div class="form-group">
+
+                <label for="test_code">
+                    Test Code
+                    <span>*</span>
+                </label>
+
+                <input
+                    type="text"
+                    id="test_code"
+                    name="test_code"
+                    value="{{ test.test_code }}"
+                    placeholder="Enter test code"
+                    required
+                >
+
+            </div>
+
+
+            <!-- Test Name -->
+
+            <div class="form-group">
+
+                <label for="test_name">
+                    Test Name
+                    <span>*</span>
+                </label>
+
+                <input
+                    type="text"
+                    id="test_name"
+                    name="test_name"
+                    value="{{ test.test_name }}"
+                    placeholder="Enter test name"
+                    required
+                >
+
+            </div>
+
+
+            <!-- Price -->
+
+            <div class="form-group">
+
+                <label for="price">
+                    Price
+                    <span>*</span>
+                </label>
+
+                <input
+                    type="number"
+                    id="price"
+                    name="price"
+                    value="{{ test.price }}"
+                    placeholder="Enter test price"
+                    min="0"
+                    step="0.01"
+                    required
+                >
+
+            </div>
+
+
+            <!-- Status -->
+
+            <div class="form-group">
+
+                <label for="status">
+                    Status
+                </label>
+
+                <select
+                    id="status"
+                    name="status"
+                >
+
+                    <option
+                        value="Active"
+                        {% if test.status == "Active" %}selected{% endif %}
+                    >
+                        Active
+                    </option>
+
+                    <option
+                        value="Inactive"
+                        {% if test.status == "Inactive" %}selected{% endif %}
+                    >
+                        Inactive
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- ==========================================
+                 FORM ACTIONS
+                 ========================================== -->
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('main.test_setup') }}"
+                    class="cancel-btn"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="save-btn"
+                >
+                    Update Test
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

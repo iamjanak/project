@@ -1,78 +1,284 @@
-function formatDOB(input){
+// ==========================================
+// REGISTRATION JAVASCRIPT
+// ==========================================
 
-    let value = input.value.replace(/\D/g, "");
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
 
-    if(value.length > 8){
-        value = value.substring(0,8);
-    }
 
-    let formatted = "";
+        // ==========================================
+        // GET DOB AND AGE ELEMENTS
+        // ==========================================
 
-    if(value.length > 0){
-        formatted = value.substring(0,2);
-    }
+        const dobInput =
+            document.getElementById("dob");
 
-    if(value.length >= 3){
-        formatted += "/" + value.substring(2,4);
-    }
+        const ageInput =
+            document.getElementById("age");
 
-    if(value.length >= 5){
-        formatted += "/" + value.substring(4,8);
-    }
 
-    input.value = formatted;
-
-    calculateAge();
-
-}
+        if (!dobInput || !ageInput) {
+            return;
+        }
 
 
 
-function calculateAge(){
+        // ==========================================
+        // DATE OF BIRTH INPUT
+        // ==========================================
 
-    let dob = document.getElementById("dob").value;
+        dobInput.addEventListener(
+            "input",
+            function () {
 
-
-    if(dob){
-
-        let parts = dob.split("/");
-
-
-        if(parts.length === 3 && parts[2].length === 4){
-
-            let birthDate = new Date(
-                parts[2],
-                parts[1] - 1,
-                parts[0]
-            );
+                // Keep numbers only
+                let value =
+                    this.value.replace(/\D/g, "");
 
 
-            let today = new Date();
+                // Maximum 8 digits
+                value =
+                    value.substring(0, 8);
 
 
-            let age = today.getFullYear() - birthDate.getFullYear();
+                // ==========================================
+                // FORMAT DD
+                // ==========================================
+
+                if (value.length <= 2) {
+
+                    this.value = value;
+
+                }
 
 
-            let monthDifference = today.getMonth() - birthDate.getMonth();
+                // ==========================================
+                // FORMAT DD/MM
+                // ==========================================
+
+                else if (value.length <= 4) {
+
+                    this.value =
+                        value.substring(0, 2) +
+                        "/" +
+                        value.substring(2, 4);
+
+                }
 
 
-            if(
-                monthDifference < 0 ||
-                (monthDifference === 0 && today.getDate() < birthDate.getDate())
-            ){
-                age--;
+                // ==========================================
+                // FORMAT DD/MM/YYYY
+                // ==========================================
+
+                else {
+
+                    this.value =
+                        value.substring(0, 2) +
+                        "/" +
+                        value.substring(2, 4) +
+                        "/" +
+                        value.substring(4, 8);
+
+                }
+
+
+                // ==========================================
+                // CALCULATE AGE
+                // ==========================================
+
+                if (
+                    this.value.length === 10
+                ) {
+
+                    calculateAge();
+
+                }
+
+                else {
+
+                    ageInput.value = "";
+
+                }
+
+            }
+        );
+
+
+
+        // ==========================================
+        // CALCULATE AGE
+        // ==========================================
+
+        function calculateAge() {
+
+            const dob =
+                dobInput.value.trim();
+
+
+            // Make sure DOB is DD/MM/YYYY
+            if (
+                !/^\d{2}\/\d{2}\/\d{4}$/.test(dob)
+            ) {
+
+                ageInput.value = "";
+
+                return;
+
             }
 
 
-            document.getElementById("age").value = age;
+            // ==========================================
+            // SPLIT DOB
+            // ==========================================
+
+            const parts =
+                dob.split("/");
+
+
+            const day =
+                parseInt(parts[0], 10);
+
+
+            const month =
+                parseInt(parts[1], 10);
+
+
+            const year =
+                parseInt(parts[2], 10);
+
+
+
+            // ==========================================
+            // CHECK YEAR
+            // ==========================================
+
+            if (
+                year < 1900 ||
+                year > new Date().getFullYear()
+            ) {
+
+                ageInput.value = "";
+
+                return;
+
+            }
+
+
+
+            // ==========================================
+            // CREATE BIRTH DATE
+            // ==========================================
+
+            const birthDate =
+                new Date(
+                    year,
+                    month - 1,
+                    day
+                );
+
+
+
+            // ==========================================
+            // INVALID DATE CHECK
+            // ==========================================
+
+            if (
+                birthDate.getFullYear() !== year ||
+                birthDate.getMonth() !== month - 1 ||
+                birthDate.getDate() !== day
+            ) {
+
+                ageInput.value = "";
+
+                return;
+
+            }
+
+
+
+            // ==========================================
+            // TODAY
+            // ==========================================
+
+            const today =
+                new Date();
+
+
+
+            // ==========================================
+            // FUTURE DATE CHECK
+            // ==========================================
+
+            if (
+                birthDate > today
+            ) {
+
+                ageInput.value = "";
+
+                return;
+
+            }
+
+
+
+            // ==========================================
+            // AGE CALCULATION
+            // ==========================================
+
+            let age =
+                today.getFullYear() -
+                birthDate.getFullYear();
+
+
+
+            // Birthday has not happened yet
+            // this year
+
+            if (
+                today.getMonth() <
+                birthDate.getMonth()
+
+                ||
+
+                (
+                    today.getMonth() ===
+                    birthDate.getMonth()
+
+                    &&
+
+                    today.getDate() <
+                    birthDate.getDate()
+                )
+            ) {
+
+                age--;
+
+            }
+
+
+
+            // ==========================================
+            // SHOW AGE
+            // ==========================================
+
+            ageInput.value = age;
+
+        }
+
+
+
+        // ==========================================
+        // CALCULATE AGE IF DOB ALREADY EXISTS
+        // ==========================================
+
+        if (
+            dobInput.value.trim() !== ""
+        ) {
+
+            calculateAge();
 
         }
 
     }
-    else{
-
-        document.getElementById("age").value = "";
-
-    }
-
-}
+);

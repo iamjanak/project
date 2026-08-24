@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+
+{% block title %}
+Bill Details
+{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/bill_detail.css') }}">
+{% endblock %}
+
+
+{% block content %}
+
+<div class="bill-details-page">
+
+
+    <!-- ==========================================
+         HEADER
+    =========================================== -->
+
+    <div class="page-header">
+
+        <div>
+
+            <div class="breadcrumb">
+
+                Billing
+
+                <span>›</span>
+
+                Bill Details
+
+            </div>
+
+
+            <h1>
+                Bill Details
+            </h1>
+
+
+            <p>
+                View all generated bills and payment information
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         BILL TABLE
+    =========================================== -->
+
+    <div class="bill-table-container">
+
+        <table class="bill-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        #
+                    </th>
+
+                    <th>
+                        Bill No
+                    </th>
+
+                    <th>
+                        Patient ID
+                    </th>
+
+                    <th>
+                        Patient Name
+                    </th>
+
+                    <th>
+                        Bill Date
+                    </th>
+
+                    <th>
+                        Payment Type
+                    </th>
+
+                    <th>
+                        Total
+                    </th>
+
+                    <th>
+                        Action
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% if bills %}
+
+                {% for bill in bills %}
+
+                <tr>
+
+                    <td>
+                        {{ loop.index }}
+                    </td>
+
+
+                    <td>
+
+                        <strong>
+                            {{ bill.bill_no }}
+                        </strong>
+
+                    </td>
+
+
+                    <td>
+
+                        {{ bill.patient.patient_no
+                        if bill.patient
+                        else "-" }}
+
+                    </td>
+
+
+                    <td>
+
+                        {{ bill.patient.full_name
+                        if bill.patient
+                        else "-" }}
+
+                    </td>
+
+
+                    <td>
+
+                        {% if bill.bill_date %}
+
+                        {{ bill.bill_date.strftime("%Y-%m-%d") }}
+
+                        {% else %}
+
+                        -
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        {{ bill.pay_type or "Cash" }}
+
+                    </td>
+
+
+                    <td>
+
+                        <strong>
+
+                            {{ "%.2f"|format(
+                            bill.total|float
+                            ) }}
+
+                        </strong>
+
+                    </td>
+
+
+                    <td>
+
+                        <a href="{{ url_for('main.bill_detail', bill_id=bill.id) }}" class="view-btn">
+                            View
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+
+                {% else %}
+
+                <tr>
+
+                    <td colspan="8" class="empty-state">
+
+                        No bills found.
+
+                    </td>
+
+                </tr>
+
+                {% endif %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

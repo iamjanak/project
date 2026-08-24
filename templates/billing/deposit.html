@@ -1,0 +1,953 @@
+{% extends "base.html" %}
+
+{% block title %}
+Deposit - SwasthaCare
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/deposit.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+
+<div class="deposit-page">
+
+    <div class="deposit-header">
+
+        <div>
+
+            <div class="breadcrumb">
+                Billing
+                <span>›</span>
+                Deposit
+            </div>
+
+            <h1>
+                Patient Deposit
+            </h1>
+
+            <p>
+                Receive and manage patient advance deposits
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="card-title">
+
+            <div class="card-icon">
+                🔎
+            </div>
+
+            <div>
+                <h2>Find Patient</h2>
+
+                <p>
+                    Enter hospital number to fetch patient
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="search-row">
+
+            <div class="form-group">
+
+                <label>
+                    Hospital Number
+                </label>
+
+                <input
+                    type="text"
+                    id="patientNo"
+                    placeholder="Enter Hospital Number"
+                >
+
+            </div>
+
+
+            <button
+                type="button"
+                class="btn-fetch"
+                onclick="fetchPatient()"
+            >
+                Fetch Patient
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div
+        class="card"
+        id="patientSection"
+        style="display:none;"
+    >
+
+        <h2>Patient Information</h2>
+
+        <div class="patient-grid">
+
+            <div>
+                <span>Patient Name</span>
+                <strong id="patientName">-</strong>
+            </div>
+
+            <div>
+                <span>Hospital Number</span>
+                <strong id="hospitalNumber">-</strong>
+            </div>
+
+            <div>
+                <span>Age / Gender</span>
+                <strong id="ageGender">-</strong>
+            </div>
+
+            <div>
+                <span>Department</span>
+                <strong id="department">-</strong>
+            </div>
+
+            <div>
+                <span>Doctor</span>
+                <strong id="doctor">-</strong>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div
+        class="card"
+        id="depositSection"
+        style="display:none;"
+    >
+
+        <h2>Deposit Money</h2>
+
+        <div class="balance-box">
+
+            <span>
+                Current Deposit Balance
+            </span>
+
+            <strong id="currentBalance">
+                Rs. 0.00
+            </strong>
+
+        </div>
+
+
+        <div class="deposit-form">
+
+            <div class="form-group amount-input">
+
+                <label>
+                    Deposit Amount
+                </label>
+
+                <span>Rs.</span>
+
+                <input
+                    type="number"
+                    id="depositAmount"
+                    min="1"
+                    step="0.01"
+                    placeholder="Enter amount"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Remarks
+                </label>
+
+                <input
+                    type="text"
+                    id="remarks"
+                    placeholder="Optional remarks"
+                >
+
+            </div>
+
+
+            <div class="deposit-action">
+
+                <button
+                    type="button"
+                    class="btn-save"
+                    onclick="saveDeposit()"
+                    id="saveDepositBtn"
+                >
+                    Save Deposit
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div
+        class="card"
+        id="historySection"
+        style="display:none;"
+    >
+
+        <h2>Deposit History</h2>
+
+        <div class="table-wrapper">
+
+            <table class="deposit-table">
+
+                <thead>
+
+                    <tr>
+                        <th>#</th>
+                        <th>Date</th>
+                        <th>Patient Name</th>
+                        <th>Hospital ID</th>
+                        <th>Receipt No.</th>
+                        <th>Amount</th>
+                        <th>Remarks</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="historyBody"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     SUCCESS POPUP
+===================================================== -->
+
+<div class="success-popup-overlay" id="successPopupOverlay">
+
+    <div class="success-popup">
+
+        <button
+            type="button"
+            class="popup-close"
+            onclick="closeSuccessPopup()"
+            aria-label="Close"
+        >
+            &times;
+        </button>
+
+        <div class="success-icon">
+            ✓
+        </div>
+
+        <h2>Deposit Saved</h2>
+
+        <p class="success-message" id="successMessage">
+            The deposit has been recorded successfully.
+        </p>
+
+        <div class="receipt-box">
+
+            <div class="receipt-row">
+                <span>Patient Name</span>
+                <strong id="popupPatientName">-</strong>
+            </div>
+
+            <div class="receipt-row">
+                <span>Receipt No.</span>
+                <strong id="popupReceiptNo">-</strong>
+            </div>
+
+            <div class="receipt-row">
+                <span>New Balance</span>
+                <strong id="popupBalance">Rs. 0.00</strong>
+            </div>
+
+        </div>
+
+        <button
+            type="button"
+            class="popup-ok-btn"
+            onclick="closeSuccessPopup()"
+        >
+            Done
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+let selectedPatient = null;
+
+
+/* =====================================================
+FETCH PATIENT
+===================================================== */
+
+async function fetchPatient() {
+
+    const patientNo =
+        document
+            .getElementById("patientNo")
+            .value
+            .trim();
+
+
+    if (!patientNo) {
+
+        alert(
+            "Please enter Hospital Number"
+        );
+
+        return;
+    }
+
+
+    try {
+
+        const url =
+            `/fetch_deposit_patient/${encodeURIComponent(patientNo)}`;
+
+
+        console.log(
+            "Fetching patient:",
+            url
+        );
+
+
+        const response =
+            await fetch(url);
+
+
+        /*
+        * Try to read JSON response
+        */
+        const data =
+            await response.json();
+
+
+        console.log(
+            "Server response:",
+            data
+        );
+
+
+        /*
+        * Server returned an error
+        */
+        if (!response.ok || !data.success) {
+
+            alert(
+                data.message ||
+                "Patient not found"
+            );
+
+            hidePatient();
+
+            return;
+        }
+
+
+        /*
+        * Store selected patient
+        */
+        selectedPatient =
+            data.patient;
+
+
+        /* =================================================
+        PATIENT INFORMATION
+        ================================================= */
+
+
+        document
+            .getElementById("patientName")
+            .textContent =
+            data.patient.full_name || "-";
+
+
+        document
+            .getElementById("hospitalNumber")
+            .textContent =
+            data.patient.patient_no || "-";
+
+
+        document
+            .getElementById("ageGender")
+            .textContent =
+            `${data.patient.age || "-"} / ${data.patient.gender || "-"}`;
+
+
+        document
+            .getElementById("department")
+            .textContent =
+            data.patient.department || "-";
+
+
+        document
+            .getElementById("doctor")
+            .textContent =
+            data.patient.doctor || "-";
+
+
+        /* =================================================
+        CURRENT BALANCE
+        ================================================= */
+
+
+        const balance =
+            Number(
+                data.current_balance || 0
+            );
+
+
+        document
+            .getElementById("currentBalance")
+            .textContent =
+            `Rs. ${balance.toFixed(2)}`;
+
+
+        /* =================================================
+        SHOW PATIENT SECTIONS
+        ================================================= */
+
+
+        document
+            .getElementById("patientSection")
+            .style.display =
+            "block";
+
+
+        document
+            .getElementById("depositSection")
+            .style.display =
+            "block";
+
+
+        document
+            .getElementById("historySection")
+            .style.display =
+            "block";
+
+
+        /* =================================================
+        DEPOSIT HISTORY
+        ================================================= */
+
+        renderHistory(
+            data.history || []
+        );
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "FETCH PATIENT ERROR:",
+            error
+        );
+
+
+        alert(
+            "Unable to fetch patient.\n\n" +
+            "Error: " +
+            error.message
+        );
+
+    }
+
+}
+
+
+
+/* =====================================================
+RENDER DEPOSIT HISTORY
+===================================================== */
+
+function renderHistory(history) {
+
+    const tbody =
+        document
+            .getElementById("historyBody");
+
+
+    if (!tbody) {
+
+        console.error(
+            "historyBody element not found"
+        );
+
+        return;
+    }
+
+
+    tbody.innerHTML = "";
+
+
+    /* -------------------------------------------------
+    No history
+    ------------------------------------------------- */
+
+    if (
+        !history ||
+        history.length === 0
+    ) {
+
+        tbody.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="7"
+                    class="empty-history"
+                >
+                    No deposit history found
+                </td>
+
+            </tr>
+
+        `;
+
+        return;
+    }
+
+
+    /* -------------------------------------------------
+    History rows
+    ------------------------------------------------- */
+
+    /*
+    * Patient name / hospital id are constant for every
+    * row on this page (single patient view), but we read
+    * them per-row in case the API ever returns them
+    * per-entry (e.g. a combined/all-patients history view).
+    */
+
+    history.forEach(
+        function(item, index) {
+
+            const row =
+                document.createElement("tr");
+
+
+            const date =
+                item.date || "-";
+
+
+            const patientName =
+                item.patient_name ||
+                (selectedPatient && selectedPatient.full_name) ||
+                "-";
+
+
+            const hospitalId =
+                item.patient_no ||
+                (selectedPatient && selectedPatient.patient_no) ||
+                "-";
+
+
+            const receiptNo =
+                item.receipt_no || "-";
+
+
+            const amount =
+                Number(
+                    item.amount || 0
+                ).toFixed(2);
+
+
+            const remarks =
+                item.remarks || "-";
+
+
+            row.innerHTML = `
+
+                <td>
+                    ${index + 1}
+                </td>
+
+                <td>
+                    ${date}
+                </td>
+
+                <td class="patient-name-cell">
+                    ${patientName}
+                </td>
+
+                <td>
+                    <span class="hospital-id-cell">
+                        ${hospitalId}
+                    </span>
+                </td>
+
+                <td>
+                    <span class="receipt-chip">
+                        ${receiptNo}
+                    </span>
+                </td>
+
+                <td class="amount-cell">
+                    Rs. ${amount}
+                </td>
+
+                <td>
+                    ${remarks}
+                </td>
+
+            `;
+
+
+            tbody.appendChild(row);
+
+        }
+    );
+
+}
+
+
+
+/* =====================================================
+SAVE DEPOSIT
+===================================================== */
+
+async function saveDeposit() {
+
+    /* -------------------------------------------------
+    Patient check
+    ------------------------------------------------- */
+
+    if (!selectedPatient) {
+
+        alert(
+            "Please fetch a patient first"
+        );
+
+        return;
+    }
+
+
+    /* -------------------------------------------------
+    Get amount
+    ------------------------------------------------- */
+
+    const amount =
+        document
+            .getElementById("depositAmount")
+            .value
+            .trim();
+
+
+    /* -------------------------------------------------
+    Get remarks
+    ------------------------------------------------- */
+
+    const remarks =
+        document
+            .getElementById("remarks")
+            .value
+            .trim();
+
+
+    /* -------------------------------------------------
+    Validate amount
+    ------------------------------------------------- */
+
+    if (
+        !amount ||
+        Number(amount) <= 0
+    ) {
+
+        alert(
+            "Please enter a valid deposit amount"
+        );
+
+        return;
+    }
+
+
+    const saveBtn =
+        document.getElementById("saveDepositBtn");
+
+    saveBtn.disabled = true;
+    saveBtn.textContent = "Saving...";
+
+
+    try {
+
+        const response =
+            await fetch(
+                "{{ url_for('main.save_deposit') }}",
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body: JSON.stringify({
+
+                        patient_no:
+                            selectedPatient.patient_no,
+
+                        amount:
+                            amount,
+
+                        remarks:
+                            remarks
+
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        console.log(
+            "Save deposit response:",
+            data
+        );
+
+
+        /* -------------------------------------------------
+        Server error
+        ------------------------------------------------- */
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            alert(
+
+                data.message ||
+                "Unable to save deposit"
+
+            );
+
+            return;
+        }
+
+
+        /* -------------------------------------------------
+        SUCCESS — show popup instead of alert()
+        ------------------------------------------------- */
+
+        showSuccessPopup({
+            patientName: selectedPatient.full_name || "-",
+            receiptNo: data.receipt_no || "-",
+            balance: Number(data.balance || 0)
+        });
+
+
+        /* -------------------------------------------------
+        Clear form
+        ------------------------------------------------- */
+
+        document
+            .getElementById("depositAmount")
+            .value = "";
+
+
+        document
+            .getElementById("remarks")
+            .value = "";
+
+
+        /* -------------------------------------------------
+        Refresh patient information
+        and deposit history
+        ------------------------------------------------- */
+
+        await fetchPatient();
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "SAVE DEPOSIT ERROR:",
+            error
+        );
+
+
+        alert(
+
+            "Unable to save deposit.\n\n" +
+
+            "Error: " +
+            error.message
+
+        );
+
+    }
+
+    finally {
+
+        saveBtn.disabled = false;
+        saveBtn.textContent = "Save Deposit";
+
+    }
+
+}
+
+
+
+/* =====================================================
+SUCCESS POPUP CONTROLS
+===================================================== */
+
+function showSuccessPopup({ patientName, receiptNo, balance }) {
+
+    document.getElementById("popupPatientName").textContent =
+        patientName;
+
+    document.getElementById("popupReceiptNo").textContent =
+        receiptNo;
+
+    document.getElementById("popupBalance").textContent =
+        `Rs. ${balance.toFixed(2)}`;
+
+    document.getElementById("successMessage").textContent =
+        `The deposit for ${patientName} has been recorded successfully.`;
+
+    document
+        .getElementById("successPopupOverlay")
+        .classList.add("show");
+
+}
+
+
+function closeSuccessPopup() {
+
+    document
+        .getElementById("successPopupOverlay")
+        .classList.remove("show");
+
+}
+
+
+/*
+* Close popup on outside click
+*/
+
+document
+    .getElementById("successPopupOverlay")
+    .addEventListener("click", function(event) {
+
+        if (event.target === this) {
+
+            closeSuccessPopup();
+
+        }
+
+    });
+
+
+/*
+* Close popup on Escape key
+*/
+
+document.addEventListener("keydown", function(event) {
+
+    if (event.key === "Escape") {
+
+        closeSuccessPopup();
+
+    }
+
+});
+
+
+
+/* =====================================================
+HIDE PATIENT INFORMATION
+===================================================== */
+
+function hidePatient() {
+
+    selectedPatient = null;
+
+
+    document
+        .getElementById("patientSection")
+        .style.display =
+        "none";
+
+
+    document
+        .getElementById("depositSection")
+        .style.display =
+        "none";
+
+
+    document
+        .getElementById("historySection")
+        .style.display =
+        "none";
+
+}
+
+
+
+/* =====================================================
+ENTER KEY
+===================================================== */
+
+const patientNoInput =
+    document.getElementById("patientNo");
+
+
+if (patientNoInput) {
+
+    patientNoInput.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (event.key === "Enter") {
+
+                event.preventDefault();
+
+                fetchPatient();
+
+            }
+
+        }
+    );
+
+}
+
+</script>
+
+{% endblock %}

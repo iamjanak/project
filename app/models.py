@@ -260,6 +260,8 @@ class Department(db.Model):
     department_name = db.Column(db.String(150), nullable=False)
     dep_type = db.Column(db.String(100), nullable=True)
     status = db.Column(db.String(20), nullable=False, default="Active")
+
+    
 class Doctor(db.Model):
     __tablename__ = "doctors"
 
@@ -290,4 +292,66 @@ class Doctor(db.Model):
     department = db.relationship(
         "Department",
         backref="doctors"
+    )
+
+class Test(db.Model):
+    __tablename__ = "tests"
+
+    id = db.Column(db.Integer, primary_key=True)
+    test_code = db.Column(db.String(50), unique=True, nullable=False)
+    test_name = db.Column(db.String(150), nullable=False)
+    price = db.Column(db.Numeric(10, 2), nullable=False)
+    status = db.Column(db.String(20), default="Active")
+
+
+# =========================================================
+# DEPOSIT MODEL
+# =========================================================
+# =========================================================
+# DEPOSIT MODEL
+# =========================================================
+
+class Deposit(db.Model):
+    __tablename__ = "deposits"
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    receipt_no = db.Column(
+        db.String(20),
+        unique=True,
+        nullable=False
+    )
+
+    patient_id = db.Column(
+        db.Integer,
+        nullable=False
+    )
+
+    patient_no = db.Column(
+        db.String(20),
+        nullable=True
+    )
+
+    patient_name = db.Column(
+        db.String(100),
+        nullable=True
+    )
+
+    amount = db.Column(
+        db.Numeric(10, 2),
+        nullable=False
+    )
+
+    deposit_date = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=datetime.utcnow
+    )
+
+    remarks = db.Column(
+        db.Text,
+        nullable=True
     )

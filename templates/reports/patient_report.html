@@ -19,11 +19,7 @@
         <div class="search-box">
             <span class="search-icon">🔍</span>
 
-            <input
-                type="text"
-                placeholder="Search Patient"
-                id="patientSearch"
-            >
+            <input type="text" placeholder="Search Patient" id="patientSearch">
         </div>
 
         <!-- Page Title -->
@@ -129,9 +125,9 @@
                     <!-- Department -->
                     <td>
                         {% if patient.department %}
-                            {{ patient.department.department_name }}
+                        {{ patient.department.department_name }}
                         {% else %}
-                            Not Assigned
+                        Not Assigned
                         {% endif %}
                     </td>
 
@@ -139,9 +135,9 @@
                     <!-- Doctor -->
                     <td>
                         {% if patient.doctor %}
-                            {{ patient.doctor.doc_name }}
+                        {{ patient.doctor.doc_name }}
                         {% else %}
-                            Not Assigned
+                        Not Assigned
                         {% endif %}
                     </td>
 
@@ -151,15 +147,15 @@
 
                         {% if patient.status == "Active" %}
 
-                            <span class="badge badge-active">
-                                Active
-                            </span>
+                        <span class="badge badge-active">
+                            Active
+                        </span>
 
                         {% else %}
 
-                            <span class="badge badge-inactive">
-                                Inactive
-                            </span>
+                        <span class="badge badge-inactive">
+                            Inactive
+                        </span>
 
                         {% endif %}
 
@@ -169,12 +165,9 @@
                     <!-- Action -->
                     <td class="action-cell">
 
-                        <a
-                            href="{{ url_for('main.patient_report_view', patient_id=patient.id) }}"
-                            class="view-btn"
-                            title="View Patient Report"
-                        >
-                            👁
+                        <a href="{{ url_for('main.patient_report_view', patient_id=patient.id) }}">
+                            👁 View Report
+
                         </a>
 
                     </td>
@@ -187,10 +180,7 @@
                 <!-- No Patients -->
                 <tr>
 
-                    <td
-                        colspan="9"
-                        class="no-data"
-                    >
+                    <td colspan="9" class="no-data">
                         No patients found
                     </td>
 
@@ -246,41 +236,41 @@
 ========================== -->
 <script>
 
-document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
 
-    const searchInput =
-        document.getElementById("patientSearch");
+        const searchInput =
+            document.getElementById("patientSearch");
 
-    const rows =
-        document.querySelectorAll(
-            "#patientTableBody tr"
-        );
+        const rows =
+            document.querySelectorAll(
+                "#patientTableBody tr"
+            );
 
-    searchInput.addEventListener("keyup", function () {
+        searchInput.addEventListener("keyup", function () {
 
-        const searchValue =
-            this.value.toLowerCase().trim();
+            const searchValue =
+                this.value.toLowerCase().trim();
 
-        rows.forEach(function (row) {
+            rows.forEach(function (row) {
 
-            const rowText =
-                row.textContent.toLowerCase();
+                const rowText =
+                    row.textContent.toLowerCase();
 
-            if (rowText.includes(searchValue)) {
+                if (rowText.includes(searchValue)) {
 
-                row.style.display = "";
+                    row.style.display = "";
 
-            } else {
+                } else {
 
-                row.style.display = "none";
+                    row.style.display = "none";
 
-            }
+                }
+
+            });
 
         });
 
     });
-
-});
 
 </script>
 

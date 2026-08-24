@@ -1,0 +1,640 @@
+/* ==========================================
+   ADD TEST PAGE
+   ========================================== */
+
+.add-test-page {
+
+    width: 100%;
+
+    padding: 25px 30px;
+
+    box-sizing: border-box;
+}
+
+
+/* ==========================================
+   PAGE HEADER
+   ========================================== */
+
+.add-test-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 25px;
+}
+
+
+.add-test-heading h2 {
+
+    margin: 0;
+
+    color: #222;
+
+    font-size: 25px;
+
+    font-weight: 700;
+}
+
+
+.add-test-heading p {
+
+    margin: 6px 0 0;
+
+    color: #777;
+
+    font-size: 14px;
+}
+
+
+/* ==========================================
+   BACK BUTTON
+   ========================================== */
+
+.header-action {
+
+    display: flex;
+
+    align-items: center;
+}
+
+
+.back-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 10px 16px;
+
+    border: 1px solid #dfe3e8;
+
+    border-radius: 7px;
+
+    background: #ffffff;
+
+    color: #555;
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    transition: all 0.2s ease;
+}
+
+
+.back-btn:hover {
+
+    background: #f6f7f9;
+
+    border-color: #cfd4da;
+
+    color: #222;
+}
+
+
+/* ==========================================
+   FORM CARD
+   ========================================== */
+
+.add-test-card {
+
+    width: 100%;
+
+    max-width: 900px;
+
+    margin: 0 auto;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 10px;
+
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+
+    overflow: hidden;
+}
+
+
+/* ==========================================
+   FORM CARD HEADER
+   ========================================== */
+
+.form-card-header {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 22px 25px;
+
+    border-bottom: 1px solid #e9ebef;
+
+    background: #fafbfc;
+}
+
+
+.form-icon {
+
+    width: 48px;
+
+    height: 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #eff6ff;
+
+    font-size: 22px;
+}
+
+
+.form-card-header h3 {
+
+    margin: 0;
+
+    color: #252525;
+
+    font-size: 17px;
+
+    font-weight: 650;
+}
+
+
+.form-card-header p {
+
+    margin: 5px 0 0;
+
+    color: #858a93;
+
+    font-size: 13px;
+}
+
+
+/* ==========================================
+   FORM
+   ========================================== */
+
+.test-form {
+
+    padding: 25px;
+}
+
+
+/* ==========================================
+   FORM GRID
+   ========================================== */
+
+.form-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    column-gap: 25px;
+
+    row-gap: 22px;
+}
+
+
+/* ==========================================
+   FORM GROUP
+   ========================================== */
+
+.form-group {
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+.form-group label {
+
+    margin-bottom: 8px;
+
+    color: #333;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+
+.form-group label span {
+
+    color: #dc3545;
+
+    margin-left: 2px;
+}
+
+
+/* ==========================================
+   INPUTS
+   ========================================== */
+
+.form-group input,
+.form-group select {
+
+    width: 100%;
+
+    height: 43px;
+
+    padding: 0 13px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #d9dde3;
+
+    border-radius: 6px;
+
+    background: #ffffff;
+
+    color: #333;
+
+    outline: none;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.form-group input::placeholder {
+
+    color: #a3a7ad;
+}
+
+
+.form-group input:focus,
+.form-group select:focus {
+
+    border-color: #2563eb;
+
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+
+.form-group select {
+
+    cursor: pointer;
+}
+
+
+/* ==========================================
+   FORM HELP TEXT
+   ========================================== */
+
+.form-group small {
+
+    margin-top: 6px;
+
+    color: #8b9098;
+
+    font-size: 11px;
+
+    line-height: 1.4;
+}
+
+
+/* ==========================================
+   PRICE INPUT
+   ========================================== */
+
+.price-wrapper {
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+}
+
+
+.price-wrapper .currency {
+
+    position: absolute;
+
+    left: 13px;
+
+    z-index: 1;
+
+    color: #666;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    pointer-events: none;
+}
+
+
+.price-wrapper input {
+
+    padding-left: 43px;
+}
+
+
+/* Remove number input arrows */
+
+.price-wrapper input::-webkit-outer-spin-button,
+.price-wrapper input::-webkit-inner-spin-button {
+
+    -webkit-appearance: none;
+
+    margin: 0;
+}
+
+
+.price-wrapper input[type="number"] {
+
+    -moz-appearance: textfield;
+}
+
+
+/* ==========================================
+   FORM FOOTER
+   ========================================== */
+
+.form-footer {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    margin-top: 30px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid #e9ebef;
+}
+
+
+/* ==========================================
+   CANCEL BUTTON
+   ========================================== */
+
+.cancel-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    height: 40px;
+
+    padding: 0 17px;
+
+    border: 1px solid #d9dde3;
+
+    border-radius: 6px;
+
+    background: #ffffff;
+
+    color: #555;
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    box-sizing: border-box;
+
+    transition: all 0.2s ease;
+}
+
+
+.cancel-btn:hover {
+
+    background: #f5f6f8;
+
+    color: #333;
+}
+
+
+/* ==========================================
+   RESET BUTTON
+   ========================================== */
+
+.reset-btn {
+
+    height: 40px;
+
+    padding: 0 17px;
+
+    border: 1px solid #d9dde3;
+
+    border-radius: 6px;
+
+    background: #f8f9fa;
+
+    color: #555;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+
+.reset-btn:hover {
+
+    background: #eef0f3;
+
+    border-color: #cdd2d8;
+}
+
+
+/* ==========================================
+   SAVE BUTTON
+   ========================================== */
+
+.save-btn {
+
+    height: 40px;
+
+    padding: 0 20px;
+
+    border: 1px solid #2563eb;
+
+    border-radius: 6px;
+
+    background: #2563eb;
+
+    color: #ffffff;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+
+.save-btn:hover {
+
+    background: #1d4ed8;
+
+    border-color: #1d4ed8;
+
+    box-shadow: 0 3px 8px rgba(37, 99, 235, 0.20);
+}
+
+
+.save-btn:active {
+
+    transform: translateY(1px);
+}
+
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+@media (max-width: 800px) {
+
+    .add-test-page {
+
+        padding: 20px;
+    }
+
+
+    .form-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    .add-test-header {
+
+        align-items: flex-start;
+
+        gap: 15px;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .add-test-header {
+
+        flex-direction: column;
+    }
+
+
+    .header-action {
+
+        width: 100%;
+    }
+
+
+    .back-btn {
+
+        width: 100%;
+    }
+
+
+    .add-test-card {
+
+        max-width: 100%;
+    }
+
+
+    .test-form {
+
+        padding: 20px;
+    }
+
+
+    .form-card-header {
+
+        padding: 18px 20px;
+    }
+
+
+    .form-footer {
+
+        flex-direction: column-reverse;
+
+        align-items: stretch;
+    }
+
+
+    .cancel-btn,
+    .reset-btn,
+    .save-btn {
+
+        width: 100%;
+    }
+
+}
+
+/* ==========================================
+   BACK BUTTON
+   ========================================== */
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 10px 18px;
+
+    background: #f5f5f5;
+    color: #17b6c5;
+
+    border: 1px solid #ddd;
+    border-radius: 7px;
+
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+    background: #17b6c5;
+    color: #111;
+}
+
+.back-icon {
+    font-size: 18px;
+    line-height: 1;
+}

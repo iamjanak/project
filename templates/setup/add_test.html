@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+
+{% block title %}
+Add Test - SwasthaCare
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/add_test.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="add-test-page">
+
+    <!-- ==========================================
+         PAGE HEADER
+         ========================================== -->
+
+    <div class="add-test-header">
+
+        <div class="add-test-heading">
+
+            <h2>
+                Add Test
+            </h2>
+
+            <p>
+                Add a new laboratory test to the system
+            </p>
+
+        </div>
+
+
+        <div class="header-action">
+
+            <a href="{{ url_for('main.test_setup') }}" class="back-btn">
+                ← Back to Test Setup
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         FORM CARD
+         ========================================== -->
+
+    <div class="add-test-card">
+
+        <div class="form-card-header">
+
+            <div class="form-icon">
+                🧪
+            </div>
+
+            <div>
+
+                <h3>
+                    Test Information
+                </h3>
+
+                <p>
+                    Enter the details of the laboratory test.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==========================================
+             FORM
+             ========================================== -->
+
+        <form method="POST" action="{{ url_for('main.add_test') }}" class="test-form">
+
+            <div class="form-grid">
+
+
+                <!-- ==================================
+                     TEST CODE
+                     ================================== -->
+
+                <div class="form-group">
+
+                    <label for="test_code">
+                        Test Code
+                        <span>*</span>
+                    </label>
+
+                    <input type="text" id="test_code" name="test_code" placeholder="Enter test code"
+                        value="{{ request.form.get('test_code', '') }}" maxlength="50" autocomplete="off" required>
+
+                    <small>
+                        Example: CBC001
+                    </small>
+
+                </div>
+
+
+                <!-- ==================================
+                     TEST NAME
+                     ================================== -->
+
+                <div class="form-group">
+
+                    <label for="test_name">
+                        Test Name
+                        <span>*</span>
+                    </label>
+
+                    <input type="text" id="test_name" name="test_name" placeholder="Enter test name"
+                        value="{{ request.form.get('test_name', '') }}" maxlength="150" autocomplete="off" required>
+
+                    <small>
+                        Example: Complete Blood Count
+                    </small>
+
+                </div>
+
+
+                <!-- ==================================
+                     PRICE
+                     ================================== -->
+
+                <div class="form-group">
+
+                    <label for="price">
+                        Test Price
+                        <span>*</span>
+                    </label>
+
+                    <div class="price-wrapper">
+
+                        <span class="currency">
+                            Rs.
+                        </span>
+
+                        <input type="number" id="price" name="price" placeholder="0.00"
+                            value="{{ request.form.get('price', '') }}" min="0" step="0.01" required>
+
+                    </div>
+
+                    <small>
+                        Enter the test price in Nepalese Rupees.
+                    </small>
+
+                </div>
+
+
+                <!-- ==================================
+                     STATUS
+                     ================================== -->
+
+                <div class="form-group">
+
+                    <label for="status">
+                        Status
+                        <span>*</span>
+                    </label>
+
+                    <select id="status" name="status" required>
+
+                        <option value="Active" {% if request.form.get('status', 'Active' )=='Active' %} selected {%
+                            endif %}>
+                            Active
+                        </option>
+
+                        <option value="Inactive" {% if request.form.get('status')=='Inactive' %} selected {% endif %}>
+                            Inactive
+                        </option>
+
+                    </select>
+
+                    <small>
+                        Inactive tests will not be available for normal use.
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==========================================
+                 FORM ACTIONS
+                 ========================================== -->
+
+            <div class="form-footer">
+
+                <a href="{{ url_for('main.test_setup') }}" class="cancel-btn">
+                    Cancel
+                </a>
+
+                <button type="reset" class="reset-btn">
+                    Clear
+                </button>
+
+                <button type="submit" class="save-btn">
+                    Save Test
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

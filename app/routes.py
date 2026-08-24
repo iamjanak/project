@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, session, jsonify, flash, url_for
 
-from app.models import Patient, Bill, BillItem, Role, User, Department, Doctor
+from app.models import Patient, Bill, BillItem, Role, User, Department, Doctor, Test, Deposit
 from app.database import db 
 from datetime import datetime
 
@@ -38,7 +38,10 @@ def login_post():
     # Real users created via User Setup
     user = User.query.filter_by(username=username).first()
 
-    if user and user.check_password(password):
+    if user and user.check_password(password
+
+                                    
+                                    ):
 
         if user.status != "Active":
             flash("Your account is inactive. Please contact the administrator.", "danger")
@@ -211,8 +214,6 @@ def billing():
         active_page="billing"
     )
 
-
-
 # ==============================
 # Fetch Patient For Billing
 # ==============================
@@ -225,28 +226,81 @@ def fetch_patient(patient_no):
             "error": "Unauthorized"
         }), 401
 
+    # ------------------------------------------
+    # Find Patient
+    # ------------------------------------------
 
     patient = Patient.query.filter_by(
         patient_no=patient_no
     ).first()
-
 
     if not patient:
         return jsonify({
             "error": "Patient not found"
         }), 404
 
+    # ------------------------------------------
+    # Department Name
+    # ------------------------------------------
+
+    department_name = ""
+
+    if patient.department:
+
+        try:
+            department = Department.query.get(
+                int(patient.department)
+            )
+
+            if department:
+                department_name = department.department_name
+
+        except (ValueError, TypeError):
+
+            # If old patient record already contains department name
+            department_name = str(patient.department)
+
+    # ------------------------------------------
+    # Doctor Name
+    # ------------------------------------------
+
+    doctor_name = ""
+
+    if patient.doctor:
+
+        try:
+            doctor = Doctor.query.get(
+                int(patient.doctor)
+            )
+
+            if doctor:
+                doctor_name = doctor.doc_name
+
+        except (ValueError, TypeError):
+
+            # If old patient record already contains doctor name
+            doctor_name = str(patient.doctor)
+
+    # ------------------------------------------
+    # Return Patient Data
+    # ------------------------------------------
 
     return jsonify({
 
         "patient_no": patient.patient_no,
+
         "name": patient.full_name,
+
         "age": patient.age,
+
         "gender": patient.gender,
-        "department": patient.department,
-        "doctor": patient.doctor
+
+        "department": department_name,
+
+        "doctor": doctor_name
 
     })
+
 
 # ==============================
 # Save Patient Bill
@@ -690,60 +744,141 @@ def edit_doctor(doctor_id):
         doctor=doctor,
         departments=departments
     )
-
 # ==============================
 # Generate Bill
 # ==============================
+
 @main.route("/generate_bill/<int:bill_id>")
 def generate_bill(bill_id):
 
     if "user" not in session:
         return redirect("/")
 
+    # ------------------------------------------
+    # Get Bill
+    # ------------------------------------------
 
     bill = Bill.query.get_or_404(bill_id)
 
+    patient = bill.patient
+
+    # ------------------------------------------
+    # Get Department Name
+    # ------------------------------------------
+
+    department_name = ""
+
+    if patient.department:
+
+        try:
+            department = Department.query.get(
+                int(patient.department)
+            )
+
+            if department:
+                department_name = department.department_name
+
+        except (ValueError, TypeError):
+
+            # If old record already contains department name/code
+            department_name = str(patient.department)
+
+    # ------------------------------------------
+    # Get Doctor Name
+    # ------------------------------------------
+
+    doctor_name = ""
+
+    if patient.doctor:
+
+        try:
+            doctor = Doctor.query.get(
+                int(patient.doctor)
+            )
+
+            if doctor:
+                doctor_name = doctor.doc_name
+
+        except (ValueError, TypeError):
+
+            # If old record already contains doctor name/code
+            doctor_name = str(patient.doctor)
+
+    # ------------------------------------------
+    # Bill Items
+    # ------------------------------------------
 
     items = []
 
     for item in bill.items:
 
         gross = item.rate * item.quantity
+
         net = item.amount
+
         disc_amt = gross - net
-        disc_pct = (disc_amt / gross * 100) if gross else 0
+
+        disc_pct = (
+            (disc_amt / gross * 100)
+            if gross
+            else 0
+        )
 
         items.append({
+
             "name": item.service_name,
-            "code": getattr(item, "service_code", ""),
+
+            "code": getattr(
+                item,
+                "service_code",
+                ""
+            ),
+
             "qty": item.quantity,
+
             "rate": item.rate,
+
             "total": gross,
+
             "disc_pct": disc_pct,
+
             "disc_amt": disc_amt,
+
             "net_total": net
         })
 
+    # ------------------------------------------
+    # Bill Data
+    # ------------------------------------------
 
     bill_data = {
 
         "hospital_name": "SwasthaCare Hospital",
+
         "hospital_address": "Kathmandu, Nepal",
 
         "bill_no": bill.bill_no,
 
-        "patient_no": bill.patient.patient_no,
+        "patient_no": patient.patient_no,
 
-        "patient_name": bill.patient.full_name,
+        "patient_name": patient.full_name,
 
-        "age_gender": f"{bill.patient.age} Yrs / {bill.patient.gender}",
+        "age_gender": (
+            f"{patient.age} Yrs / "
+            f"{patient.gender}"
+        ),
 
-        "doctor": bill.patient.doctor,
+        # IMPORTANT
+        # Use names instead of IDs/codes
+        "doctor": doctor_name,
 
-        "department": bill.patient.department,
+        "department": department_name,
 
-        "transaction_date": bill.bill_date.strftime("%Y-%m-%d")
-            if hasattr(bill, "bill_date") and bill.bill_date else "",
+        "transaction_date": (
+            bill.bill_date.strftime("%Y-%m-%d")
+            if bill.bill_date
+            else ""
+        ),
 
         "items": items,
 
@@ -762,11 +897,224 @@ def generate_bill(bill_id):
         "remarks": bill.remarks
     }
 
+    # ------------------------------------------
+    # Render Bill
+    # ------------------------------------------
 
     return render_template(
         "billing/bill.html",
         bill=bill_data
     )
+
+
+# =========================================================
+# BILL LIST
+# =========================================================
+
+@main.route("/bill_details")
+def bill_details():
+
+    if "user" not in session:
+        return redirect("/")
+
+    bills = Bill.query.order_by(
+        Bill.id.desc()
+    ).all()
+
+    return render_template(
+        "billing/bill_details.html",
+        bills=bills
+    )
+
+
+# =========================================================
+# BILL DETAIL - SINGLE BILL
+# =========================================================
+
+@main.route("/bill_detail/<int:bill_id>")
+def bill_detail(bill_id):
+
+    if "user" not in session:
+        return redirect("/")
+
+    bill = Bill.query.get_or_404(bill_id)
+
+    patient = bill.patient
+
+    if not patient:
+        return "Patient not found", 404
+
+
+    # =====================================================
+    # DEPARTMENT
+    # =====================================================
+
+    department_name = ""
+
+    if patient.department:
+
+        try:
+
+            department = Department.query.get(
+                int(patient.department)
+            )
+
+            if department:
+                department_name = department.department_name
+
+        except (ValueError, TypeError):
+
+            department_name = str(
+                patient.department
+            )
+
+
+    # =====================================================
+    # DOCTOR
+    # =====================================================
+
+    doctor_name = ""
+
+    if patient.doctor:
+
+        try:
+
+            doctor = Doctor.query.get(
+                int(patient.doctor)
+            )
+
+            if doctor:
+                doctor_name = doctor.doc_name
+
+        except (ValueError, TypeError):
+
+            doctor_name = str(
+                patient.doctor
+            )
+
+
+    # =====================================================
+    # BILL ITEMS
+    # =====================================================
+
+    items = []
+
+    for item in bill.items:
+
+        qty = int(item.quantity or 1)
+
+        rate = float(item.rate or 0)
+
+        gross = rate * qty
+
+        net = float(item.amount or 0)
+
+        disc_amt = gross - net
+
+        disc_pct = (
+            (disc_amt / gross) * 100
+            if gross > 0
+            else 0
+        )
+
+        items.append({
+
+            "name": item.service_name,
+
+            "code": getattr(
+                item,
+                "service_code",
+                ""
+            ),
+
+            "qty": qty,
+
+            "rate": rate,
+
+            "total": gross,
+
+            "disc_pct": disc_pct,
+
+            "disc_amt": disc_amt,
+
+            "net_total": net
+
+        })
+
+
+    # =====================================================
+    # BILL DATA
+    # =====================================================
+
+    bill_data = {
+
+        "hospital_name":
+            "SwasthaCare Hospital",
+
+        "hospital_address":
+            "Kathmandu, Nepal",
+
+        "bill_no":
+            bill.bill_no,
+
+        "transaction_date":
+            bill.bill_date.strftime("%Y-%m-%d")
+            if bill.bill_date
+            else "",
+
+        "patient_no":
+            patient.patient_no,
+
+        "patient_name":
+            patient.full_name,
+
+        "age_gender":
+            f"{patient.age or 0} Yrs / "
+            f"{patient.gender or ''}",
+
+        "doctor":
+            doctor_name,
+
+        "department":
+            department_name,
+
+        "items":
+            items,
+
+        "subtotal":
+            float(bill.subtotal or 0),
+
+        "discount":
+            float(bill.discount or 0),
+
+        "total":
+            float(bill.total or 0),
+
+        "pay_type":
+            bill.pay_type or "Cash",
+
+        "tender_amt":
+            float(bill.tender_amt or 0),
+
+        "return_amt":
+            float(bill.return_amt or 0),
+
+        "remarks":
+            bill.remarks or "",
+
+        "patient_type":
+            "GEN",
+
+        "status":
+            "PAID"
+    }
+
+
+    return render_template(
+        "billing/bill_detail.html",
+        bill=bill_data
+    )
+
 
 # ==============================
 # User Setup List
@@ -903,6 +1251,858 @@ def edit_user(user_id):
         user=user,
         roles=roles
     )
+
+# ==============================
+# Test Setup
+# ==============================
+
+@main.route("/test_setup")
+def test_setup():
+
+    tests = Test.query.order_by(
+        Test.id.desc()
+    ).all()
+
+    return render_template(
+        "setup/test_setup.html",
+        tests=tests,
+        active_page="test_setup"
+    )
+
+
+# ==========================================
+# Add Test
+# ==========================================
+
+@main.route("/add_test", methods=["GET", "POST"])
+def add_test():
+
+    if request.method == "POST":
+
+        test_code = request.form.get(
+            "test_code",
+            ""
+        ).strip()
+
+        test_name = request.form.get(
+            "test_name",
+            ""
+        ).strip()
+
+        price = request.form.get(
+            "price",
+            ""
+        ).strip()
+
+        status = request.form.get(
+            "status",
+            "Active"
+        ).strip()
+
+
+        # ------------------------------------------
+        # Validation
+        # ------------------------------------------
+
+        if not test_code:
+
+            flash(
+                "Test code is required.",
+                "error"
+            )
+
+            return render_template(
+                "setup/add_test.html"
+            )
+
+
+        if not test_name:
+
+            flash(
+                "Test name is required.",
+                "error"
+            )
+
+            return render_template(
+                "setup/add_test.html"
+            )
+
+
+        if not price:
+
+            flash(
+                "Test price is required.",
+                "error"
+            )
+
+            return render_template(
+                "setup/add_test.html"
+            )
+
+
+        # ------------------------------------------
+        # Validate Price
+        # ------------------------------------------
+
+        try:
+
+            price = float(price)
+
+            if price < 0:
+
+                flash(
+                    "Test price cannot be negative.",
+                    "error"
+                )
+
+                return render_template(
+                    "setup/add_test.html"
+                )
+
+        except ValueError:
+
+            flash(
+                "Please enter a valid test price.",
+                "error"
+            )
+
+            return render_template(
+                "setup/add_test.html"
+            )
+
+
+        # ------------------------------------------
+        # Check Duplicate Test Code
+        # ------------------------------------------
+
+        existing_test = Test.query.filter_by(
+            test_code=test_code
+        ).first()
+
+
+        if existing_test:
+
+            flash(
+                f"Test code '{test_code}' already exists. "
+                "Please use a different test code.",
+                "error"
+            )
+
+            return render_template(
+                "setup/add_test.html"
+            )
+
+
+        # ------------------------------------------
+        # Create Test
+        # ------------------------------------------
+
+        test = Test(
+
+            test_code=test_code,
+
+            test_name=test_name,
+
+            price=price,
+
+            status=status
+
+        )
+
+
+        # ------------------------------------------
+        # Save
+        # ------------------------------------------
+
+        try:
+
+            db.session.add(test)
+
+            db.session.commit()
+
+            flash(
+                "Test added successfully.",
+                "success"
+            )
+
+            return redirect(
+                url_for("main.test_setup")
+            )
+
+
+        except Exception as e:
+
+            db.session.rollback()
+
+            print(
+                "Error adding test:",
+                e
+            )
+
+            flash(
+                "Unable to add test. Please try again.",
+                "error"
+            )
+
+            return render_template(
+                "setup/add_test.html"
+            )
+
+
+    # ------------------------------------------
+    # GET
+    # ------------------------------------------
+
+    return render_template(
+        "setup/add_test.html"
+    )
+
+
+# ==========================================
+# Edit Test
+# ==========================================
+
+@main.route(
+    "/edit_test/<int:test_id>",
+    methods=["GET", "POST"]
+)
+def edit_test(test_id):
+
+    test = Test.query.get_or_404(
+        test_id
+    )
+
+
+    if request.method == "POST":
+
+        test_code = request.form.get(
+            "test_code",
+            ""
+        ).strip()
+
+        test_name = request.form.get(
+            "test_name",
+            ""
+        ).strip()
+
+        price = request.form.get(
+            "price",
+            ""
+        ).strip()
+
+        status = request.form.get(
+            "status",
+            "Active"
+        ).strip()
+
+
+        # ------------------------------------------
+        # Validation
+        # ------------------------------------------
+
+        if not test_code:
+
+            flash(
+                "Test code is required.",
+                "error"
+            )
+
+            return render_template(
+                "setup/edit_test.html",
+                test=test
+            )
+
+
+        if not test_name:
+
+            flash(
+                "Test name is required.",
+                "error"
+            )
+
+            return render_template(
+                "setup/edit_test.html",
+                test=test
+            )
+
+
+        if not price:
+
+            flash(
+                "Test price is required.",
+                "error"
+            )
+
+            return render_template(
+                "setup/edit_test.html",
+                test=test
+            )
+
+
+        # ------------------------------------------
+        # Validate Price
+        # ------------------------------------------
+
+        try:
+
+            price = float(price)
+
+            if price < 0:
+
+                flash(
+                    "Test price cannot be negative.",
+                    "error"
+                )
+
+                return render_template(
+                    "setup/edit_test.html",
+                    test=test
+                )
+
+        except ValueError:
+
+            flash(
+                "Please enter a valid test price.",
+                "error"
+            )
+
+            return render_template(
+                "setup/edit_test.html",
+                test=test
+            )
+
+
+        # ------------------------------------------
+        # Check Duplicate Test Code
+        # ------------------------------------------
+
+        existing_test = Test.query.filter(
+            Test.test_code == test_code,
+            Test.id != test.id
+        ).first()
+
+
+        if existing_test:
+
+            flash(
+                f"Test code '{test_code}' already exists.",
+                "error"
+            )
+
+            return render_template(
+                "setup/edit_test.html",
+                test=test
+            )
+
+
+        # ------------------------------------------
+        # Update Test
+        # ------------------------------------------
+
+        test.test_code = test_code
+
+        test.test_name = test_name
+
+        test.price = price
+
+        test.status = status
+
+
+        # ------------------------------------------
+        # Save
+        # ------------------------------------------
+
+        try:
+
+            db.session.commit()
+
+            flash(
+                "Test updated successfully.",
+                "success"
+            )
+
+            return redirect(
+                url_for("main.test_setup")
+            )
+
+
+        except Exception as e:
+
+            db.session.rollback()
+
+            print(
+                "Error updating test:",
+                e
+            )
+
+            flash(
+                "Unable to update test.",
+                "error"
+            )
+
+            return render_template(
+                "setup/edit_test.html",
+                test=test
+            )
+
+
+    # ------------------------------------------
+    # GET
+    # ------------------------------------------
+
+    return render_template(
+        "setup/edit_test.html",
+        test=test
+    )
+
+
+# ==========================================
+# Delete Test
+# ==========================================
+
+@main.route(
+    "/delete_test/<int:test_id>",
+    methods=["POST"]
+)
+def delete_test(test_id):
+
+    test = Test.query.get_or_404(
+        test_id
+    )
+
+
+    try:
+
+        db.session.delete(test)
+
+        db.session.commit()
+
+        flash(
+            "Test deleted successfully.",
+            "success"
+        )
+
+
+    except Exception as e:
+
+        db.session.rollback()
+
+        print(
+            "Error deleting test:",
+            e
+        )
+
+        flash(
+            "Unable to delete test. Please try again.",
+            "error"
+        )
+
+
+    return redirect(
+        url_for("main.test_setup")
+    )
+
+# ==========================================
+# Test API - Billing
+# ==========================================
+
+@main.route("/api/tests")
+def get_tests():
+
+    tests = Test.query.filter_by(
+        status="Active"
+    ).order_by(
+        Test.test_name.asc()
+    ).all()
+
+    return jsonify([
+        {
+            "id": test.id,
+            "test_code": test.test_code,
+            "test_name": test.test_name,
+            "price": float(test.price)
+        }
+        for test in tests
+    ])
+
+# =========================================================
+# DEPOSIT PAGE
+# =========================================================
+
+@main.route("/deposit")
+def deposit():
+
+    if "user" not in session:
+        return redirect("/")
+
+    return render_template(
+        "billing/deposit.html"
+    )
+# =========================================================
+# SAVE DEPOSIT
+# =========================================================
+
+@main.route("/save_deposit", methods=["POST"])
+def save_deposit():
+
+    if "user" not in session:
+        return jsonify({
+            "success": False,
+            "message": "Unauthorized"
+        }), 401
+
+    try:
+
+        data = request.get_json() or {}
+
+        patient_no = str(
+            data.get("patient_no", "")
+        ).strip()
+
+        amount = data.get("amount")
+
+        remarks = str(
+            data.get("remarks", "")
+        ).strip()
+
+        # ---------------------------------------------
+        # Validation
+        # ---------------------------------------------
+
+        if not patient_no:
+            return jsonify({
+                "success": False,
+                "message": "Hospital Number is required"
+            }), 400
+
+        if amount is None or amount == "":
+            return jsonify({
+                "success": False,
+                "message": "Deposit amount is required"
+            }), 400
+
+        try:
+            amount = float(amount)
+
+        except (ValueError, TypeError):
+            return jsonify({
+                "success": False,
+                "message": "Invalid deposit amount"
+            }), 400
+
+        if amount <= 0:
+            return jsonify({
+                "success": False,
+                "message": "Deposit amount must be greater than 0"
+            }), 400
+
+        # ---------------------------------------------
+        # Find patient
+        # ---------------------------------------------
+
+        patient = Patient.query.filter_by(
+            patient_no=patient_no
+        ).first()
+
+        if not patient:
+            return jsonify({
+                "success": False,
+                "message": "Patient not found"
+            }), 404
+
+        # ---------------------------------------------
+        # Generate receipt number
+        # ---------------------------------------------
+
+        last_deposit = Deposit.query.order_by(
+            Deposit.id.desc()
+        ).first()
+
+        if last_deposit:
+            next_id = last_deposit.id + 1
+        else:
+            next_id = 1
+
+        receipt_no = f"DEP-{next_id:05d}"
+
+        # ---------------------------------------------
+        # Create deposit
+        # ---------------------------------------------
+
+        new_deposit = Deposit(
+            receipt_no=receipt_no,
+            patient_id=patient.id,
+            patient_no=patient.patient_no,
+            patient_name=patient.full_name,
+            amount=amount,
+            remarks=remarks
+        )
+
+        db.session.add(new_deposit)
+
+        db.session.commit()
+
+        # ---------------------------------------------
+        # Calculate current balance
+        # ---------------------------------------------
+
+        deposits = Deposit.query.filter_by(
+            patient_id=patient.id
+        ).all()
+
+        balance = sum(
+            float(d.amount or 0)
+            for d in deposits
+        )
+
+        # ---------------------------------------------
+        # Success response
+        # ---------------------------------------------
+
+        return jsonify({
+            "success": True,
+            "message": "Deposit saved successfully",
+            "receipt_no": receipt_no,
+            "balance": balance
+        })
+
+    except Exception as e:
+
+        db.session.rollback()
+
+        print("====================================")
+        print("SAVE DEPOSIT ERROR:", repr(e))
+        print("====================================")
+
+        return jsonify({
+            "success": False,
+            "message": str(e)
+        }), 500
+
+# =========================================================
+# FETCH PATIENT FOR DEPOSIT
+# =========================================================
+
+@main.route("/fetch_deposit_patient/<patient_no>")
+def fetch_deposit_patient(patient_no):
+
+    if "user" not in session:
+        return jsonify({
+            "success": False,
+            "message": "Unauthorized"
+        }), 401
+
+    try:
+
+        patient_no = str(patient_no).strip()
+
+        # -------------------------------------------------
+        # FIND PATIENT
+        # -------------------------------------------------
+
+        patient = Patient.query.filter_by(
+            patient_no=patient_no
+        ).first()
+
+        if not patient:
+
+            return jsonify({
+                "success": False,
+                "message": "Patient not found"
+            }), 404
+
+
+        # -------------------------------------------------
+        # DEPARTMENT
+        # -------------------------------------------------
+
+        department_name = patient.department or "-"
+
+        try:
+
+            if patient.department:
+
+                department = Department.query.get(
+                    int(patient.department)
+                )
+
+                if department:
+                    department_name = department.department_name
+
+        except (ValueError, TypeError):
+
+            department_name = str(
+                patient.department
+            )
+
+
+        # -------------------------------------------------
+        # DOCTOR
+        # -------------------------------------------------
+
+        doctor_name = patient.doctor or "-"
+
+        try:
+
+            if patient.doctor:
+
+                doctor = Doctor.query.get(
+                    int(patient.doctor)
+                )
+
+                if doctor:
+                    doctor_name = doctor.doc_name
+
+        except (ValueError, TypeError):
+
+            doctor_name = str(
+                patient.doctor
+            )
+
+
+        # -------------------------------------------------
+        # DEPOSIT HISTORY
+        #
+        # IMPORTANT:
+        # Your SAVE route stores patient_id.
+        # Therefore FETCH must also use patient_id.
+        # -------------------------------------------------
+
+        deposits = Deposit.query.filter_by(
+            patient_id=patient.id
+        ).order_by(
+            Deposit.id.desc()
+        ).all()
+
+
+        # -------------------------------------------------
+        # CURRENT BALANCE
+        # -------------------------------------------------
+
+        current_balance = sum(
+            float(deposit.amount or 0)
+            for deposit in deposits
+        )
+
+
+        # -------------------------------------------------
+        # HISTORY
+        # -------------------------------------------------
+
+        history = []
+
+        for deposit in deposits:
+
+            deposit_date = ""
+
+            if getattr(
+                deposit,
+                "deposit_date",
+                None
+            ):
+
+                deposit_date = deposit.deposit_date.strftime(
+                    "%d/%m/%Y %H:%M"
+                )
+
+            elif getattr(
+                deposit,
+                "created_at",
+                None
+            ):
+
+                deposit_date = deposit.created_at.strftime(
+                    "%d/%m/%Y %H:%M"
+                )
+
+
+            history.append({
+
+                "receipt_no":
+                    getattr(
+                        deposit,
+                        "receipt_no",
+                        ""
+                    ),
+
+                "date":
+                    deposit_date,
+
+                "amount":
+                    float(
+                        deposit.amount or 0
+                    ),
+
+                "remarks":
+                    getattr(
+                        deposit,
+                        "remarks",
+                        ""
+                    )
+
+            })
+
+
+        # -------------------------------------------------
+        # RESPONSE
+        # -------------------------------------------------
+
+        return jsonify({
+
+            "success": True,
+
+            "patient": {
+
+                "id":
+                    patient.id,
+
+                "patient_no":
+                    patient.patient_no,
+
+                "full_name":
+                    patient.full_name,
+
+                "age":
+                    patient.age or "",
+
+                "gender":
+                    patient.gender or "",
+
+                "department":
+                    department_name,
+
+                "doctor":
+                    doctor_name
+
+            },
+
+            "current_balance":
+                current_balance,
+
+            "history":
+                history
+
+        })
+
+
+    except Exception as e:
+
+        # IMPORTANT:
+        # This will show the actual error in terminal
+        print(
+            "DEPOSIT FETCH ERROR:",
+            str(e)
+        )
+
+        return jsonify({
+
+            "success": False,
+
+            "message":
+                f"Server error: {str(e)}"
+
+        }), 500
+
 
 # ==============================
 # Patient Reports

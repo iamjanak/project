@@ -1,0 +1,687 @@
+/* ==========================================
+   TEST SETUP PAGE
+   ========================================== */
+
+.test-setup-page {
+
+    width: 100%;
+
+    padding: 25px 30px;
+
+    box-sizing: border-box;
+}
+
+
+/* ==========================================
+   PAGE HEADER
+   ========================================== */
+
+.test-page-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 25px;
+}
+
+
+.test-page-heading h2 {
+
+    margin: 0;
+
+    font-size: 25px;
+
+    font-weight: 700;
+
+    color: #222;
+}
+
+
+.test-page-heading p {
+
+    margin: 6px 0 0;
+
+    font-size: 14px;
+
+    color: #777;
+}
+
+
+/* ==========================================
+   ADD TEST BUTTON
+   ========================================== */
+
+.test-page-actions {
+
+    display: flex;
+
+    align-items: center;
+}
+
+
+.add-test-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    padding: 11px 19px;
+
+    background: #2563eb;
+
+    color: #ffffff;
+
+    text-decoration: none;
+
+    border-radius: 7px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    transition: all 0.2s ease;
+}
+
+
+.add-test-btn:hover {
+
+    background: #1d4ed8;
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.22);
+}
+
+
+.add-icon {
+
+    font-size: 20px;
+
+    line-height: 14px;
+
+    font-weight: 400;
+}
+
+
+/* ==========================================
+   MAIN CARD
+   ========================================== */
+
+.test-card {
+
+    background: #ffffff;
+
+    border: 1px solid #e7e9ee;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+
+/* ==========================================
+   CARD HEADER
+   ========================================== */
+
+.test-card-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 19px 22px;
+
+    border-bottom: 1px solid #e9ebef;
+
+    background: #ffffff;
+}
+
+
+.test-card-title h3 {
+
+    margin: 0;
+
+    font-size: 17px;
+
+    font-weight: 650;
+
+    color: #252525;
+}
+
+
+.test-card-title p {
+
+    margin: 5px 0 0;
+
+    font-size: 13px;
+
+    color: #8a8f98;
+}
+
+
+/* ==========================================
+   TEST COUNT
+   ========================================== */
+
+.test-count {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.count-label {
+
+    font-size: 13px;
+
+    color: #777;
+}
+
+
+.count-number {
+
+    min-width: 30px;
+
+    height: 30px;
+
+    padding: 0 8px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 6px;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    font-size: 13px;
+
+    font-weight: 700;
+}
+
+
+/* ==========================================
+   TABLE WRAPPER
+   ========================================== */
+
+.test-table-wrapper {
+
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+
+/* ==========================================
+   TABLE
+   ========================================== */
+
+.test-table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    table-layout: auto;
+}
+
+
+.test-table thead {
+
+    background: #f8f9fb;
+}
+
+
+.test-table th {
+
+    padding: 14px 18px;
+
+    text-align: left;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    color: #6b7280;
+
+    letter-spacing: 0.4px;
+
+    white-space: nowrap;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+
+.test-table td {
+
+    padding: 15px 18px;
+
+    font-size: 14px;
+
+    color: #333;
+
+    border-bottom: 1px solid #eef0f3;
+
+    vertical-align: middle;
+}
+
+
+.test-table tbody tr {
+
+    transition: background 0.15s ease;
+}
+
+
+.test-table tbody tr:hover {
+
+    background: #fafbfc;
+}
+
+
+.test-table tbody tr:last-child td {
+
+    border-bottom: none;
+}
+
+
+/* ==========================================
+   S.N.
+   ========================================== */
+
+.sn-column {
+
+    width: 65px;
+
+    text-align: center !important;
+
+    color: #777 !important;
+}
+
+
+/* ==========================================
+   TEST CODE
+   ========================================== */
+
+.test-code {
+
+    display: inline-block;
+
+    padding: 5px 9px;
+
+    border-radius: 5px;
+
+    background: #f3f4f6;
+
+    color: #374151;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    letter-spacing: 0.3px;
+}
+
+
+/* ==========================================
+   TEST NAME
+   ========================================== */
+
+.test-name {
+
+    color: #252525;
+
+    font-weight: 500;
+}
+
+
+/* ==========================================
+   PRICE
+   ========================================== */
+
+.test-price {
+
+    color: #222;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+/* ==========================================
+   STATUS
+   ========================================== */
+
+.status-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-width: 70px;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    font-size: 11px;
+
+    font-weight: 600;
+}
+
+
+.status-badge.active {
+
+    background: #eaf8ef;
+
+    color: #207a3e;
+
+    border: 1px solid #bce8c9;
+}
+
+
+.status-badge.inactive {
+
+    background: #fdecec;
+
+    color: #b42318;
+
+    border: 1px solid #f4c2c2;
+}
+
+
+/* ==========================================
+   ACTION COLUMN
+   ========================================== */
+
+.action-column {
+
+    text-align: center !important;
+}
+
+
+.action-buttons {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+}
+
+
+.delete-form {
+
+    margin: 0;
+
+    padding: 0;
+}
+
+
+/* ==========================================
+   EDIT BUTTON
+   ========================================== */
+
+.edit-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-width: 55px;
+
+    padding: 7px 11px;
+
+    border-radius: 5px;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    border: 1px solid #dbeafe;
+
+    text-decoration: none;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    transition: all 0.2s ease;
+}
+
+
+.edit-btn:hover {
+
+    background: #dbeafe;
+
+    border-color: #bfdbfe;
+}
+
+
+/* ==========================================
+   DELETE BUTTON
+   ========================================== */
+
+.delete-btn {
+
+    min-width: 60px;
+
+    padding: 7px 11px;
+
+    border-radius: 5px;
+
+    background: #fff1f2;
+
+    color: #dc2626;
+
+    border: 1px solid #fecdd3;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+
+.delete-btn:hover {
+
+    background: #fee2e2;
+
+    border-color: #fca5a5;
+}
+
+
+/* ==========================================
+   EMPTY STATE
+   ========================================== */
+
+.empty-table-cell {
+
+    padding: 0 !important;
+}
+
+
+.empty-state {
+
+    padding: 65px 20px;
+
+    text-align: center;
+}
+
+
+.empty-icon {
+
+    width: 55px;
+
+    height: 55px;
+
+    margin: 0 auto 15px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #f3f4f6;
+
+    font-size: 25px;
+}
+
+
+.empty-state h3 {
+
+    margin: 0;
+
+    color: #333;
+
+    font-size: 16px;
+
+    font-weight: 600;
+}
+
+
+.empty-state p {
+
+    margin: 7px 0 18px;
+
+    color: #888;
+
+    font-size: 13px;
+}
+
+
+.empty-add-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 9px 15px;
+
+    border-radius: 6px;
+
+    background: #2563eb;
+
+    color: #ffffff;
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    transition: background 0.2s ease;
+}
+
+
+.empty-add-btn:hover {
+
+    background: #1d4ed8;
+}
+
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+@media (max-width: 900px) {
+
+    .test-setup-page {
+
+        padding: 20px;
+    }
+
+
+    .test-page-header {
+
+        align-items: flex-start;
+
+        gap: 15px;
+    }
+
+
+    .test-card-header {
+
+        padding: 16px;
+    }
+
+
+    .test-table th,
+    .test-table td {
+
+        padding: 12px 14px;
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .test-page-header {
+
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    .test-page-actions {
+
+        justify-content: flex-start;
+    }
+
+
+    .add-test-btn {
+
+        width: 100%;
+    }
+
+
+    .test-card-header {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 12px;
+    }
+
+
+    .test-table {
+
+        min-width: 750px;
+    }
+
+}

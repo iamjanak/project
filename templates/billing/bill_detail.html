@@ -1,0 +1,751 @@
+{% extends "base.html" %}
+
+{% block title %}Bill Details - {{ bill.bill_no }}{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/bill_detail.css') }}"
+>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="bill-detail-page">
+
+
+    <!-- ==========================================
+         TOP HEADER
+    =========================================== -->
+
+    <div class="bill-page-header">
+
+        <div>
+
+            <div class="breadcrumb">
+                Billing
+                <span>›</span>
+                Bill Details
+            </div>
+
+            <h1>
+                Bill Details
+            </h1>
+
+            <p>
+                View complete billing and payment information
+            </p>
+
+        </div>
+
+
+        <div class="header-actions">
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                onclick="goBack()"
+            >
+                ← Back
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                onclick="printBill()"
+            >
+                🖨 Print Bill
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         BILL CONTAINER
+    =========================================== -->
+
+    <div class="bill-container">
+
+
+        <!-- ==========================================
+             BILL HEADER
+        =========================================== -->
+
+        <div class="bill-header">
+
+
+            <div class="hospital-info">
+
+                <div class="hospital-logo">
+
+                    <img
+                        src="{{ url_for('static', filename='images/logo.png') }}"
+                        alt="SwasthaCare Hospital"
+                    >
+
+                </div>
+
+
+                <div>
+
+                    <h2>
+                        SwasthaCare Hospital
+                    </h2>
+
+                    <p>
+                        Kathmandu, Nepal
+                    </p>
+
+                    <p>
+                        Phone: 9863001549
+                    </p>
+
+                    <p>
+                        Email: swasthacare2063@gmail.com
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="bill-title">
+
+                <span class="bill-status">
+                    {{ bill.status|default("PAID") }}
+                </span>
+
+                <h1>
+                    INVOICE
+                </h1>
+
+                <div class="bill-number">
+
+                    <span>
+                        Bill No
+                    </span>
+
+                    <strong>
+                        {{ bill.bill_no }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ==========================================
+             BILL META
+        =========================================== -->
+
+        <div class="bill-meta">
+
+
+            <div class="meta-item">
+
+                <span>
+                    Hospital ID
+                </span>
+
+                <strong>
+                    {{ bill.patient_no }}
+                </strong>
+
+            </div>
+
+
+            <div class="meta-item">
+
+                <span>
+                    Transaction Date
+                </span>
+
+                <strong>
+                    {{ bill.transaction_date }}
+                </strong>
+
+            </div>
+
+
+            <div class="meta-item">
+
+                <span>
+                    Payment Type
+                </span>
+
+                <strong class="payment-type">
+                    {{ bill.pay_type }}
+                </strong>
+
+            </div>
+
+
+            <div class="meta-item">
+
+                <span>
+                    Patient Type
+                </span>
+
+                <strong>
+                    {{ bill.patient_type|default("GEN") }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ==========================================
+             PATIENT INFORMATION
+        =========================================== -->
+
+        <div class="section">
+
+
+            <div class="section-heading">
+
+                <div class="section-icon">
+                    👤
+                </div>
+
+                <div>
+
+                    <h3>
+                        Patient Information
+                    </h3>
+
+                    <p>
+                        Patient and assigned medical details
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="patient-grid">
+
+
+                <div class="patient-item">
+
+                    <span>
+                        Patient Name
+                    </span>
+
+                    <strong>
+                        {{ bill.patient_name }}
+                    </strong>
+
+                </div>
+
+
+                <div class="patient-item">
+
+                    <span>
+                        Hospital ID
+                    </span>
+
+                    <strong>
+                        {{ bill.patient_no }}
+                    </strong>
+
+                </div>
+
+
+                <div class="patient-item">
+
+                    <span>
+                        Age / Gender
+                    </span>
+
+                    <strong>
+                        {{ bill.age_gender }}
+                    </strong>
+
+                </div>
+
+
+                <div class="patient-item">
+
+                    <span>
+                        Department
+                    </span>
+
+                    <strong>
+                        {{ bill.department }}
+                    </strong>
+
+                </div>
+
+
+                <div class="patient-item">
+
+                    <span>
+                        Doctor
+                    </span>
+
+                    <strong>
+                        {{ bill.doctor }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ==========================================
+             SERVICES
+        =========================================== -->
+
+        <div class="section">
+
+
+            <div class="section-heading">
+
+                <div class="section-icon">
+                    🧾
+                </div>
+
+                <div>
+
+                    <h3>
+                        Bill Items
+                    </h3>
+
+                    <p>
+                        Services and charges included in this bill
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table class="bill-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th class="col-sn">
+                                #
+                            </th>
+
+                            <th>
+                                Service
+                            </th>
+
+                            <th>
+                                Code
+                            </th>
+
+                            <th class="text-center">
+                                Qty
+                            </th>
+
+                            <th class="text-right">
+                                Rate
+                            </th>
+
+                            <th class="text-right">
+                                Gross
+                            </th>
+
+                            <th class="text-center">
+                                Disc %
+                            </th>
+
+                            <th class="text-right">
+                                Discount
+                            </th>
+
+                            <th class="text-right">
+                                Net Total
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% if bill["items"] %}
+
+    {% for item in bill["items"] %}
+
+                            <tr>
+
+                                <td class="serial">
+                                    {{ loop.index }}
+                                </td>
+
+                                <td>
+
+                                    <div class="service-name">
+                                        {{ item.name }}
+                                    </div>
+
+                                </td>
+
+                                <td>
+
+                                    <span class="service-code">
+                                        {{ item.code|default("-") }}
+                                    </span>
+
+                                </td>
+
+                                <td class="text-center">
+                                    {{ item.qty }}
+                                </td>
+
+                                <td class="text-right">
+                                    {{ "%.2f"|format(item.rate|float) }}
+                                </td>
+
+                                <td class="text-right">
+                                    {{ "%.2f"|format(item.total|float) }}
+                                </td>
+
+                                <td class="text-center">
+                                    {{ "%.1f"|format(item.disc_pct|float) }}%
+                                </td>
+
+                                <td class="text-right">
+                                    {{ "%.2f"|format(item.disc_amt|float) }}
+                                </td>
+
+                                <td class="text-right net-amount">
+                                    {{ "%.2f"|format(item.net_total|float) }}
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        {% else %}
+
+                            <tr>
+
+                                <td
+                                    colspan="9"
+                                    class="empty-items"
+                                >
+                                    No bill items found
+                                </td>
+
+                            </tr>
+
+                        {% endif %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ==========================================
+             BILL SUMMARY
+        =========================================== -->
+
+        <div class="summary-area">
+
+
+            <div class="summary-spacer"></div>
+
+
+            <div class="summary-box">
+
+
+                <div class="summary-row">
+
+                    <span>
+                        Sub Total
+                    </span>
+
+                    <strong>
+                        {{ "%.2f"|format(bill.subtotal|float) }}
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-row">
+
+                    <span>
+                        Discount
+                    </span>
+
+                    <strong class="discount-value">
+                        - {{ "%.2f"|format(bill.discount|float) }}
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-divider"></div>
+
+
+                <div class="summary-row grand-total">
+
+                    <span>
+                        Grand Total
+                    </span>
+
+                    <strong>
+                        {{ "%.2f"|format(bill.total|float) }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ==========================================
+             PAYMENT DETAILS
+        =========================================== -->
+
+        <div class="payment-section">
+
+
+            <div class="section-heading">
+
+                <div class="section-icon">
+                    💳
+                </div>
+
+                <div>
+
+                    <h3>
+                        Payment Information
+                    </h3>
+
+                    <p>
+                        Payment and settlement details
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="payment-grid">
+
+
+                <div class="payment-card">
+
+                    <span>
+                        Payment Type
+                    </span>
+
+                    <strong>
+                        {{ bill.pay_type }}
+                    </strong>
+
+                </div>
+
+
+                <div class="payment-card">
+
+                    <span>
+                        Tender Amount
+                    </span>
+
+                    <strong>
+                        {{ "%.2f"|format(bill.tender_amt|float) }}
+                    </strong>
+
+                </div>
+
+
+                <div class="payment-card">
+
+                    <span>
+                        Return Amount
+                    </span>
+
+                    <strong>
+                        {{ "%.2f"|format(bill.return_amt|float) }}
+                    </strong>
+
+                </div>
+
+
+                <div class="payment-card payment-card-total">
+
+                    <span>
+                        Amount Paid
+                    </span>
+
+                    <strong>
+                        {{ "%.2f"|format(bill.total|float) }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ==========================================
+             REMARKS
+        =========================================== -->
+
+        {% if bill.remarks %}
+
+        <div class="remarks-section">
+
+            <div class="remarks-title">
+                📝 Remarks
+            </div>
+
+            <p>
+                {{ bill.remarks }}
+            </p>
+
+        </div>
+
+        {% endif %}
+
+
+
+        <!-- ==========================================
+             FOOTER
+        =========================================== -->
+
+        <div class="bill-footer">
+
+            <div>
+
+                <strong>
+                    SwasthaCare Hospital
+                </strong>
+
+                <span>
+                    Thank you for choosing our healthcare services.
+                </span>
+
+            </div>
+
+
+            <div class="footer-right">
+
+                <span>
+                    Generated on
+                </span>
+
+                <strong id="generatedDate">
+                    {{ bill.transaction_date }}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ==========================================
+     JAVASCRIPT
+=========================================== -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        // ------------------------------------------
+        // Add current date/time to generated section
+        // ------------------------------------------
+
+        const generatedDate =
+            document.getElementById("generatedDate");
+
+
+        if (generatedDate) {
+
+            const now =
+                new Date();
+
+
+            const formatted =
+                now.toLocaleDateString(
+                    "en-GB",
+                    {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric"
+                    }
+                );
+
+
+            generatedDate.textContent =
+                formatted;
+
+        }
+
+    }
+);
+
+
+// ==========================================
+// PRINT BILL
+// ==========================================
+
+function printBill() {
+
+    window.print();
+
+}
+
+
+// ==========================================
+// GO BACK
+// ==========================================
+
+function goBack() {
+
+    if (window.history.length > 1) {
+
+        window.history.back();
+
+    } else {
+
+        window.location.href =
+            "{{ url_for('main.billing') }}";
+
+    }
+
+}
+
+</script>
+
+{% endblock %}

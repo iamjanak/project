@@ -46,9 +46,16 @@
   outline: none;
 }
 
+/* Patient ID / Hospital no. placeholder ("e.g. 20260000") */
+#patient_id::placeholder {
+  color: hsla(0, 2%, 71%, 0.956);
+  font-weight: 400;
+  opacity: 1;
+}
+
 .form-field input[readonly] {
   background: #f5f6fa;
-  color: var(--text-muted);
+  color: var(--text-muted); 
 }
 
 .form-field input:focus,
