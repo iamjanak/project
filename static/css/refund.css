@@ -1,0 +1,397 @@
+/* =========================================================
+   REFUND PAGE
+   ========================================================= */
+
+.refund-page {
+    padding: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.refund-header {
+    margin-bottom: 25px;
+}
+
+.refund-header h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.refund-header p {
+    margin-top: 7px;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   CARD
+   ========================================================= */
+
+.refund-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 25px;
+    margin-bottom: 22px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+}
+
+
+.card-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 22px;
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #d1d5db;
+    border-radius: 9px;
+    padding: 12px 14px;
+    font-size: 14px;
+    outline: none;
+    background: #fff;
+    transition: 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.search-input {
+    display: flex;
+    gap: 10px;
+}
+
+.search-input input {
+    flex: 1;
+}
+
+.search-input button {
+    min-width: 110px;
+    border: none;
+    border-radius: 9px;
+    background: #2563eb;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.search-input button:hover {
+    background: #1d4ed8;
+}
+
+.search-input button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   PATIENT INFORMATION
+   ========================================================= */
+
+.patient-info {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.info-item {
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.info-item span {
+    display: block;
+    color: #6b7280;
+    font-size: 12px;
+    margin-bottom: 6px;
+}
+
+.info-item strong {
+    color: #111827;
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   BILL DETAILS
+   ========================================================= */
+
+.bill-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+    margin-bottom: 25px;
+}
+
+.bill-item {
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    padding: 16px;
+    border-radius: 10px;
+}
+
+.bill-item span {
+    display: block;
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 6px;
+}
+
+.bill-item strong {
+    font-size: 17px;
+    color: #111827;
+}
+
+
+/* =========================================================
+   REFUND FORM
+   ========================================================= */
+
+.refund-form {
+    margin-top: 25px;
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.refund-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.cancel-btn,
+.refund-btn {
+    padding: 12px 22px;
+    border-radius: 9px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.cancel-btn {
+    background: #fff;
+    border: 1px solid #d1d5db;
+    color: #374151;
+}
+
+.cancel-btn:hover {
+    background: #f3f4f6;
+}
+
+.refund-btn {
+    border: none;
+    background: #dc2626;
+    color: white;
+}
+
+.refund-btn:hover {
+    background: #b91c1c;
+}
+
+.refund-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   POPUPS
+   ========================================================= */
+
+.popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.success-popup,
+.error-popup {
+    width: 390px;
+    max-width: calc(100% - 40px);
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+    animation: popupIn 0.2s ease;
+}
+
+.success-icon,
+.error-icon {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    margin: 0 auto 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.success-icon {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.error-icon {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.success-popup h2,
+.error-popup h2 {
+    margin: 0 0 8px;
+    color: #111827;
+}
+
+.success-popup p,
+.error-popup p {
+    margin: 0 0 22px;
+    color: #6b7280;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.success-popup button,
+.error-popup button {
+    border: none;
+    padding: 11px 28px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.success-popup button {
+    background: #16a34a;
+}
+
+.error-popup button {
+    background: #dc2626;
+}
+
+
+/* =========================================================
+   UTILITY
+   ========================================================= */
+
+.hidden {
+    display: none !important;
+}
+
+
+@keyframes popupIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+    .patient-info {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .refund-page {
+        padding: 18px;
+    }
+
+    .patient-info,
+    .bill-details {
+        grid-template-columns: 1fr;
+    }
+
+    .search-input {
+        flex-direction: column;
+    }
+
+    .search-input button {
+        min-height: 44px;
+    }
+
+    .refund-actions {
+        flex-direction: column;
+    }
+
+    .cancel-btn,
+    .refund-btn {
+        width: 100%;
+    }
+
+}

@@ -355,3 +355,61 @@ class Deposit(db.Model):
         db.Text,
         nullable=True
     )
+
+# =========================================================
+# BILL REFUND MODEL
+# =========================================================
+class BillRefund(db.Model):
+
+    __tablename__ = "bill_refunds"
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    refund_no = db.Column(
+        db.String(50),
+        unique=True,
+        nullable=False
+    )
+
+    patient_id = db.Column(
+        db.Integer,
+        nullable=False
+    )
+
+    patient_no = db.Column(
+        db.String(20),
+        nullable=False
+    )
+
+    patient_name = db.Column(
+        db.String(200),
+        nullable=False
+    )
+
+    bill_no = db.Column(
+        db.String(50),
+        nullable=False
+    )
+
+    bill_amount = db.Column(
+        db.Numeric(10, 2),
+        nullable=False
+    )
+
+    refund_amount = db.Column(
+        db.Numeric(10, 2),
+        nullable=False
+    )
+
+    reason = db.Column(
+        db.Text,
+        nullable=False
+    )
+
+    created_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow
+    )

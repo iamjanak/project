@@ -1,7 +1,20 @@
 from flask import Blueprint, render_template, request, redirect, session, jsonify, flash, url_for
 
-from app.models import Patient, Bill, BillItem, Role, User, Department, Doctor, Test, Deposit
-from app.database import db 
+from app.models import (
+    Patient,
+    Bill,
+    BillItem,
+    Role,
+    User,
+    Department,
+    Doctor,
+    Test,
+    Deposit,
+    BillRefund
+)
+
+from app.database import db
+
 from datetime import datetime
 
 
@@ -580,9 +593,7 @@ def edit_department(dep_id):
 # ==============================
 # Doctor Setup
 # ==============================
-# ==============================
-# Doctor Setup
-# ==============================
+
 
 @main.route("/doctor-setup")
 def doctor_setup():
@@ -2100,6 +2111,580 @@ def fetch_deposit_patient(patient_no):
 
             "message":
                 f"Server error: {str(e)}"
+
+        }), 500
+
+
+# =========================================================
+# BILL REFUND PAGE
+# =========================================================
+
+@main.route("/refund")
+def refund():
+
+    if "user" not in session:
+        return redirect("/")
+
+    return render_template(
+        "billing/refund.html",
+        active_page="refund"
+    )
+
+
+# =========================================================
+# FETCH PATIENT FOR REFUND
+# =========================================================
+
+@main.route("/fetch_refund_patient/<patient_no>")
+def fetch_refund_patient(patient_no):
+
+    if "user" not in session:
+        return jsonify({
+            "success": False,
+            "message": "Unauthorized"
+        }), 401
+
+    try:
+
+        patient_no = str(patient_no).strip()
+
+        # -------------------------------------------------
+        # FIND PATIENT
+        # -------------------------------------------------
+
+        patient = Patient.query.filter_by(
+            patient_no=patient_no
+        ).first()
+
+        if not patient:
+            return jsonify({
+                "success": False,
+                "message": "Patient not found"
+            }), 404
+
+        # -------------------------------------------------
+        # DEPARTMENT
+        # -------------------------------------------------
+
+        department_name = "-"
+
+        if patient.department:
+
+            try:
+
+                department = Department.query.get(
+                    int(patient.department)
+                )
+
+                if department:
+                    department_name = department.department_name
+
+            except (ValueError, TypeError):
+
+                department_name = str(
+                    patient.department
+                )
+
+        # -------------------------------------------------
+        # DOCTOR
+        # -------------------------------------------------
+
+        doctor_name = "-"
+
+        if patient.doctor:
+
+            try:
+
+                doctor = Doctor.query.get(
+                    int(patient.doctor)
+                )
+
+                if doctor:
+                    doctor_name = doctor.doc_name
+
+            except (ValueError, TypeError):
+
+                doctor_name = str(
+                    patient.doctor
+                )
+
+        # -------------------------------------------------
+        # RESPONSE
+        # -------------------------------------------------
+
+        return jsonify({
+
+            "success": True,
+
+            "patient": {
+
+                "id": patient.id,
+
+                "patient_no": patient.patient_no,
+
+                "full_name": patient.full_name,
+
+                "age": patient.age or "",
+
+                "gender": patient.gender or "",
+
+                "department": department_name,
+
+                "doctor": doctor_name
+
+            }
+
+        })
+
+    except Exception as e:
+
+        print("REFUND PATIENT FETCH ERROR:", repr(e))
+
+        return jsonify({
+
+            "success": False,
+
+            "message": f"Server error: {str(e)}"
+
+        }), 500
+    
+# =========================================================
+# FETCH BILLS FOR REFUND
+# =========================================================
+
+@main.route("/fetch_refund_bills/<patient_no>")
+def fetch_refund_bills(patient_no):
+
+    if "user" not in session:
+        return jsonify({
+            "success": False,
+            "message": "Unauthorized"
+        }), 401
+
+    try:
+
+        patient_no = str(patient_no).strip()
+
+        # -------------------------------------------------
+        # FIND PATIENT
+        # -------------------------------------------------
+
+        patient = Patient.query.filter_by(
+            patient_no=patient_no
+        ).first()
+
+        if not patient:
+
+            return jsonify({
+                "success": False,
+                "message": "Patient not found"
+            }), 404
+
+        print("REFUND PATIENT FOUND:", patient.id, patient.patient_no)
+
+        # -------------------------------------------------
+        # FIND BILLS
+        # -------------------------------------------------
+
+        bills = Bill.query.filter_by(
+            patient_id=patient.id
+        ).order_by(
+            Bill.id.desc()
+        ).all()
+
+        print("REFUND BILLS FOUND:", len(bills))
+
+        bill_list = []
+
+        for bill in bills:
+
+            print("--------------------------------")
+            print("CHECKING BILL:", bill.bill_no)
+
+            # -------------------------------------------------
+            # BILL AMOUNT
+            # -------------------------------------------------
+
+            bill_amount = float(
+                bill.total or 0
+            )
+
+            print("BILL AMOUNT:", bill_amount)
+
+            # -------------------------------------------------
+            # PREVIOUS REFUNDS
+            # -------------------------------------------------
+
+            print("CHECKING BILL REFUNDS...")
+
+            refunds = BillRefund.query.filter_by(
+                patient_id=patient.id,
+                bill_no=bill.bill_no
+            ).all()
+
+            print(
+                "PREVIOUS REFUNDS:",
+                len(refunds)
+            )
+
+            already_refunded = sum(
+                float(
+                    refund.refund_amount or 0
+                )
+                for refund in refunds
+            )
+
+            # -------------------------------------------------
+            # REFUNDABLE AMOUNT
+            # -------------------------------------------------
+
+            refundable_amount = (
+                bill_amount -
+                already_refunded
+            )
+
+            if refundable_amount < 0:
+                refundable_amount = 0
+
+            print(
+                "REFUNDABLE:",
+                refundable_amount
+            )
+
+            # -------------------------------------------------
+            # SKIP FULLY REFUNDED
+            # -------------------------------------------------
+
+            if refundable_amount <= 0:
+                continue
+
+            bill_list.append({
+
+                "bill_no":
+                    bill.bill_no,
+
+                "bill_amount":
+                    bill_amount,
+
+                "already_refunded":
+                    already_refunded,
+
+                "refundable_amount":
+                    refundable_amount
+
+            })
+
+        # -------------------------------------------------
+        # RESPONSE
+        # -------------------------------------------------
+
+        return jsonify({
+
+            "success": True,
+
+            "bills":
+                bill_list
+
+        })
+
+    except Exception as e:
+
+        db.session.rollback()
+
+        print("====================================")
+        print("FETCH REFUND BILLS ERROR")
+        print("ERROR TYPE:", type(e).__name__)
+        print("ERROR:", repr(e))
+        print("====================================")
+
+        return jsonify({
+
+            "success": False,
+
+            "message":
+                f"Refund bill error: {str(e)}"
+
+        }), 500
+
+# =========================================================
+# SAVE BILL REFUND
+# =========================================================
+
+@main.route("/save_refund", methods=["POST"])
+def save_refund():
+
+    if "user" not in session:
+        return jsonify({
+            "success": False,
+            "message": "Unauthorized"
+        }), 401
+
+    try:
+
+        data = request.get_json() or {}
+
+        # -------------------------------------------------
+        # GET DATA
+        # -------------------------------------------------
+
+        patient_no = str(
+            data.get("patient_no", "")
+        ).strip()
+
+        bill_no = str(
+            data.get("bill_no", "")
+        ).strip()
+
+        refund_amount = data.get(
+            "refund_amount"
+        )
+
+        reason = str(
+            data.get("reason", "")
+        ).strip()
+
+        # -------------------------------------------------
+        # VALIDATION
+        # -------------------------------------------------
+
+        if not patient_no:
+
+            return jsonify({
+                "success": False,
+                "message":
+                    "Hospital Number is required"
+            }), 400
+
+        if not bill_no:
+
+            return jsonify({
+                "success": False,
+                "message":
+                    "Bill Number is required"
+            }), 400
+
+        if refund_amount is None or refund_amount == "":
+
+            return jsonify({
+                "success": False,
+                "message":
+                    "Refund amount is required"
+            }), 400
+
+        if not reason:
+
+            return jsonify({
+                "success": False,
+                "message":
+                    "Refund reason is required"
+            }), 400
+
+        # -------------------------------------------------
+        # CONVERT REFUND AMOUNT
+        # -------------------------------------------------
+
+        try:
+
+            refund_amount = float(
+                refund_amount
+            )
+
+        except (ValueError, TypeError):
+
+            return jsonify({
+                "success": False,
+                "message":
+                    "Invalid refund amount"
+            }), 400
+
+        if refund_amount <= 0:
+
+            return jsonify({
+                "success": False,
+                "message":
+                    "Refund amount must be greater than 0"
+            }), 400
+
+        # -------------------------------------------------
+        # FIND PATIENT
+        # -------------------------------------------------
+
+        patient = Patient.query.filter_by(
+            patient_no=patient_no
+        ).first()
+
+        if not patient:
+
+            return jsonify({
+                "success": False,
+                "message":
+                    "Patient not found"
+            }), 404
+
+        # -------------------------------------------------
+        # FIND BILL
+        # -------------------------------------------------
+
+        bill = Bill.query.filter_by(
+            bill_no=bill_no,
+            patient_id=patient.id
+        ).first()
+
+        if not bill:
+
+            return jsonify({
+                "success": False,
+                "message":
+                    "Bill not found"
+            }), 404
+
+        # -------------------------------------------------
+        # BILL AMOUNT
+        # -------------------------------------------------
+
+        bill_amount = float(
+    bill.total or 0
+)
+
+        # -------------------------------------------------
+        # PREVIOUS REFUNDS
+        # -------------------------------------------------
+
+        previous_refunds = BillRefund.query.filter_by(
+            patient_id=patient.id,
+            bill_no=bill.bill_no
+        ).all()
+
+        already_refunded = sum(
+            float(
+                refund.refund_amount or 0
+            )
+            for refund in previous_refunds
+        )
+
+        # -------------------------------------------------
+        # CALCULATE REFUNDABLE AMOUNT
+        # -------------------------------------------------
+
+        refundable_amount = (
+            bill_amount -
+            already_refunded
+        )
+
+        if refundable_amount < 0:
+            refundable_amount = 0
+
+        # -------------------------------------------------
+        # CHECK REFUND AMOUNT
+        # -------------------------------------------------
+
+        if refund_amount > refundable_amount:
+
+            return jsonify({
+
+                "success": False,
+
+                "message":
+                    f"Maximum refundable amount is "
+                    f"Rs. {refundable_amount:.2f}"
+
+            }), 400
+
+        # -------------------------------------------------
+        # GENERATE REFUND NUMBER
+        # -------------------------------------------------
+
+        last_refund = BillRefund.query.order_by(
+            BillRefund.id.desc()
+        ).first()
+
+        if last_refund:
+
+            next_id = last_refund.id + 1
+
+        else:
+
+            next_id = 1
+
+        refund_no = (
+            f"REF-{next_id:05d}"
+        )
+
+        # -------------------------------------------------
+        # CREATE REFUND
+        # -------------------------------------------------
+
+        new_refund = BillRefund(
+
+            refund_no=refund_no,
+
+            patient_id=patient.id,
+
+            patient_no=patient.patient_no,
+
+            patient_name=patient.full_name,
+
+            bill_no=bill.bill_no,
+
+            bill_amount=bill_amount,
+
+            refund_amount=refund_amount,
+
+            reason=reason
+
+        )
+
+        # -------------------------------------------------
+        # SAVE
+        # -------------------------------------------------
+
+        db.session.add(
+            new_refund
+        )
+
+        db.session.commit()
+
+        # -------------------------------------------------
+        # RESPONSE
+        # -------------------------------------------------
+
+        return jsonify({
+
+            "success": True,
+
+            "message":
+                "Bill refund processed successfully",
+
+            "refund_no":
+                refund_no,
+
+            "refund_amount":
+                refund_amount,
+
+            "bill_amount":
+                bill_amount,
+
+            "remaining_amount":
+                refundable_amount -
+                refund_amount
+
+        })
+
+    except Exception as e:
+
+        db.session.rollback()
+
+        print(
+            "SAVE REFUND ERROR:",
+            repr(e)
+        )
+
+        return jsonify({
+
+            "success": False,
+
+            "message":
+                str(e)
 
         }), 500
 

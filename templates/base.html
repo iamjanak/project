@@ -380,8 +380,9 @@
                         </li>
 
                         <li>
-                            <a href="#">
-                                ↩ Refund
+                            <a href="{{ url_for('main.refund') }}"
+                                class="{% if active_page == 'refund' %}active{% endif %}">
+                                <span>↩ Bill Refund</span>
                             </a>
                         </li>
 

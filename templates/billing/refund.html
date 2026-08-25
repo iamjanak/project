@@ -1,0 +1,299 @@
+{% extends "base.html" %}
+
+{% block title %}
+Bill Refund - SwasthaCare
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/refund.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+
+<div class="refund-page">
+
+    <div class="refund-header">
+        <div>
+            <h1>Bill Refund</h1>
+            <p>Process and manage patient bill refunds</p>
+        </div>
+    </div>
+
+
+    <!-- Patient Search -->
+
+    <div class="refund-card">
+
+        <div class="card-title">
+            Patient Information
+        </div>
+
+        <div class="search-row">
+
+            <div class="form-group">
+
+                <label>
+                    Hospital Number
+                </label>
+
+                <div class="search-input">
+
+                    <input
+                        type="text"
+                        id="patientNo"
+                        placeholder="Enter hospital number"
+                    >
+
+                    <button
+                        type="button"
+                        id="searchPatientBtn"
+                    >
+                        Search
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Patient Information -->
+
+        <div
+            id="patientInfo"
+            class="patient-info hidden"
+        >
+
+            <div class="info-item">
+                <span>Hospital Number</span>
+                <strong id="displayPatientNo">-</strong>
+            </div>
+
+            <div class="info-item">
+                <span>Patient Name</span>
+                <strong id="displayPatientName">-</strong>
+            </div>
+
+            <div class="info-item">
+                <span>Age</span>
+                <strong id="displayAge">-</strong>
+            </div>
+
+            <div class="info-item">
+                <span>Gender</span>
+                <strong id="displayGender">-</strong>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Bill Information -->
+
+    <div
+        class="refund-card hidden"
+        id="billSection"
+    >
+
+        <div class="card-title">
+            Bill Information
+        </div>
+
+        <div class="form-group">
+
+            <label>
+                Select Bill
+            </label>
+
+            <select id="billSelect">
+
+                <option value="">
+                    Select Bill
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div
+            id="billDetails"
+            class="bill-details hidden"
+        >
+
+            <div class="bill-item">
+
+                <span>
+                    Bill Number
+                </span>
+
+                <strong id="displayBillNo">
+                    -
+                </strong>
+
+            </div>
+
+            <div class="bill-item">
+
+                <span>
+                    Bill Amount
+                </span>
+
+                <strong id="displayBillAmount">
+                    Rs. 0.00
+                </strong>
+
+            </div>
+
+            <div class="bill-item">
+
+                <span>
+                    Already Refunded
+                </span>
+
+                <strong>
+                    Rs. 0.00
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- Refund Form -->
+
+        <div class="refund-form">
+
+            <div class="form-group">
+
+                <label>
+                    Refund Amount
+                </label>
+
+                <input
+                    type="number"
+                    id="refundAmount"
+                    min="0"
+                    step="0.01"
+                    placeholder="Enter refund amount"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Refund Reason
+                </label>
+
+                <textarea
+                    id="refundReason"
+                    rows="4"
+                    placeholder="Enter reason for refund..."
+                ></textarea>
+
+            </div>
+
+        </div>
+
+
+        <div class="refund-actions">
+
+            <button
+                type="button"
+                class="cancel-btn"
+                id="clearBtn"
+            >
+                Clear
+            </button>
+
+            <button
+                type="button"
+                class="refund-btn"
+                id="refundBtn"
+            >
+                Process Refund
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Success Popup -->
+
+<div
+    id="successPopup"
+    class="popup-overlay hidden"
+>
+
+    <div class="success-popup">
+
+        <div class="success-icon">
+            ✓
+        </div>
+
+        <h2>
+            Refund Successful
+        </h2>
+
+        <p id="successMessage">
+            Refund has been processed successfully.
+        </p>
+
+        <button
+            type="button"
+            onclick="closeSuccessPopup()"
+        >
+            Done
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- Error Popup -->
+
+<div
+    id="errorPopup"
+    class="popup-overlay hidden"
+>
+
+    <div class="error-popup">
+
+        <div class="error-icon">
+            !
+        </div>
+
+        <h2>
+            Refund Failed
+        </h2>
+
+        <p id="errorMessage">
+            Unable to process refund.
+        </p>
+
+        <button
+            type="button"
+            onclick="closeErrorPopup()"
+        >
+            Close
+        </button>
+
+    </div>
+
+</div>
+
+
+<script src="{{ url_for('static', filename='js/refund.js') }}"></script>
+
+{% endblock %}
