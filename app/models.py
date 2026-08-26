@@ -2,20 +2,19 @@ from .database import db
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
-# ==============================
-# Patient Model
-# ==============================
+
+# =========================================================
+# PATIENT MODEL
+# =========================================================
 
 class Patient(db.Model):
 
     __tablename__ = "patients"
 
-
     id = db.Column(
         db.Integer,
         primary_key=True
     )
-
 
     patient_no = db.Column(
         db.String(20),
@@ -23,63 +22,78 @@ class Patient(db.Model):
         nullable=False
     )
 
-
     full_name = db.Column(
         db.String(100),
         nullable=False
     )
 
-
     dob = db.Column(
-        db.Date
+        db.Date,
+        nullable=True
     )
-
 
     age = db.Column(
-        db.Integer
+        db.Integer,
+        nullable=True
     )
-
 
     gender = db.Column(
-        db.String(10)
+        db.String(10),
+        nullable=True
     )
-
 
     phone = db.Column(
-        db.String(15)
+        db.String(15),
+        nullable=True
     )
-
 
     address = db.Column(
-        db.Text
+        db.Text,
+        nullable=True
     )
 
+    # -----------------------------------------------------
+    # STORE DEPARTMENT NAME
+    # -----------------------------------------------------
 
     department = db.Column(
-        db.String(50)
+        db.String(150),
+        nullable=True
     )
 
+    # -----------------------------------------------------
+    # STORE DOCTOR NAME
+    # -----------------------------------------------------
 
     doctor = db.Column(
-        db.String(50)
+        db.String(150),
+        nullable=True
+    )
+
+    # -----------------------------------------------------
+    # FOLLOW-UP RELATIONSHIP
+    # -----------------------------------------------------
+
+    followups = db.relationship(
+        "FollowUp",
+        back_populates="patient",
+        foreign_keys="FollowUp.patient_id",
+        lazy=True
     )
 
 
-
-# ==============================
-# Billing Model
-# ==============================
+# =========================================================
+# BILL MODEL
+# =========================================================
 
 class Bill(db.Model):
 
     __tablename__ = "bills"
 
-
     id = db.Column(
         db.Integer,
         primary_key=True
     )
-
 
     bill_no = db.Column(
         db.String(30),
@@ -87,62 +101,52 @@ class Bill(db.Model):
         nullable=False
     )
 
-
     patient_id = db.Column(
         db.Integer,
         db.ForeignKey("patients.id"),
         nullable=False
     )
 
-
     bill_date = db.Column(
         db.DateTime,
-        default=datetime.utcnow
+        default=datetime.utcnow,
+        nullable=False
     )
-
 
     subtotal = db.Column(
         db.Float,
         default=0
     )
 
-
     discount = db.Column(
         db.Float,
         default=0
     )
-
 
     total = db.Column(
         db.Float,
         default=0
     )
 
-
-    # ---- New fields ----
-
     pay_type = db.Column(
         db.String(20),
         default="Cash"
     )
-
 
     tender_amt = db.Column(
         db.Float,
         default=0
     )
 
-
     return_amt = db.Column(
         db.Float,
         default=0
     )
 
-
     remarks = db.Column(
-        db.Text
+        db.Text,
+        nullable=True
     )
-
 
     patient = db.relationship(
         "Patient",
@@ -150,21 +154,18 @@ class Bill(db.Model):
     )
 
 
-
-# ==============================
-# Bill Item Model
-# ==============================
+# =========================================================
+# BILL ITEM MODEL
+# =========================================================
 
 class BillItem(db.Model):
 
     __tablename__ = "bill_items"
 
-
     id = db.Column(
         db.Integer,
         primary_key=True
     )
-
 
     bill_id = db.Column(
         db.Integer,
@@ -172,116 +173,142 @@ class BillItem(db.Model):
         nullable=False
     )
 
-
     service_name = db.Column(
         db.String(100),
         nullable=False
     )
-
 
     quantity = db.Column(
         db.Integer,
         default=1
     )
 
-
     rate = db.Column(
         db.Float,
         nullable=False
     )
 
-
     amount = db.Column(
         db.Float,
         nullable=False
-    )   
-
+    )
 
     bill = db.relationship(
         "Bill",
         backref="items"
     )
 
-# ==============================
-# Role Model
-# ==============================
+
+# =========================================================
+# ROLE MODEL
+# =========================================================
+
 class Role(db.Model):
+
     __tablename__ = "roles"
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), unique=True, nullable=False)
-
-
-# ==============================
-# User Model
-# ==============================
-class User(db.Model):
-    __tablename__ = "users"
-
-    id = db.Column(db.Integer, primary_key=True)
-
-    full_name = db.Column(db.String(100), nullable=False)
-
-    username = db.Column(db.String(50), unique=True, nullable=False)
-
-    password_hash = db.Column(db.String(255), nullable=False)
-
-    email = db.Column(db.String(120))
-
-    status = db.Column(db.String(20), default="Active")
-
-    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
-
-    role = db.relationship('Role')
-
-    # Password methods
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
-
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
-
-
-print("Models file loaded")
-
-try:
-    print(Role)
-except:
-    print("Role class NOT FOUND")
-
-    # ==============================
-# Department Model
-# ==============================
-class Department(db.Model):
-    __tablename__ = "departments"
-
-    id = db.Column(db.Integer, primary_key=True)
-    dep_code = db.Column(db.String(50), unique=True, nullable=False)
-    department_name = db.Column(db.String(150), nullable=False)
-    dep_type = db.Column(db.String(100), nullable=True)
-    status = db.Column(db.String(20), nullable=False, default="Active")
-
-    
-class Doctor(db.Model):
-    __tablename__ = "doctors"
-
-    id = db.Column(db.Integer, primary_key=True)
-
-    doc_code = db.Column(db.String(50), nullable=False)
-
-    doc_name = db.Column(db.String(100), nullable=False)
-
-    department_id = db.Column(
+    id = db.Column(
         db.Integer,
-        db.ForeignKey("departments.id"),
+        primary_key=True
+    )
+
+    name = db.Column(
+        db.String(50),
+        unique=True,
         nullable=False
     )
 
-    specialization = db.Column(db.String(100))
 
-    email = db.Column(db.String(100))
+# =========================================================
+# USER MODEL
+# =========================================================
 
-    phone = db.Column(db.String(20))
+class User(db.Model):
+
+    __tablename__ = "users"
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    full_name = db.Column(
+        db.String(100),
+        nullable=False
+    )
+
+    username = db.Column(
+        db.String(50),
+        unique=True,
+        nullable=False
+    )
+
+    password_hash = db.Column(
+        db.String(255),
+        nullable=False
+    )
+
+    email = db.Column(
+        db.String(120),
+        nullable=True
+    )
+
+    status = db.Column(
+        db.String(20),
+        default="Active"
+    )
+
+    role_id = db.Column(
+        db.Integer,
+        db.ForeignKey("roles.id")
+    )
+
+    role = db.relationship(
+        "Role"
+    )
+
+    def set_password(self, password):
+
+        self.password_hash = generate_password_hash(
+            password
+        )
+
+    def check_password(self, password):
+
+        return check_password_hash(
+            self.password_hash,
+            password
+        )
+
+
+# =========================================================
+# DEPARTMENT MODEL
+# =========================================================
+
+class Department(db.Model):
+
+    __tablename__ = "departments"
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    dep_code = db.Column(
+        db.String(50),
+        unique=True,
+        nullable=False
+    )
+
+    department_name = db.Column(
+        db.String(150),
+        nullable=False
+    )
+
+    dep_type = db.Column(
+        db.String(100),
+        nullable=True
+    )
 
     status = db.Column(
         db.String(20),
@@ -289,29 +316,140 @@ class Doctor(db.Model):
         default="Active"
     )
 
-    department = db.relationship(
-        "Department",
-        backref="doctors"
+    # -----------------------------------------------------
+    # DOCTORS
+    # -----------------------------------------------------
+
+    doctors = db.relationship(
+        "Doctor",
+        back_populates="department",
+        lazy=True
     )
 
+    # -----------------------------------------------------
+    # FOLLOW-UPS
+    # -----------------------------------------------------
+
+    followups = db.relationship(
+        "FollowUp",
+        back_populates="department",
+        foreign_keys="FollowUp.department_id",
+        lazy=True
+    )
+
+
+# =========================================================
+# DOCTOR MODEL
+# =========================================================
+
+class Doctor(db.Model):
+
+    __tablename__ = "doctors"
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    doc_code = db.Column(
+        db.String(50),
+        nullable=False
+    )
+
+    doc_name = db.Column(
+        db.String(100),
+        nullable=False
+    )
+
+    department_id = db.Column(
+        db.Integer,
+        db.ForeignKey("departments.id"),
+        nullable=False
+    )
+
+    specialization = db.Column(
+        db.String(100),
+        nullable=True
+    )
+
+    email = db.Column(
+        db.String(100),
+        nullable=True
+    )
+
+    phone = db.Column(
+        db.String(20),
+        nullable=True
+    )
+
+    status = db.Column(
+        db.String(20),
+        nullable=False,
+        default="Active"
+    )
+
+    # -----------------------------------------------------
+    # DEPARTMENT
+    # -----------------------------------------------------
+
+    department = db.relationship(
+        "Department",
+        back_populates="doctors"
+    )
+
+    # -----------------------------------------------------
+    # FOLLOW-UPS
+    # -----------------------------------------------------
+
+    followups = db.relationship(
+        "FollowUp",
+        back_populates="doctor",
+        foreign_keys="FollowUp.doctor_id",
+        lazy=True
+    )
+
+
+# =========================================================
+# TEST MODEL
+# =========================================================
+
 class Test(db.Model):
+
     __tablename__ = "tests"
 
-    id = db.Column(db.Integer, primary_key=True)
-    test_code = db.Column(db.String(50), unique=True, nullable=False)
-    test_name = db.Column(db.String(150), nullable=False)
-    price = db.Column(db.Numeric(10, 2), nullable=False)
-    status = db.Column(db.String(20), default="Active")
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    test_code = db.Column(
+        db.String(50),
+        unique=True,
+        nullable=False
+    )
+
+    test_name = db.Column(
+        db.String(150),
+        nullable=False
+    )
+
+    price = db.Column(
+        db.Numeric(10, 2),
+        nullable=False
+    )
+
+    status = db.Column(
+        db.String(20),
+        default="Active"
+    )
 
 
-# =========================================================
-# DEPOSIT MODEL
-# =========================================================
 # =========================================================
 # DEPOSIT MODEL
 # =========================================================
 
 class Deposit(db.Model):
+
     __tablename__ = "deposits"
 
     id = db.Column(
@@ -356,9 +494,11 @@ class Deposit(db.Model):
         nullable=True
     )
 
+
 # =========================================================
 # BILL REFUND MODEL
 # =========================================================
+
 class BillRefund(db.Model):
 
     __tablename__ = "bill_refunds"
@@ -411,5 +551,167 @@ class BillRefund(db.Model):
 
     created_at = db.Column(
         db.DateTime,
-        default=datetime.utcnow
+        default=datetime.utcnow,
+        nullable=False
     )
+
+
+# =========================================================
+# FOLLOW-UP MODEL
+# =========================================================
+
+class FollowUp(db.Model):
+
+    __tablename__ = "follow_ups"
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    # -----------------------------------------------------
+    # FOLLOW-UP NUMBER
+    # -----------------------------------------------------
+
+    followup_no = db.Column(
+        db.String(30),
+        unique=True,
+        nullable=False
+    )
+
+    # -----------------------------------------------------
+    # PATIENT
+    # -----------------------------------------------------
+
+    patient_id = db.Column(
+        db.Integer,
+        db.ForeignKey("patients.id"),
+        nullable=False
+    )
+
+    patient_no = db.Column(
+        db.String(20),
+        nullable=False
+    )
+
+    patient_name = db.Column(
+        db.String(150),
+        nullable=False
+    )
+
+    # -----------------------------------------------------
+    # DEPARTMENT
+    # -----------------------------------------------------
+
+    department_id = db.Column(
+        db.Integer,
+        db.ForeignKey("departments.id"),
+        nullable=False
+    )
+
+    # -----------------------------------------------------
+    # DOCTOR
+    # -----------------------------------------------------
+
+    doctor_id = db.Column(
+        db.Integer,
+        db.ForeignKey("doctors.id"),
+        nullable=False
+    )
+
+    # -----------------------------------------------------
+    # VISIT INFORMATION
+    # -----------------------------------------------------
+
+    visit_date = db.Column(
+        db.DateTime,
+        nullable=False
+    )
+
+    visit_type = db.Column(
+        db.String(50),
+        nullable=False,
+        default="Follow-Up"
+    )
+
+    # -----------------------------------------------------
+    # CLINICAL INFORMATION
+    # -----------------------------------------------------
+
+    chief_complaint = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+    diagnosis = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+    treatment = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+    prescription = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+    notes = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+    # -----------------------------------------------------
+    # NEXT FOLLOW-UP
+    # -----------------------------------------------------
+
+    next_followup_date = db.Column(
+        db.DateTime,
+        nullable=True
+    )
+
+    # -----------------------------------------------------
+    # STATUS
+    # -----------------------------------------------------
+
+    status = db.Column(
+        db.String(20),
+        nullable=False,
+        default="Active"
+    )
+
+    # -----------------------------------------------------
+    # RELATIONSHIPS
+    # -----------------------------------------------------
+
+    patient = db.relationship(
+        "Patient",
+        back_populates="followups",
+        foreign_keys=[patient_id]
+    )
+
+    department = db.relationship(
+        "Department",
+        back_populates="followups",
+        foreign_keys=[department_id]
+    )
+
+    doctor = db.relationship(
+        "Doctor",
+        back_populates="followups",
+        foreign_keys=[doctor_id]
+    )
+
+    # -----------------------------------------------------
+    # REPRESENTATION
+    # -----------------------------------------------------
+
+    def __repr__(self):
+
+        return (
+            f"<FollowUp "
+            f"{self.followup_no} "
+            f"- {self.patient_no}>"
+        )

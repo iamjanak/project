@@ -323,8 +323,8 @@
                         </li>
 
                         <li>
-                            <a href="#">
-                                🔄 Patient Follow Up
+<a href="{{ url_for('followup.followup_page') }}" class="sidebar-link">
+                                    🔄 Patient Follow Up
                             </a>
                         </li>
 
@@ -1224,6 +1224,7 @@
 
     </script>
 
+{% block extra_js %}{% endblock %}
 
 </body>
 

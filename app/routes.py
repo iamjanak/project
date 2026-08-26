@@ -10,7 +10,8 @@ from app.models import (
     Doctor,
     Test,
     Deposit,
-    BillRefund
+    BillRefund,
+
 )
 
 from app.database import db
@@ -88,8 +89,6 @@ def dashboard():
         doctor_count=78,
         bill_count=52
     )
-
-
 # ==============================
 # Patient Registration
 # ==============================
@@ -99,8 +98,14 @@ def patient_registration():
     if "user" not in session:
         return redirect("/")
 
+    # =================================================
+    # POST - REGISTER PATIENT
+    # =================================================
     if request.method == "POST":
 
+        # -------------------------------------------------
+        # Generate Patient Number
+        # -------------------------------------------------
         year = datetime.now().year
 
         last_patient = Patient.query.order_by(
@@ -114,49 +119,207 @@ def patient_registration():
 
         patient_no = f"{year}{number:04d}"
 
-        full_name = (
-            request.form.get("first_name", "")
-            + " "
-            + request.form.get("last_name", "")
-        )
+        # -------------------------------------------------
+        # Full Name
+        # -------------------------------------------------
+        first_name = request.form.get(
+            "first_name",
+            ""
+        ).strip()
 
-        dob_input = request.form.get("dob")
+        last_name = request.form.get(
+            "last_name",
+            ""
+        ).strip()
+
+        full_name = f"{first_name} {last_name}".strip()
+
+        # -------------------------------------------------
+        # DOB
+        # -------------------------------------------------
+        dob_input = request.form.get(
+            "dob",
+            ""
+        ).strip()
 
         if dob_input:
-            dob = datetime.strptime(
-                dob_input,
-                "%d/%m/%Y"
-            ).date()
+
+            try:
+                dob = datetime.strptime(
+                    dob_input,
+                    "%d/%m/%Y"
+                ).date()
+
+            except ValueError:
+
+                flash(
+                    "Invalid date of birth. Please use DD/MM/YYYY.",
+                    "error"
+                )
+
+                return redirect(
+                    url_for("main.patient_registration")
+                )
+
         else:
             dob = None
 
+        # =================================================
+        # DEPARTMENT
+        # =================================================
+
+        department_id = request.form.get(
+            "department",
+            ""
+        ).strip()
+
+        department_name = None
+
+        if department_id:
+
+            try:
+
+                department = Department.query.get(
+                    int(department_id)
+                )
+
+            except (ValueError, TypeError):
+
+                flash(
+                    "Invalid department selected.",
+                    "error"
+                )
+
+                return redirect(
+                    url_for("main.patient_registration")
+                )
+
+            if not department:
+
+                flash(
+                    "Selected department was not found.",
+                    "error"
+                )
+
+                return redirect(
+                    url_for("main.patient_registration")
+                )
+
+            # ---------------------------------------------
+            # IMPORTANT:
+            # Save Department NAME, not Department ID
+            # ---------------------------------------------
+            department_name = department.department_name
+
+        # =================================================
+        # DOCTOR
+        # =================================================
+
+        doctor_id = request.form.get(
+            "doctor_id",
+            ""
+        ).strip()
+
+        doctor_name = None
+
+        if doctor_id:
+
+            try:
+
+                doctor = Doctor.query.get(
+                    int(doctor_id)
+                )
+
+            except (ValueError, TypeError):
+
+                flash(
+                    "Invalid doctor selected.",
+                    "error"
+                )
+
+                return redirect(
+                    url_for("main.patient_registration")
+                )
+
+            if not doctor:
+
+                flash(
+                    "Selected doctor was not found.",
+                    "error"
+                )
+
+                return redirect(
+                    url_for("main.patient_registration")
+                )
+
+            # ---------------------------------------------
+            # IMPORTANT:
+            # Save Doctor NAME, not Doctor ID
+            # ---------------------------------------------
+            doctor_name = doctor.doc_name
+
+        # =================================================
+        # CREATE PATIENT
+        # =================================================
+
         patient = Patient(
+
             patient_no=patient_no,
+
             full_name=full_name,
+
             dob=dob,
-            age=request.form.get("age"),
-            gender=request.form.get("gender"),
-            phone=request.form.get("phone"),
-            address=request.form.get("address"),
-            department=request.form.get("department"),
-            doctor=request.form.get("doctor_id")
+
+            age=request.form.get(
+                "age"
+            ),
+
+            gender=request.form.get(
+                "gender"
+            ),
+
+            phone=request.form.get(
+                "phone"
+            ),
+
+            address=request.form.get(
+                "address"
+            ),
+
+            # SAVE NAME
+            department=department_name,
+
+            # SAVE NAME
+            doctor=doctor_name
         )
 
+        # =================================================
+        # SAVE
+        # =================================================
+
         db.session.add(patient)
+
         db.session.commit()
 
-        flash("Patient registered successfully", "success")
+        flash(
+            "Patient registered successfully",
+            "success"
+        )
 
-        return redirect(url_for("main.patient_registration"))
+        return redirect(
+            url_for("main.patient_registration")
+        )
 
-    # Load departments
+    # =================================================
+    # GET - LOAD DEPARTMENTS AND DOCTORS
+    # =================================================
+
     departments = Department.query.filter_by(
         status="Active"
     ).order_by(
         Department.department_name.asc()
     ).all()
 
-    # Load active doctors
     doctors = Doctor.query.filter_by(
         status="Active"
     ).order_by(
@@ -168,8 +331,11 @@ def patient_registration():
         departments=departments,
         doctors=doctors
     )
-
-# ==============================
+    
+    
+    
+    
+# =============================
 # Patient List
 # ==============================
 
@@ -938,10 +1104,17 @@ def bill_details():
     )
 
 
+
+
+
+
+
+
+
+
 # =========================================================
 # BILL DETAIL - SINGLE BILL
 # =========================================================
-
 @main.route("/bill_detail/<int:bill_id>")
 def bill_detail(bill_id):
 
@@ -1002,6 +1175,14 @@ def bill_detail(bill_id):
             doctor_name = str(
                 patient.doctor
             )
+
+
+
+
+
+
+
+
 
 
     # =====================================================

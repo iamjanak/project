@@ -16,33 +16,30 @@ def create_app():
         static_folder="../static"
     )
 
-
     app.secret_key = "hospital-secret-key"
 
-
-    # Load database configuration
     app.config.from_object(Config)
 
-
-    # Initialize database
     db.init_app(app)
 
-
-    # Initialize migration
     migrate.init_app(app, db)
-
 
     # Load models
     from app import models
 
-
-    # Register routes
+    # Main routes
     from app.routes import main
 
-    app.register_blueprint(main)
+    # Follow-up routes
+    from app.followup_routes import followup_bp
 
+    app.register_blueprint(main)
+    app.register_blueprint(followup_bp)
 
     return app
 
 
-__all__ = ["db", "create_app"]
+__all__ = [
+    "db",
+    "create_app"
+]

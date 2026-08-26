@@ -1,0 +1,560 @@
+{% extends "base.html" %}
+
+{% block title %}
+Patient Follow-Up - SwasthaCare
+{% endblock %}
+
+
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/followup.css') }}"
+>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="followup-page">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <div class="followup-header">
+
+        <div>
+            <h1>Patient Follow-Up</h1>
+
+            <p>
+                Manage follow-up visits for registered patients
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         SEARCH PATIENT
+    ====================================================== -->
+
+    <div class="followup-card">
+
+        <div class="card-title">
+
+            <h2>Search Patient</h2>
+
+            <p>
+                Enter the hospital number of an existing patient
+            </p>
+
+        </div>
+
+
+        <div class="patient-search">
+
+            <div class="form-group">
+
+                <label for="patientNo">
+                    Hospital Number
+                </label>
+
+                <input
+                    type="text"
+                    id="patientNo"
+                    placeholder="Enter hospital number"
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+            <button
+                type="button"
+                id="searchPatientBtn"
+                class="btn-primary"
+            >
+                Search Patient
+            </button>
+
+        </div>
+
+
+        <div
+            id="patientMessage"
+            class="followup-message"
+        ></div>
+
+    </div>
+
+
+    <!-- =====================================================
+         PATIENT INFORMATION
+    ====================================================== -->
+
+    <div
+        class="followup-card"
+        id="patientInfoCard"
+        style="display:none;"
+    >
+
+        <div class="card-title">
+
+            <h2>Patient Information</h2>
+
+        </div>
+
+
+        <div class="patient-grid">
+
+            <div class="info-item">
+
+                <span>Patient No.</span>
+
+                <strong id="patientNoDisplay">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <span>Patient Name</span>
+
+                <strong id="patientName">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <span>Age</span>
+
+                <strong id="patientAge">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <span>Gender</span>
+
+                <strong id="patientGender">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <span>Phone</span>
+
+                <strong id="patientPhone">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <span>Address</span>
+
+                <strong id="patientAddress">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <span>Current Department</span>
+
+                <strong id="currentDepartment">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <span>Current Doctor</span>
+
+                <strong id="currentDoctor">
+                    -
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         FOLLOW-UP FORM
+    ====================================================== -->
+
+    <div
+        class="followup-card"
+        id="followupFormCard"
+        style="display:none;"
+    >
+
+        <div class="card-title">
+
+            <h2>Follow-Up Details</h2>
+
+            <p>
+                Enter the details of the patient's current visit
+            </p>
+
+        </div>
+
+
+        <form id="followupForm">
+
+            <!-- Hidden Patient ID -->
+
+            <input
+                type="hidden"
+                id="patientId"
+            >
+
+
+            <!-- Department + Doctor -->
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label for="department">
+                        Department
+                        <span>*</span>
+                    </label>
+
+
+                    <select
+                        id="department"
+                        required
+                    >
+
+                        <option value="">
+                            Select Department
+                        </option>
+
+
+                        {% for department in departments %}
+
+                        <option
+                            value="{{ department.id }}"
+                        >
+                            {{ department.department_name }}
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="doctor">
+                        Doctor
+                        <span>*</span>
+                    </label>
+
+
+                    <select
+                        id="doctor"
+                        required
+                        disabled
+                    >
+
+                        <option value="">
+                            Select Department First
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- Visit Type + Next Follow-Up -->
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label for="visitType">
+                        Visit Type
+                    </label>
+
+
+                    <select id="visitType">
+
+                        <option value="Follow-Up">
+                            Follow-Up
+                        </option>
+
+                        <option value="Review">
+                            Review
+                        </option>
+
+                        <option value="Routine">
+                            Routine Visit
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="nextFollowup">
+                        Next Follow-Up
+                    </label>
+
+
+                    <input
+                        type="datetime-local"
+                        id="nextFollowup"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- Chief Complaint -->
+
+            <div class="form-group">
+
+                <label for="chiefComplaint">
+                    Chief Complaint
+                </label>
+
+
+                <textarea
+                    id="chiefComplaint"
+                    rows="3"
+                    placeholder="Enter patient's chief complaint"
+                ></textarea>
+
+            </div>
+
+
+            <!-- Diagnosis -->
+
+            <div class="form-group">
+
+                <label for="diagnosis">
+                    Diagnosis
+                </label>
+
+
+                <textarea
+                    id="diagnosis"
+                    rows="3"
+                    placeholder="Enter diagnosis"
+                ></textarea>
+
+            </div>
+
+
+            <!-- Treatment -->
+
+            <div class="form-group">
+
+                <label for="treatment">
+                    Treatment
+                </label>
+
+
+                <textarea
+                    id="treatment"
+                    rows="3"
+                    placeholder="Enter treatment details"
+                ></textarea>
+
+            </div>
+
+
+            <!-- Prescription -->
+
+            <div class="form-group">
+
+                <label for="prescription">
+                    Prescription
+                </label>
+
+
+                <textarea
+                    id="prescription"
+                    rows="3"
+                    placeholder="Enter prescription"
+                ></textarea>
+
+            </div>
+
+
+            <!-- Notes -->
+
+            <div class="form-group">
+
+                <label for="notes">
+                    Notes
+                </label>
+
+
+                <textarea
+                    id="notes"
+                    rows="3"
+                    placeholder="Enter additional notes"
+                ></textarea>
+
+            </div>
+
+
+            <!-- Buttons -->
+
+            <div class="form-actions">
+
+                <button
+                    type="reset"
+                    class="btn-secondary"
+                    id="resetFollowupBtn"
+                >
+                    Clear
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="btn-primary"
+                >
+                    Save Follow-Up
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- =====================================================
+         FOLLOW-UP HISTORY
+    ====================================================== -->
+
+    <div
+        class="followup-card"
+        id="historyCard"
+        style="display:none;"
+    >
+
+        <div class="card-title">
+
+            <h2>Follow-Up History</h2>
+
+            <p>
+                Previous follow-up visits for this patient
+            </p>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Follow-Up No.</th>
+
+                        <th>Date & Time</th>
+
+                        <th>Department</th>
+
+                        <th>Doctor</th>
+
+                        <th>Visit Type</th>
+
+                        <th>Diagnosis</th>
+
+                        <th>Next Follow-Up</th>
+
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="historyBody">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- FOLLOW-UP SUCCESS POPUP -->
+
+<div id="followupSuccessPopup" class="success-popup-overlay">
+
+    <div class="success-popup">
+
+        <div class="success-icon">
+            ✓
+        </div>
+
+        <h3>Follow-Up Recorded</h3>
+
+        <p id="followupSuccessMessage">
+            Follow-up recorded successfully.
+        </p>
+
+        <button
+            type="button"
+            id="closeFollowupPopup"
+            class="success-popup-btn"
+        >
+            OK
+        </button>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script
+    src="{{ url_for('static', filename='js/followup.js') }}"
+></script>
+
+{% endblock %}
