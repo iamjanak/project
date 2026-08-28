@@ -323,8 +323,8 @@
                         </li>
 
                         <li>
-<a href="{{ url_for('followup.followup_page') }}" class="sidebar-link">
-                                    🔄 Patient Follow Up
+                            <a href="{{ url_for('followup.followup_page') }}" class="sidebar-link">
+                                🔄 Patient Follow Up
                             </a>
                         </li>
 
@@ -335,15 +335,15 @@
                         </li>
 
                         <li>
-                            <a href="#">
+                            <a href="{{ url_for('patient_correction.patient_info_correction') }}">
                                 ✏️ Patient Information Correction
                             </a>
                         </li>
 
                         <li>
-                            <a href="#">
-                                📄 Patient Reports
-                            </a>
+                           <a href="{{ url_for('main.patient_report') }}">
+    📄 Patient Reports
+</a>
                         </li>
 
                     </ul>
@@ -438,22 +438,22 @@
                         </li>
 
                         <li>
-                            <a href="#">
-                                🛏 Ward Setup
-                            </a>
+                            <a href="{{ url_for('ward.ward_setup') }}">
+    🏥 Ward Setup
+</a>
                         </li>
 
                         <li>
-                            <a href="#">
-                                🚪 Room Setup
-                            </a>
+                            <a href="{{ url_for('room.room_setup') }}">
+    🚪 Room Setup
+</a>
                         </li>
 
-                        <li>
-                            <a href="#">
-                                🛌 Bed Setup
-                            </a>
-                        </li>
+                       <li class="{% if active_page == 'bed_setup' %}active{% endif %}">
+    <a href="{{ url_for('bed.bed_setup') }}">
+        🛌 Bed Setup
+    </a>
+</li>
 
                     </ul>
 
@@ -1224,7 +1224,7 @@
 
     </script>
 
-{% block extra_js %}{% endblock %}
+    {% block extra_js %}{% endblock %}
 
 </body>
 

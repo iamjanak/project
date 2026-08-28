@@ -1,0 +1,519 @@
+{% extends "base.html" %}
+
+{% block title %}
+Patient Information Correction - SwasthaCare
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/patient_info_correction.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+
+<div class="patient-correction-page">
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <div class="correction-header">
+
+        <div class="header-content">
+            <div class="header-icon">
+                ✎
+            </div>
+
+            <div>
+                <h1>Patient Information Correction</h1>
+                <p>
+                    Review and update registered patient information
+                    with a complete correction history.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         PATIENT SEARCH
+    ====================================================== -->
+
+    <div class="correction-card search-card">
+
+        <div class="section-header">
+
+            <div>
+                <h2>Find Patient</h2>
+                <p>
+                    Enter the hospital number to retrieve patient information.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="search-row">
+
+            <div class="search-input-wrapper">
+
+                <label for="patientNo">
+                    Hospital Number
+                </label>
+
+                <div class="input-with-icon">
+
+                    <span class="input-icon">⌕</span>
+
+                    <input
+                        type="text"
+                        id="patientNo"
+                        placeholder="Enter hospital number"
+                        autocomplete="off"
+                    >
+
+                </div>
+
+            </div>
+
+            <button
+                type="button"
+                class="btn btn-primary search-btn"
+                id="searchPatientBtn"
+            >
+                <span>Search Patient</span>
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         PATIENT INFORMATION
+    ====================================================== -->
+
+    <div
+        class="correction-card patient-card"
+        id="patientDetails"
+        style="display: none;"
+    >
+
+        <div class="section-header patient-section-header">
+
+            <div>
+                <h2>Patient Information</h2>
+                <p>
+                    Correct the required information and provide a reason
+                    for the correction.
+                </p>
+            </div>
+
+            <div class="patient-number-box">
+
+                <span>Hospital Number</span>
+
+                <strong id="displayPatientNo">
+                    —
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <input
+            type="hidden"
+            id="patientId"
+        >
+
+
+        <!-- =================================================
+             FORM
+        ================================================== -->
+
+        <div class="form-grid">
+
+            <!-- FULL NAME -->
+
+            <div class="form-group">
+
+                <label for="fullName">
+                    Full Name
+                </label>
+
+                <input
+                    type="text"
+                    id="fullName"
+                    placeholder="Enter full name"
+                >
+
+            </div>
+
+
+            <!-- DOB -->
+
+            <div class="form-group">
+
+                <label for="dob">
+                    Date of Birth
+                </label>
+
+                <input
+                    type="date"
+                    id="dob"
+                >
+
+            </div>
+
+
+            <!-- AGE -->
+
+            <div class="form-group">
+
+                <label for="age">
+                    Age
+                </label>
+
+                <input
+                    type="number"
+                    id="age"
+                    min="0"
+                    max="150"
+                    placeholder="Age"
+                >
+
+            </div>
+
+
+            <!-- GENDER -->
+
+            <div class="form-group">
+
+                <label for="gender">
+                    Gender
+                </label>
+
+                <select id="gender">
+
+                    <option value="">
+                        Select Gender
+                    </option>
+
+                    <option value="Male">
+                        Male
+                    </option>
+
+                    <option value="Female">
+                        Female
+                    </option>
+
+                    <option value="Other">
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- PHONE -->
+
+            <div class="form-group">
+
+                <label for="phone">
+                    Phone Number
+                </label>
+
+                <input
+                    type="text"
+                    id="phone"
+                    placeholder="Enter phone number"
+                >
+
+            </div>
+
+
+            <!-- DEPARTMENT -->
+
+            <div class="form-group">
+
+                <label for="department">
+                    Department
+                </label>
+
+                <select id="department">
+
+                    <option value="">
+                        Select Department
+                    </option>
+
+                    {% for department in departments %}
+
+                    <option value="{{ department.department_name }}">
+                        {{ department.department_name }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <!-- DOCTOR -->
+
+
+<div class="form-group">
+    <label for="doctor">Doctor</label>
+
+    <select
+        id="doctor"
+        name="doctor"
+        class="form-control"
+    >
+        <option value="">Select Doctor</option>
+
+        {% for doctor in doctors %}
+            <option
+                value="{{ doctor.doc_name }}"
+            data-department-id="{{ doctor.department_id }}"
+            >
+                {{ doctor.doc_name }}
+            </option>
+        {% endfor %}
+
+    </select>
+</div>
+
+            <!-- ADDRESS -->
+
+            <div class="form-group full-width">
+
+                <label for="address">
+                    Address
+                </label>
+
+                <textarea
+                    id="address"
+                    rows="3"
+                    placeholder="Enter patient address"
+                ></textarea>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             SYSTEM INFORMATION
+        ================================================== -->
+
+        <div class="system-information">
+
+            <div class="system-info-item">
+
+                <span>Registration Date</span>
+
+                <strong id="createdAt">
+                    —
+                </strong>
+
+            </div>
+
+            <div class="system-info-item">
+
+                <span>Last Updated</span>
+
+                <strong id="updatedAt">
+                    —
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             CORRECTION REASON
+        ================================================== -->
+
+        <div class="reason-section">
+
+            <div class="form-group">
+
+                <label for="reason">
+                    Reason for Correction
+                    <span class="required">*</span>
+                </label>
+
+                <textarea
+                    id="reason"
+                    rows="3"
+                    placeholder="Enter the reason for correcting patient information..."
+                ></textarea>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             ACTIONS
+        ================================================== -->
+
+        <div class="form-actions">
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                id="clearBtn"
+            >
+                Clear
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="saveCorrectionBtn"
+            >
+                Save Correction
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         CORRECTION HISTORY
+    ====================================================== -->
+
+    <div
+        class="correction-card history-card"
+        id="historyCard"
+        style="display: none;"
+    >
+
+        <div class="section-header">
+
+            <div>
+                <h2>Correction History</h2>
+                <p>
+                    Previous changes made to this patient's information.
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="history-table-wrapper">
+
+            <table class="history-table">
+
+                <thead>
+
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>Field</th>
+                        <th>Previous Value</th>
+                        <th>New Value</th>
+                        <th>Reason</th>
+                        <th>Corrected By</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="historyBody">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     SUCCESS POPUP
+========================================================== -->
+
+<div
+    class="correction-popup success-popup"
+    id="successPopup"
+>
+
+    <div class="popup-icon">
+        ✓
+    </div>
+
+    <div class="popup-content">
+
+        <strong>Correction Saved</strong>
+
+        <p id="successMessage">
+            Patient information has been updated successfully.
+        </p>
+
+    </div>
+
+    <button
+        type="button"
+        class="popup-close"
+        onclick="hidePopup('successPopup')"
+    >
+        ×
+    </button>
+
+</div>
+
+
+<!-- =========================================================
+     ERROR POPUP
+========================================================== -->
+
+<div
+    class="correction-popup error-popup"
+    id="errorPopup"
+>
+
+    <div class="popup-icon">
+        !
+    </div>
+
+    <div class="popup-content">
+
+        <strong>Action Failed</strong>
+
+        <p id="errorMessage">
+            Something went wrong.
+        </p>
+
+    </div>
+
+    <button
+        type="button"
+        class="popup-close"
+        onclick="hidePopup('errorPopup')"
+    >
+        ×
+    </button>
+
+</div>
+
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script
+    src="{{ url_for('static', filename='js/patient_info_correction.js') }}"
+></script>
+
+{% endblock %}

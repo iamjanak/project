@@ -1,0 +1,815 @@
+/* =========================================================
+   SWASTHACARE - BED SETUP
+   ========================================================= */
+
+.bed-page {
+    width: 100%;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.bed-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 22px;
+}
+
+.bed-header h1 {
+    margin: 0;
+    font-size: 25px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.bed-header p {
+    margin: 6px 0 0;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+
+/* =========================================================
+   ADD BED BUTTON
+   ========================================================= */
+
+.bed-add-btn {
+    height: 42px;
+    padding: 0 18px;
+
+    border: none;
+    border-radius: 6px;
+
+    background: #2563eb;
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition: background 0.2s ease,
+                transform 0.1s ease;
+}
+
+.bed-add-btn:hover {
+    background: #1d4ed8;
+}
+
+.bed-add-btn:active {
+    transform: translateY(1px);
+}
+
+
+/* =========================================================
+   FORM CARD
+   ========================================================= */
+
+.bed-form-card {
+    width: 100%;
+    margin-bottom: 22px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   FORM HEADER
+   ========================================================= */
+
+.bed-form-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    padding: 20px 22px;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.bed-form-header h2 {
+    margin: 0;
+
+    font-size: 18px;
+    font-weight: 600;
+
+    color: #1f2937;
+}
+
+.bed-form-header p {
+    margin: 5px 0 0;
+
+    font-size: 13px;
+    color: #6b7280;
+}
+
+
+/* =========================================================
+   CLOSE BUTTON
+   ========================================================= */
+
+.bed-close-btn {
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 6px;
+
+    background: #f3f4f6;
+    color: #6b7280;
+
+    font-size: 23px;
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+.bed-close-btn:hover {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+#bedForm {
+    width: 100%;
+}
+
+
+/* =========================================================
+   FORM GRID
+   ========================================================= */
+
+.bed-form-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 18px;
+
+    padding: 22px;
+}
+
+
+/* =========================================================
+   FORM FIELD
+   ========================================================= */
+
+.bed-field {
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+}
+
+.bed-field-full {
+    grid-column: 1 / -1;
+}
+
+.bed-field label {
+    margin-bottom: 7px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    color: #374151;
+}
+
+.bed-field label span {
+    color: #dc2626;
+    margin-left: 2px;
+}
+
+
+/* =========================================================
+   INPUT / SELECT / TEXTAREA
+   ========================================================= */
+
+.bed-field input,
+.bed-field select,
+.bed-field textarea {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+
+    background: #ffffff;
+
+    color: #1f2937;
+
+    font-family: inherit;
+    font-size: 14px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+/* INPUT + SELECT */
+
+.bed-field input,
+.bed-field select {
+    height: 42px;
+    padding: 0 12px;
+}
+
+
+/* TEXTAREA */
+
+.bed-field textarea {
+    min-height: 82px;
+
+    padding: 10px 12px;
+
+    resize: vertical;
+    line-height: 1.5;
+}
+
+
+/* PLACEHOLDER */
+
+.bed-field input::placeholder,
+.bed-field textarea::placeholder {
+    color: #9ca3af;
+}
+
+
+/* FOCUS */
+
+.bed-field input:focus,
+.bed-field select:focus,
+.bed-field textarea:focus {
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+
+/* SELECT */
+
+.bed-field select {
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   FORM ACTIONS
+   ========================================================= */
+
+.bed-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    padding: 18px 22px;
+
+    border-top: 1px solid #e5e7eb;
+}
+
+
+/* =========================================================
+   CANCEL BUTTON
+   ========================================================= */
+
+.bed-cancel-btn {
+    height: 40px;
+
+    padding: 0 18px;
+
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+
+    background: #ffffff;
+    color: #374151;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+.bed-cancel-btn:hover {
+    background: #f3f4f6;
+}
+
+
+/* =========================================================
+   SAVE BUTTON
+   ========================================================= */
+
+.bed-save-btn {
+    height: 40px;
+
+    padding: 0 20px;
+
+    border: none;
+    border-radius: 6px;
+
+    background: #2563eb;
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition: background 0.2s ease,
+                transform 0.1s ease;
+}
+
+.bed-save-btn:hover {
+    background: #1d4ed8;
+}
+
+.bed-save-btn:active {
+    transform: translateY(1px);
+}
+
+.bed-save-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   BED LIST CARD
+   ========================================================= */
+
+.bed-list-card {
+    width: 100%;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   BED LIST HEADER
+   ========================================================= */
+
+.bed-list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 20px 22px;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.bed-list-header h2 {
+    margin: 0;
+
+    font-size: 18px;
+    font-weight: 600;
+
+    color: #1f2937;
+}
+
+.bed-list-header p {
+    margin: 5px 0 0;
+
+    font-size: 13px;
+    color: #6b7280;
+}
+
+
+/* =========================================================
+   BED COUNT
+   ========================================================= */
+
+.bed-count {
+    padding: 6px 12px;
+
+    border-radius: 20px;
+
+    background: #eff6ff;
+    color: #2563eb;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   TABLE WRAPPER
+   ========================================================= */
+
+.bed-table-wrapper {
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.bed-table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    min-width: 900px;
+}
+
+
+/* TABLE HEADER */
+
+.bed-table thead th {
+    height: 46px;
+
+    padding: 0 14px;
+
+    background: #f8fafc;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    text-align: left;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    color: #4b5563;
+
+    white-space: nowrap;
+}
+
+
+/* TABLE BODY */
+
+.bed-table tbody td {
+    height: 50px;
+
+    padding: 0 14px;
+
+    border-bottom: 1px solid #f1f5f9;
+
+    font-size: 13px;
+
+    color: #374151;
+
+    white-space: nowrap;
+}
+
+
+/* ROW HOVER */
+
+.bed-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+
+/* LAST ROW */
+
+.bed-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* =========================================================
+   BED CODE
+   ========================================================= */
+
+.bed-code {
+    display: inline-block;
+
+    padding: 5px 9px;
+
+    border-radius: 5px;
+
+    background: #f3f4f6;
+
+    color: #374151;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   STATUS BADGES
+   ========================================================= */
+
+.status-badge {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-width: 75px;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+
+/* AVAILABLE */
+
+.status-badge.available {
+    background: #dcfce7;
+    color: #166534;
+}
+
+
+/* OCCUPIED */
+
+.status-badge.occupied {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+
+/* MAINTENANCE */
+
+.status-badge.maintenance {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+
+/* INACTIVE */
+
+.status-badge.inactive {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+
+/* =========================================================
+   EMPTY TABLE
+   ========================================================= */
+
+.bed-empty {
+    height: 100px !important;
+
+    text-align: center !important;
+
+    color: #9ca3af !important;
+
+    font-size: 14px !important;
+}
+
+
+/* =========================================================
+   POPUP
+   RIGHT SIDE
+   ========================================================= */
+
+.bed-popup {
+    position: fixed;
+
+    top: 85px;
+    right: 25px;
+
+    width: 360px;
+    min-height: 72px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 14px 16px;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+
+    border-radius: 8px;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.15);
+
+    z-index: 99999;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transform: translateX(120%);
+
+    transition:
+        opacity 0.25s ease,
+        transform 0.25s ease,
+        visibility 0.25s ease;
+}
+
+
+/* SHOW POPUP */
+
+.bed-popup.show {
+    opacity: 1;
+    visibility: visible;
+
+    transform: translateX(0);
+}
+
+
+/* =========================================================
+   POPUP ICON
+   ========================================================= */
+
+.bed-popup-icon {
+    width: 36px;
+    height: 36px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-right: 12px;
+
+    border-radius: 50%;
+
+    font-size: 18px;
+    font-weight: 700;
+}
+
+
+/* SUCCESS */
+
+.bed-popup.success {
+    border-left: 4px solid #16a34a;
+}
+
+.bed-popup.success .bed-popup-icon {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+
+/* ERROR */
+
+.bed-popup.error {
+    border-left: 4px solid #dc2626;
+}
+
+.bed-popup.error .bed-popup-icon {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+
+/* =========================================================
+   POPUP CONTENT
+   ========================================================= */
+
+.bed-popup-content {
+    display: flex;
+    flex-direction: column;
+
+    flex: 1;
+
+    min-width: 0;
+}
+
+.bed-popup-content strong {
+    margin-bottom: 3px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    color: #1f2937;
+}
+
+.bed-popup-content span {
+    font-size: 13px;
+
+    line-height: 1.4;
+
+    color: #6b7280;
+}
+
+
+/* =========================================================
+   POPUP CLOSE
+   ========================================================= */
+
+.bed-popup-close {
+    width: 28px;
+    height: 28px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-left: 8px;
+
+    border: none;
+
+    background: transparent;
+
+    color: #9ca3af;
+
+    font-size: 20px;
+
+    cursor: pointer;
+}
+
+.bed-popup-close:hover {
+    color: #374151;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+    .bed-form-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .bed-page {
+        padding: 15px;
+    }
+
+    .bed-header {
+        flex-direction: column;
+        align-items: flex-start;
+
+        gap: 14px;
+    }
+
+    .bed-add-btn {
+        width: 100%;
+    }
+
+    .bed-form-grid {
+        grid-template-columns: 1fr;
+
+        padding: 18px;
+    }
+
+    .bed-field-full {
+        grid-column: auto;
+    }
+
+    .bed-form-actions {
+        padding: 15px 18px;
+
+        justify-content: flex-end;
+    }
+
+    .bed-popup {
+        left: 15px;
+        right: 15px;
+
+        top: 75px;
+
+        width: auto;
+    }
+}   

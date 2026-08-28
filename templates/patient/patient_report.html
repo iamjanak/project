@@ -1,0 +1,277 @@
+{% extends "base.html" %}
+
+{% block title %}
+Patient Report - SwasthaCare
+{% endblock %}
+
+{% block content %}
+
+<div class="patient-report-page">
+
+    <div class="patient-report-header">
+
+        <div>
+            <h2>Patient Report</h2>
+            <p>
+                Search and view registered patient information.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         SEARCH FILTER
+    ====================================================== -->
+
+    <div class="report-filter-card">
+
+        <div class="filter-grid">
+
+            <div class="filter-group">
+
+                <label for="patientNo">
+                    Hospital Number
+                </label>
+
+                <input
+                    type="text"
+                    id="patientNo"
+                    placeholder="Enter hospital number"
+                >
+
+            </div>
+
+
+            <div class="filter-group">
+
+                <label for="patientName">
+                    Patient Name
+                </label>
+
+                <input
+                    type="text"
+                    id="patientName"
+                    placeholder="Enter patient name"
+                >
+
+            </div>
+
+
+            <div class="filter-group">
+
+                <label for="phone">
+                    Phone
+                </label>
+
+                <input
+                    type="text"
+                    id="phone"
+                    placeholder="Enter phone number"
+                >
+
+            </div>
+
+
+            <div class="filter-group">
+
+                <label for="department">
+                    Department
+                </label>
+
+                <select id="department">
+
+                    <option value="">
+                        All Departments
+                    </option>
+
+                    {% for department in departments %}
+
+                    <option
+                        value="{{ department.department_name }}"
+                    >
+                        {{ department.department_name }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <div class="filter-group">
+
+                <label for="doctor">
+                    Doctor
+                </label>
+
+                <select id="doctor">
+
+                    <option value="">
+                        All Doctors
+                    </option>
+
+                    {% for doctor in doctors %}
+
+                    <option
+                        value="{{ doctor.doc_name }}"
+                    >
+                        {{ doctor.doc_name }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <div class="filter-actions">
+
+            <button
+                type="button"
+                id="searchReportBtn"
+            >
+                Search
+            </button>
+
+            <button
+                type="button"
+                id="clearReportBtn"
+            >
+                Clear
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         REPORT SUMMARY
+    ====================================================== -->
+
+    <div class="report-summary">
+
+        <div class="summary-card">
+
+            <span>
+                Total Patients
+            </span>
+
+            <strong id="totalPatients">
+                0
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         PATIENT TABLE
+    ====================================================== -->
+
+    <div class="patient-report-card">
+
+        <div class="table-header">
+
+            <h3>
+                Patient Records
+            </h3>
+
+            <button
+                type="button"
+                id="printReportBtn"
+            >
+                Print Report
+            </button>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>SN</th>
+
+                        <th>Hospital No.</th>
+
+                        <th>Patient Name</th>
+
+                        <th>DOB</th>
+
+                        <th>Age</th>
+
+                        <th>Gender</th>
+
+                        <th>Phone</th>
+
+                        <th>Department</th>
+
+                        <th>Doctor</th>
+
+                        <th>Registered</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="patientReportBody">
+
+                    <tr>
+
+                        <td
+                            colspan="10"
+                            class="report-empty"
+                        >
+                            Search patient records to view the report.
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/patient_report.css'
+    ) }}"
+>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script
+    src="{{ url_for(
+        'static',
+        filename='js/patient_report.js'
+    ) }}"
+></script>
+
+{% endblock %}

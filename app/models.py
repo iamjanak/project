@@ -1,6 +1,10 @@
 from .database import db
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from werkzeug.security import generate_password_hash, check_password_hash
+
+def nepal_now():
+    return datetime.now(ZoneInfo("Asia/Kathmandu"))
 
 
 # =========================================================
@@ -715,3 +719,270 @@ class FollowUp(db.Model):
             f"{self.followup_no} "
             f"- {self.patient_no}>"
         )
+        
+# app/models.py
+
+from datetime import datetime
+from app.database import db
+
+
+class PatientInfoCorrection(db.Model):
+
+    
+    __tablename__ = "patient_info_corrections"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    patient_id = db.Column(
+        db.Integer,
+        db.ForeignKey("patients.id"),
+        nullable=False,
+        index=True
+    )
+
+    patient_no = db.Column(
+        db.String(50),
+        nullable=False,
+        index=True
+    )
+
+    field_name = db.Column(
+        db.String(100),
+        nullable=False
+    )
+
+    old_value = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+    new_value = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+    reason = db.Column(
+        db.Text,
+        nullable=False
+    )
+
+    corrected_by = db.Column(
+        db.Integer,
+        db.ForeignKey("users.id"),
+        nullable=True
+    )
+
+    created_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow,
+        nullable=False
+    )
+
+    patient = db.relationship(
+        "Patient",
+        backref=db.backref(
+            "info_corrections",
+            lazy=True
+        )
+    )
+
+    user = db.relationship(
+        "User",
+        foreign_keys=[corrected_by]
+    )
+    
+class Ward(db.Model):
+
+    __tablename__ = "wards"
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    ward_code = db.Column(
+        db.String(50),
+        nullable=False,
+        unique=True
+    )
+
+    ward_name = db.Column(
+        db.String(150),
+        nullable=False,
+        unique=True
+    )
+
+    ward_type = db.Column(
+        db.String(100),
+        nullable=False
+    )
+
+    floor = db.Column(
+        db.String(50),
+        nullable=True
+    )
+
+    description = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+    status = db.Column(
+        db.String(20),
+        nullable=False,
+        default="Active"
+    )
+
+    created_at = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=datetime.utcnow
+    )
+
+    updated_at = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=datetime.utcnow,
+        onupdate=datetime.utcnow
+    )
+    
+class Room(db.Model):
+
+    __tablename__ = "rooms"
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    ward_id = db.Column(
+        db.Integer,
+        db.ForeignKey("wards.id"),
+        nullable=False
+    )
+
+    room_code = db.Column(
+        db.String(50),
+        nullable=False,
+        unique=True
+    )
+
+    room_number = db.Column(
+        db.String(50),
+        nullable=False
+    )
+
+    room_name = db.Column(
+        db.String(150),
+        nullable=False
+    )
+
+    room_type = db.Column(
+        db.String(100),
+        nullable=False
+    )
+
+    floor = db.Column(
+        db.String(50)
+    )
+
+    capacity = db.Column(
+        db.Integer,
+        nullable=False,
+        default=1
+    )
+
+    description = db.Column(
+        db.Text
+    )
+
+    status = db.Column(
+        db.String(20),
+        nullable=False,
+        default="Available"
+    )
+
+    created_at = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=datetime.utcnow
+    )
+
+    updated_at = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=datetime.utcnow,
+        onupdate=datetime.utcnow
+    )
+
+    ward = db.relationship(
+        "Ward",
+        backref=db.backref(
+            "rooms",
+            lazy=True
+        )
+    )
+    
+class Bed(db.Model):
+    __tablename__ = "beds"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    bed_code = db.Column(
+        db.String(50),
+        nullable=False,
+        unique=True
+    )
+
+    bed_name = db.Column(
+        db.String(100),
+        nullable=False
+    )
+
+    room_id = db.Column(
+        db.Integer,
+        db.ForeignKey("rooms.id"),
+        nullable=False
+    )
+
+    bed_type = db.Column(
+        db.String(50),
+        nullable=False
+    )
+
+    status = db.Column(
+        db.String(30),
+        nullable=False,
+        default="Available"
+    )
+
+    description = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+    created_at = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=datetime.utcnow
+    )
+
+    updated_at = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=datetime.utcnow,
+        onupdate=datetime.utcnow
+    )
+
+    room = db.relationship(
+        "Room",
+        backref=db.backref(
+            "beds",
+            lazy=True
+        )
+    )
+
+    bed_price = db.Column(
+        db.Numeric(10, 2),
+        nullable=True
+    )

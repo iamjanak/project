@@ -33,9 +33,27 @@ def create_app():
     # Follow-up routes
     from app.followup_routes import followup_bp
 
+    # Patient Info Correction routes
+    from app.patient_correction import patient_correction
+
+    # Ward  Route
+    from app.ward_routes import ward_bp
+    
+    # For room Route
+    from app.room_routes import room_bp
+    
+    # For Bed Route 
+    from app.bed import bed_bp
+    
+    
+    # Register blueprints
     app.register_blueprint(main)
     app.register_blueprint(followup_bp)
-
+    app.register_blueprint(patient_correction)
+    app.register_blueprint(ward_bp)
+    app.register_blueprint(room_bp)
+    app.register_blueprint(bed_bp)
+    
     return app
 
 

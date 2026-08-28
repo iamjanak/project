@@ -1,0 +1,732 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+Bed Setup - SwasthaCare
+{% endblock %}
+
+
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/bed_setup.css') }}"
+>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="bed-page">
+
+    <!-- ==========================================
+         HEADER
+    =========================================== -->
+
+    <div class="bed-header">
+
+        <div>
+
+            <h1>
+                Bed Setup
+            </h1>
+
+            <p>
+                Manage hospital beds and their basic information.
+            </p>
+
+        </div>
+
+
+        <button
+            type="button"
+            class="bed-add-btn"
+            id="openBedFormBtn"
+        >
+            + Add Bed
+        </button>
+
+    </div>
+
+
+    <!-- ==========================================
+         ADD BED FORM
+    =========================================== -->
+
+    <div
+        class="bed-form-card"
+        id="bedFormCard"
+        style="display: none;"
+    >
+
+        <!-- FORM HEADER -->
+
+        <div class="bed-form-header">
+
+            <div>
+
+                <h2>
+                    Add New Bed
+                </h2>
+
+                <p>
+                    Enter the bed information below.
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="bed-close-btn"
+                id="closeBedFormBtn"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <!-- FORM -->
+
+        <form id="bedForm">
+
+            <div class="bed-form-grid">
+
+                <!-- ==================================
+                     ROOM
+                =================================== -->
+
+                <div class="bed-field">
+
+                    <label for="bedRoom">
+                        Room
+                        <span>*</span>
+                    </label>
+
+
+                    <select
+                        id="bedRoom"
+                        name="room_id"
+                        required
+                    >
+
+                        <option
+                            value=""
+                            disabled
+                            selected
+                        >
+                            Select Room
+                        </option>
+
+
+                        {% for room in rooms %}
+
+                        <option
+                            value="{{ room.id }}"
+                        >
+                            {{ room.room_name }}
+                            ({{ room.room_code }})
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- ==================================
+                     BED CODE
+                =================================== -->
+
+                <div class="bed-field">
+
+                    <label for="bedCode">
+                        Bed Code
+                        <span>*</span>
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="bedCode"
+                        name="bed_code"
+                        placeholder="e.g. B01"
+                        maxlength="50"
+                        autocomplete="off"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- ==================================
+                     BED NAME
+                =================================== -->
+
+                <div class="bed-field">
+
+                    <label for="bedName">
+                        Bed Name
+                        <span>*</span>
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="bedName"
+                        name="bed_name"
+                        placeholder="e.g. Bed 01"
+                        maxlength="100"
+                        autocomplete="off"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- ==================================
+                     BED CHARGE
+                =================================== -->
+
+                <div class="bed-field">
+
+                    <label for="bedPrice">
+                        Bed Charge
+                    </label>
+
+
+                    <input
+                        type="number"
+                        id="bedPrice"
+                        name="bed_price"
+                        placeholder="Enter bed charge"
+                        min="0"
+                        step="0.01"
+                        inputmode="decimal"
+                        autocomplete="off"
+                    >
+
+
+                    <small class="bed-field-help">
+                        Enter the charge for this bed.
+                    </small>
+
+                </div>
+
+
+                <!-- ==================================
+                     BED TYPE
+                =================================== -->
+
+                <div class="bed-field">
+
+                    <label for="bedType">
+                        Bed Type
+                        <span>*</span>
+                    </label>
+
+
+                    <select
+                        id="bedType"
+                        name="bed_type"
+                        required
+                    >
+
+                        <option
+                            value=""
+                            disabled
+                            selected
+                        >
+                            Select Bed Type
+                        </option>
+
+
+                        <option value="General">
+                            General
+                        </option>
+
+
+                        <option value="Private">
+                            Private
+                        </option>
+
+
+                        <option value="ICU">
+                            ICU
+                        </option>
+
+
+                        <option value="Emergency">
+                            Emergency
+                        </option>
+
+
+                        <option value="Pediatric">
+                            Pediatric
+                        </option>
+
+
+                        <option value="Maternity">
+                            Maternity
+                        </option>
+
+
+                        <option value="Surgical">
+                            Surgical
+                        </option>
+
+
+                        <option value="Other">
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- ==================================
+                     STATUS
+                =================================== -->
+
+                <div class="bed-field">
+
+                    <label for="bedStatus">
+                        Status
+                    </label>
+
+
+                    <select
+                        id="bedStatus"
+                        name="status"
+                    >
+
+                        <option value="Available">
+                            Available
+                        </option>
+
+
+                        <option value="Occupied">
+                            Occupied
+                        </option>
+
+
+                        <option value="Maintenance">
+                            Maintenance
+                        </option>
+
+
+                        <option value="Inactive">
+                            Inactive
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- ==================================
+                     DESCRIPTION
+                =================================== -->
+
+                <div
+                    class="bed-field bed-field-full"
+                >
+
+                    <label for="bedDescription">
+                        Description
+                    </label>
+
+
+                    <textarea
+                        id="bedDescription"
+                        name="description"
+                        rows="3"
+                        placeholder="Enter bed description..."
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==================================
+                 FORM ACTIONS
+            =================================== -->
+
+            <div class="bed-form-actions">
+
+                <button
+                    type="button"
+                    class="bed-cancel-btn"
+                    id="cancelBedBtn"
+                >
+                    Cancel
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="bed-save-btn"
+                    id="saveBedBtn"
+                >
+                    Save Bed
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- ==========================================
+         BED LIST
+    =========================================== -->
+
+    <div class="bed-list-card">
+
+        <!-- LIST HEADER -->
+
+        <div class="bed-list-header">
+
+            <div>
+
+                <h2>
+                    Bed List
+                </h2>
+
+                <p>
+                    Registered hospital beds
+                </p>
+
+            </div>
+
+
+            <div class="bed-count">
+
+                {{ beds|length }}
+
+                Bed{% if beds|length != 1 %}s{% endif %}
+
+            </div>
+
+        </div>
+
+
+        <!-- TABLE -->
+
+        <div class="bed-table-wrapper">
+
+            <table class="bed-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            S.N.
+                        </th>
+
+
+                        <th>
+                            BED CODE
+                        </th>
+
+
+                        <th>
+                            BED NAME
+                        </th>
+
+
+                        <th>
+                            ROOM
+                        </th>
+
+
+                        <th>
+                            BED TYPE
+                        </th>
+
+
+                        <th>
+                            BED CHARGE
+                        </th>
+
+
+                        <th>
+                            STATUS
+                        </th>
+
+
+                        <th>
+                            CREATED AT
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="bedTableBody">
+
+                    {% if beds %}
+
+                        {% for bed in beds %}
+
+                        <tr>
+
+                            <!-- S.N. -->
+
+                            <td>
+                                {{ loop.index }}
+                            </td>
+
+
+                            <!-- BED CODE -->
+
+                            <td>
+
+                                <span class="bed-code">
+                                    {{ bed.bed_code }}
+                                </span>
+
+                            </td>
+
+
+                            <!-- BED NAME -->
+
+                            <td>
+
+                                <strong>
+                                    {{ bed.bed_name }}
+                                </strong>
+
+                            </td>
+
+
+                            <!-- ROOM -->
+
+                            <td>
+
+                                {% if bed.room %}
+
+                                    {{ bed.room.room_name }}
+
+                                {% else %}
+
+                                    —
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- BED TYPE -->
+
+                            <td>
+                                {{ bed.bed_type }}
+                            </td>
+
+
+                            <!-- BED CHARGE -->
+
+                            <td>
+
+                                {% if bed.bed_price is not none %}
+
+                                    Rs.
+                                    {{ "%.2f"|format(bed.bed_price) }}
+
+                                {% else %}
+
+                                    —
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- STATUS -->
+
+                            <td>
+
+                                {% if bed.status == "Available" %}
+
+                                    <span
+                                        class="status-badge available"
+                                    >
+                                        Available
+                                    </span>
+
+
+                                {% elif bed.status == "Occupied" %}
+
+                                    <span
+                                        class="status-badge occupied"
+                                    >
+                                        Occupied
+                                    </span>
+
+
+                                {% elif bed.status == "Maintenance" %}
+
+                                    <span
+                                        class="status-badge maintenance"
+                                    >
+                                        Maintenance
+                                    </span>
+
+
+                                {% else %}
+
+                                    <span
+                                        class="status-badge inactive"
+                                    >
+                                        Inactive
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- CREATED AT -->
+
+                            <td>
+
+                                {{
+                                    bed.created_at.strftime(
+                                        "%d/%m/%Y %I:%M %p"
+                                    )
+                                    if bed.created_at
+                                    else "—"
+                                }}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+
+                    {% else %}
+
+                        <!-- EMPTY TABLE -->
+
+                        <tr id="emptyBedRow">
+
+                            <td
+                                colspan="8"
+                                class="bed-empty"
+                            >
+                                No beds have been created yet.
+                            </td>
+
+                        </tr>
+
+                    {% endif %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     SUCCESS POPUP
+=========================================== -->
+
+<div
+    class="bed-popup success"
+    id="bedSuccessPopup"
+>
+
+    <div class="bed-popup-icon">
+        ✓
+    </div>
+
+
+    <div class="bed-popup-content">
+
+        <strong>
+            Success
+        </strong>
+
+
+        <span id="bedSuccessMessage">
+            Bed added successfully.
+        </span>
+
+    </div>
+
+
+    <button
+        type="button"
+        class="bed-popup-close"
+        data-popup="bedSuccessPopup"
+    >
+        ×
+    </button>
+
+</div>
+
+
+<!-- ==========================================
+     ERROR POPUP
+=========================================== -->
+
+<div
+    class="bed-popup error"
+    id="bedErrorPopup"
+>
+
+    <div class="bed-popup-icon">
+        !
+    </div>
+
+
+    <div class="bed-popup-content">
+
+        <strong>
+            Action Failed
+        </strong>
+
+
+        <span id="bedErrorMessage">
+            Unable to complete the request.
+        </span>
+
+    </div>
+
+
+    <button
+        type="button"
+        class="bed-popup-close"
+        data-popup="bedErrorPopup"
+    >
+        ×
+    </button>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script
+    src="{{ url_for('static', filename='js/bed_setup.js') }}"
+    data-page-script="true"
+></script>
+
+{% endblock %}
+

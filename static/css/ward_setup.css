@@ -1,0 +1,457 @@
+/* =========================================================
+   WARD PAGE
+========================================================= */
+
+.ward-page {
+    padding: 24px;
+    width: 100%;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.ward-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.ward-header h1 {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.ward-header p {
+    margin: 6px 0 0;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.ward-add-btn,
+.ward-save-btn,
+.ward-cancel-btn {
+    border: none;
+    border-radius: 7px;
+    padding: 11px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.ward-add-btn {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.ward-add-btn:hover {
+    background: #1d4ed8;
+}
+
+.ward-save-btn {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.ward-save-btn:hover {
+    background: #1d4ed8;
+}
+
+.ward-save-btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.ward-cancel-btn {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.ward-cancel-btn:hover {
+    background: #e5e7eb;
+}
+
+
+/* =========================================================
+   FORM CARD
+========================================================= */
+
+.ward-form-card,
+.ward-list-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+
+.ward-form-card {
+    margin-bottom: 24px;
+}
+
+
+.ward-form-header,
+.ward-list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 22px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+
+.ward-form-header h2,
+.ward-list-header h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 650;
+}
+
+
+.ward-form-header p,
+.ward-list-header p {
+    margin: 5px 0 0;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+
+.ward-close-btn {
+    border: none;
+    background: transparent;
+    font-size: 25px;
+    color: #6b7280;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.ward-close-btn:hover {
+    color: #111827;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+#wardForm {
+    padding: 22px;
+}
+
+
+.ward-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+
+.ward-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+
+.ward-field-full {
+    grid-column: 1 / -1;
+}
+
+
+.ward-field label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+}
+
+
+.ward-field label span {
+    color: #dc2626;
+}
+
+
+.ward-field input,
+.ward-field select,
+.ward-field textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 10px 12px;
+    background: #ffffff;
+    color: #111827;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.15s ease,
+                box-shadow 0.15s ease;
+}
+
+
+.ward-field input,
+.ward-field select {
+    height: 42px;
+}
+
+
+.ward-field textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+
+.ward-field input:focus,
+.ward-field select:focus,
+.ward-field textarea:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+
+/* =========================================================
+   FORM ACTIONS
+========================================================= */
+
+.ward-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+
+/* =========================================================
+   LIST
+========================================================= */
+
+.ward-count {
+    background: #f3f4f6;
+    color: #374151;
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+
+.ward-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+
+.ward-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+
+.ward-table th {
+    background: #f9fafb;
+    color: #4b5563;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: left;
+    padding: 13px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    white-space: nowrap;
+}
+
+
+.ward-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #f0f1f3;
+    font-size: 13px;
+    color: #374151;
+    white-space: nowrap;
+}
+
+
+.ward-table tbody tr:hover {
+    background: #fafafa;
+}
+
+
+.ward-code {
+    font-weight: 700;
+    color: #2563eb;
+}
+
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 20px;
+    padding: 5px 10px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+
+.status-badge.active {
+    background: #dcfce7;
+    color: #166534;
+}
+
+
+.status-badge.inactive {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+
+.ward-empty {
+    text-align: center;
+    padding: 40px 20px !important;
+    color: #9ca3af !important;
+}
+
+
+/* =========================================================
+   POPUPS
+========================================================= */
+
+.ward-popup {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+
+    width: 360px;
+    max-width: calc(100vw - 48px);
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 15px 16px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 9px;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+
+    transform: translateX(calc(100% + 40px));
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition:
+        transform 0.25s ease,
+        opacity 0.25s ease;
+
+    z-index: 9999;
+}
+
+
+.ward-popup.show {
+    transform: translateX(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+
+.ward-popup-icon {
+    width: 30px;
+    height: 30px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    font-weight: 800;
+}
+
+
+.ward-popup.success .ward-popup-icon {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+
+.ward-popup.error .ward-popup-icon {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+
+.ward-popup-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+
+.ward-popup-content strong {
+    font-size: 13px;
+    color: #111827;
+}
+
+
+.ward-popup-content span {
+    font-size: 12px;
+    color: #6b7280;
+    line-height: 1.4;
+}
+
+
+.ward-popup-close {
+    border: none;
+    background: transparent;
+    color: #9ca3af;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+
+.ward-popup-close:hover {
+    color: #374151;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .ward-page {
+        padding: 16px;
+    }
+
+    .ward-header {
+        align-items: flex-start;
+        gap: 15px;
+        flex-direction: column;
+    }
+
+    .ward-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ward-field-full {
+        grid-column: auto;
+    }
+
+    .ward-form-actions {
+        flex-direction: column;
+    }
+
+    .ward-form-actions button {
+        width: 100%;
+    }
+
+}

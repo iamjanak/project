@@ -1,0 +1,722 @@
+{% extends "base.html" %}
+
+{% block title %}
+Room Setup - SwasthaCare
+{% endblock %}
+
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/room_setup.css') }}"
+>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="room-page">
+
+
+<!-- =====================================================
+     ROOM HEADER
+====================================================== -->
+
+<div class="room-header">
+
+    <div>
+
+        <h1>
+            Room Setup
+        </h1>
+
+        <p>
+            Manage hospital rooms and their basic information.
+        </p>
+
+    </div>
+
+
+    <button
+    type="button"
+    class="room-add-btn"
+    id="openRoomFormBtn"
+    onclick="openRoomForm()"
+>
+    + Add Room
+</button>
+
+</div>
+
+
+<!-- =====================================================
+     ROOM FORM
+====================================================== -->
+
+<div
+    class="room-form-card"
+    id="roomFormCard"
+    style="display: none;"
+>
+
+
+    <!-- FORM HEADER -->
+
+    <div class="room-form-header">
+
+        <div>
+
+            <h2>
+                Add New Room
+            </h2>
+
+            <p>
+                Enter the room information below.
+            </p>
+
+        </div>
+
+
+        <button
+            type="button"
+            class="room-close-btn"
+            id="closeRoomFormBtn"
+        >
+            ×
+        </button>
+
+    </div>
+
+
+    <!-- =================================================
+         FORM
+    ================================================== -->
+
+    <form id="roomForm">
+
+        <div class="room-form-grid">
+
+
+            <!-- =================================================
+                 WARD
+            ================================================== -->
+<div class="room-field">
+
+    <label for="roomWard">
+        Ward
+        <span>*</span>
+    </label>
+
+    <select
+        id="roomWard"
+        name="ward_id"
+        required
+    >
+
+        <option value="" disabled selected>
+            Select Ward
+        </option>
+
+        {% for ward in wards %}
+            <option
+                value="{{ ward.id }}"
+                data-ward-id="{{ ward.id }}"
+            >
+                {{ ward.ward_name }}
+                {% if ward.ward_code %}
+                    ({{ ward.ward_code }})
+                {% endif %}
+            </option>
+        {% endfor %}
+
+    </select>
+
+</div>
+
+
+            <!-- =================================================
+                 ROOM CODE
+            ================================================== -->
+
+            <div class="room-field">
+
+                <label for="roomCode">
+
+                    Room Code
+                    <span>*</span>
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="roomCode"
+                    name="room_code"
+                    placeholder="e.g. RM01"
+                    maxlength="50"
+                    autocomplete="off"
+                    required
+                >
+
+            </div>
+
+
+            <!-- =================================================
+                 ROOM NAME
+            ================================================== -->
+
+            <div class="room-field">
+
+                <label for="roomName">
+
+                    Room Name
+                    <span>*</span>
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="roomName"
+                    name="room_name"
+                    placeholder="e.g. Room 101"
+                    maxlength="100"
+                    autocomplete="off"
+                    required
+                >
+
+            </div>
+
+
+            <!-- =================================================
+                 ROOM TYPE
+            ================================================== -->
+
+            <div class="room-field">
+
+                <label for="roomType">
+
+                    Room Type
+                    <span>*</span>
+
+                </label>
+
+
+                <select
+                    id="roomType"
+                    name="room_type"
+                    required
+                >
+
+                    <option value="">
+                        Select Room Type
+                    </option>
+
+                    <option value="General">
+                        General
+                    </option>
+
+                    <option value="Private">
+                        Private
+                    </option>
+
+                    <option value="Semi Private">
+                        Semi Private
+                    </option>
+
+                    <option value="ICU">
+                        ICU
+                    </option>
+
+                    <option value="Emergency">
+                        Emergency
+                    </option>
+
+                    <option value="Pediatric">
+                        Pediatric
+                    </option>
+
+                    <option value="Maternity">
+                        Maternity
+                    </option>
+
+                    <option value="Surgical">
+                        Surgical
+                    </option>
+
+                    <option value="Other">
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- =================================================
+                 FLOOR
+            ================================================== -->
+
+            <div class="room-field">
+
+                <label for="roomFloor">
+                    Floor
+                </label>
+
+
+                <input
+                    type="text"
+                    id="roomFloor"
+                    name="floor"
+                    placeholder="e.g. Ground Floor"
+                    maxlength="50"
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+            <!-- =================================================
+                 STATUS
+            ================================================== -->
+
+            <div class="room-field">
+
+                <label for="roomStatus">
+                    Status
+                </label>
+
+
+                <select
+                    id="roomStatus"
+                    name="status"
+                >
+
+                    <option value="Active">
+                        Active
+                    </option>
+
+                    <option value="Inactive">
+                        Inactive
+                    </option>
+
+                    <option value="Maintenance">
+                        Maintenance
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- =================================================
+                 DESCRIPTION
+            ================================================== -->
+
+            <div class="room-field room-field-full">
+
+                <label for="roomDescription">
+                    Description
+                </label>
+
+
+                <textarea
+                    id="roomDescription"
+                    name="description"
+                    rows="3"
+                    placeholder="Enter room description..."
+                ></textarea>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             FORM ACTIONS
+        ================================================== -->
+
+        <div class="room-form-actions">
+
+
+            <button
+                type="button"
+                class="room-cancel-btn"
+                id="cancelRoomBtn"
+            >
+                Cancel
+            </button>
+
+
+            <button
+                type="submit"
+                class="room-save-btn"
+                id="saveRoomBtn"
+            >
+                Save Room
+            </button>
+
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<!-- =====================================================
+     ROOM LIST
+====================================================== -->
+
+<div class="room-list-card">
+
+
+    <!-- LIST HEADER -->
+
+    <div class="room-list-header">
+
+        <div>
+
+            <h2>
+                Room List
+            </h2>
+
+            <p>
+                Registered hospital rooms
+            </p>
+
+        </div>
+
+
+        <div class="room-count">
+
+            {{ rooms|length }}
+
+            Room{% if rooms|length != 1 %}s{% endif %}
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         TABLE
+    ================================================== -->
+
+    <div class="room-table-wrapper">
+
+        <table class="room-table">
+
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        S.N.
+                    </th>
+
+                    <th>
+                        Room Code
+                    </th>
+
+                    <th>
+                        Room Name
+                    </th>
+
+                    <th>
+                        Room Type
+                    </th>
+
+                    <th>
+                        Ward
+                    </th>
+
+                    <th>
+                        Floor
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <th>
+                        Created At
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="roomTableBody">
+
+
+                {% if rooms %}
+
+
+                    {% for room in rooms %}
+
+                    <tr>
+
+
+                        <!-- S.N. -->
+
+                        <td>
+
+                            {{ loop.index }}
+
+                        </td>
+
+
+                        <!-- ROOM CODE -->
+
+                        <td>
+
+                            <span class="room-code">
+
+                                {{ room.room_code }}
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- ROOM NAME -->
+
+                        <td>
+
+                            <strong>
+
+                                {{ room.room_name }}
+
+                            </strong>
+
+                        </td>
+
+
+                        <!-- ROOM TYPE -->
+
+                        <td>
+
+                            {{ room.room_type }}
+
+                        </td>
+
+
+                        <!-- WARD -->
+
+                        <td>
+
+                            {% if room.ward %}
+
+                                {{ room.ward.ward_name }}
+
+                            {% else %}
+
+                                —
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- FLOOR -->
+
+                        <td>
+
+                            {{ room.floor or "—" }}
+
+                        </td>
+
+
+                        <!-- STATUS -->
+
+                        <td>
+
+
+                            {% if room.status == "Active" %}
+
+                                <span class="status-badge available">
+                                    Active
+                                </span>
+
+
+                            {% elif room.status == "Maintenance" %}
+
+                                <span class="status-badge maintenance">
+                                    Maintenance
+                                </span>
+
+
+                            {% else %}
+
+                                <span class="status-badge inactive">
+                                    Inactive
+                                </span>
+
+                            {% endif %}
+
+
+                        </td>
+
+
+                        <!-- CREATED AT -->
+
+                        <td>
+
+                            {{
+                                room.created_at.strftime(
+                                    "%d/%m/%Y %I:%M %p"
+                                )
+                                if room.created_at
+                                else "—"
+                            }}
+
+                        </td>
+
+
+                    </tr>
+
+                    {% endfor %}
+
+
+                {% else %}
+
+
+                    <!-- EMPTY LIST -->
+
+                    <tr id="emptyRoomRow">
+
+                        <td
+                            colspan="8"
+                            class="room-empty"
+                        >
+
+                            No rooms have been created yet.
+
+                        </td>
+
+                    </tr>
+
+
+                {% endif %}
+
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+</div>
+
+<!-- =========================================================
+     SUCCESS POPUP
+========================================================= -->
+
+<div
+    class="room-popup success"
+    id="roomSuccessPopup"
+>
+
+
+<div class="room-popup-icon">
+
+    ✓
+
+</div>
+
+
+<div class="room-popup-content">
+
+    <strong>
+        Success
+    </strong>
+
+
+    <span id="roomSuccessMessage">
+
+        Room added successfully.
+
+    </span>
+
+</div>
+
+
+<button
+    type="button"
+    class="room-popup-close"
+    data-popup="roomSuccessPopup"
+>
+
+    ×
+
+</button>
+
+
+</div>
+
+<!-- =========================================================
+     ERROR POPUP
+========================================================= -->
+
+<div
+    class="room-popup error"
+    id="roomErrorPopup"
+>
+
+
+<div class="room-popup-icon">
+
+    !
+
+</div>
+
+
+<div class="room-popup-content">
+
+    <strong>
+        Action Failed
+    </strong>
+
+
+    <span id="roomErrorMessage">
+
+        Unable to complete the request.
+
+    </span>
+
+</div>
+
+
+<button
+    type="button"
+    class="room-popup-close"
+    data-popup="roomErrorPopup"
+>
+
+    ×
+
+</button>
+
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+
+<script
+    src="{{ url_for('static', filename='js/room_setup.js') }}"
+    data-page-script="true"
+></script>
+
+
+
+
+{% endblock %}
+

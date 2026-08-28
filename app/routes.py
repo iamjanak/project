@@ -89,6 +89,7 @@ def dashboard():
         doctor_count=78,
         bill_count=52
     )
+    
 # ==============================
 # Patient Registration
 # ==============================
@@ -206,8 +207,7 @@ def patient_registration():
                 )
 
             # ---------------------------------------------
-            # IMPORTANT:
-            # Save Department NAME, not Department ID
+            # Save Department NAME
             # ---------------------------------------------
             department_name = department.department_name
 
@@ -253,10 +253,38 @@ def patient_registration():
                 )
 
             # ---------------------------------------------
-            # IMPORTANT:
-            # Save Doctor NAME, not Doctor ID
+            # Save Doctor NAME
             # ---------------------------------------------
             doctor_name = doctor.doc_name
+
+        # =================================================
+        # AGE
+        # =================================================
+
+        age_input = request.form.get(
+            "age",
+            ""
+        ).strip()
+
+        if age_input:
+
+            try:
+                age = int(age_input)
+
+            except (ValueError, TypeError):
+
+                flash(
+                    "Invalid age.",
+                    "error"
+                )
+
+                return redirect(
+                    url_for("main.patient_registration")
+                )
+
+        else:
+            # Empty age is stored as NULL
+            age = None
 
         # =================================================
         # CREATE PATIENT
@@ -270,9 +298,9 @@ def patient_registration():
 
             dob=dob,
 
-            age=request.form.get(
-                "age"
-            ),
+            # IMPORTANT:
+            # Use processed age value
+            age=age,
 
             gender=request.form.get(
                 "gender"
@@ -286,10 +314,10 @@ def patient_registration():
                 "address"
             ),
 
-            # SAVE NAME
+            # SAVE DEPARTMENT NAME
             department=department_name,
 
-            # SAVE NAME
+            # SAVE DOCTOR NAME
             doctor=doctor_name
         )
 
@@ -302,7 +330,7 @@ def patient_registration():
         db.session.commit()
 
         flash(
-            "Patient registered successfully",
+            f"Patient registered successfully. Patient No: {patient_no}",
             "success"
         )
 
