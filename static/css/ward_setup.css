@@ -455,3 +455,26 @@
     }
 
 }
+
+.ward-cancel-btn {
+    display: inline-block;
+    background-color: #2563eb;   /* teal/green like image 2 */
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;       /* removes the underline */
+    text-align: center;
+    transition: background-color 0.2s ease;
+}
+
+.ward-cancel-btn:hover {
+    background-color: #2563eb;   /* slightly darker on hover */
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.ward-cancel-btn:visited {
+    color: #ffffff;              /* prevent purple visited-link color */
+}

@@ -94,8 +94,8 @@ def add_room():
         ).strip()
 
         status = (
-            data.get("status") or "Available"
-        ).strip()
+    data.get("status") or "Active"
+).strip()
 
         description = (
             data.get("description") or ""

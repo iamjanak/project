@@ -21,13 +21,13 @@ Ward Setup - SwasthaCare
             <p>Manage hospital wards and their basic information.</p>
         </div>
 
-        <button
-            type="button"
-            class="ward-add-btn"
-            id="openWardFormBtn"
-        >
-            + Add Ward
-        </button>
+        <a
+href="{{ url_for('ward.add_ward_page') }}"
+    class="ward-add-btn"
+>
+    + Add Ward
+</a>
+    
     </div>
 
     
@@ -444,7 +444,7 @@ Ward Setup - SwasthaCare
 
 {% block extra_js %}
 
-<script
+<script data-page-script="true"
     src="{{ url_for('static', filename='js/ward_setup.js') }}"
     data-page-script="true"
 ></script>

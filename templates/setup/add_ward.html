@@ -1,0 +1,292 @@
+{% extends "base.html" %}
+
+{% block title %}
+Add Ward - SwasthaCare
+{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/ward_setup.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="ward-page">
+
+
+<div class="ward-header">
+
+    <div>
+        <h1>Add New Ward</h1>
+        <p>Enter the ward information below.</p>
+    </div>
+
+    <a href="{{ url_for('ward.ward_setup') }}"
+       class="ward-cancel-btn">
+        ← Back to Ward Setup
+    </a>
+
+</div>
+
+
+<div class="ward-form-card"
+     id="wardFormCard"
+     style="display: block;">
+
+    <form id="wardForm" novalidate>
+
+        <div class="ward-form-grid">
+
+            <div class="ward-field">
+
+                <label for="wardCode">
+                    Ward Code <span>*</span>
+                </label>
+
+                <input
+                    type="text"
+                    id="wardCode"
+                    name="ward_code"
+                    placeholder="e.g. GW01"
+                    maxlength="50"
+                    autocomplete="off"
+                    required
+                >
+
+            </div>
+
+
+            <div class="ward-field">
+
+                <label for="wardName">
+                    Ward Name <span>*</span>
+                </label>
+
+                <input
+                    type="text"
+                    id="wardName"
+                    name="ward_name"
+                    placeholder="e.g. General Ward"
+                    maxlength="150"
+                    autocomplete="off"
+                    required
+                >
+
+            </div>
+
+
+            <div class="ward-field">
+
+                <label for="wardType">
+                    Ward Type <span>*</span>
+                </label>
+
+                <select
+                    id="wardType"
+                    name="ward_type"
+                    required
+                >
+
+                    <option value="">
+                        Select Ward Type
+                    </option>
+
+                    <option value="General">
+                        General
+                    </option>
+
+                    <option value="Private">
+                        Private
+                    </option>
+
+                    <option value="ICU">
+                        ICU
+                    </option>
+
+                    <option value="Emergency">
+                        Emergency
+                    </option>
+
+                    <option value="Pediatric">
+                        Pediatric
+                    </option>
+
+                    <option value="Maternity">
+                        Maternity
+                    </option>
+
+                    <option value="Surgical">
+                        Surgical
+                    </option>
+
+                    <option value="Other">
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="ward-field">
+
+                <label for="wardFloor">
+                    Floor
+                </label>
+
+                <input
+                    type="text"
+                    id="wardFloor"
+                    name="floor"
+                    placeholder="e.g. Ground Floor"
+                    maxlength="50"
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+            <div class="ward-field">
+
+                <label for="wardStatus">
+                    Status
+                </label>
+
+                <select
+                    id="wardStatus"
+                    name="status"
+                >
+
+                    <option value="Active" selected>
+                        Active
+                    </option>
+
+                    <option value="Inactive">
+                        Inactive
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="ward-field ward-field-full">
+
+                <label for="wardDescription">
+                    Description
+                </label>
+
+                <textarea
+                    id="wardDescription"
+                    name="description"
+                    rows="4"
+                    placeholder="Enter ward description..."
+                ></textarea>
+
+            </div>
+
+        </div>
+
+
+        <div class="ward-form-actions">
+
+            <a
+                href="{{ url_for('ward.ward_setup') }}"
+                class="ward-cancel-btn"
+            >
+                Cancel
+            </a>
+
+            <button
+                type="submit"
+                class="ward-save-btn"
+                id="saveWardBtn"
+            >
+                Save Ward
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+</div>
+
+<div
+    class="ward-popup success"
+    id="wardSuccessPopup"
+    style="display: none;"
+>
+
+
+<div class="ward-popup-icon">
+    ✓
+</div>
+
+<div class="ward-popup-content">
+
+    <strong>Success</strong>
+
+    <span id="wardSuccessMessage">
+        Ward added successfully.
+    </span>
+
+</div>
+
+<button
+    type="button"
+    class="ward-popup-close"
+    data-popup="wardSuccessPopup"
+>
+    ×
+</button>
+
+
+</div>
+
+<div
+    class="ward-popup error"
+    id="wardErrorPopup"
+    style="display: none;"
+>
+
+
+<div class="ward-popup-icon">
+    !
+</div>
+
+<div class="ward-popup-content">
+
+    <strong>Action Failed</strong>
+
+    <span id="wardErrorMessage">
+        Unable to complete the request.
+    </span>
+
+</div>
+
+<button
+    type="button"
+    class="ward-popup-close"
+    data-popup="wardErrorPopup"
+>
+    ×
+</button>
+
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+
+<script>
+window.SAVE_WARD_URL = "{{ url_for('ward.save_ward') }}";
+</script>
+
+<script src="{{ url_for('static', filename='js/add_ward.js') }}"></script>
+
+{% endblock %}

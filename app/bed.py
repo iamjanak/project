@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, render_template, request, jsonify, redirect, session
 from datetime import datetime, timedelta
 
 from app.database import db
@@ -23,6 +23,13 @@ bed_bp = Blueprint(
 @bed_bp.route("/bed_setup", methods=["GET"])
 def bed_setup():
 
+    if "user" not in session:
+        return jsonify({
+            "success": False,
+            "message": "Unauthorized"
+        }), 401
+
+
     rooms = (
         Room.query
         .order_by(Room.id.desc())
@@ -41,7 +48,6 @@ def bed_setup():
         beds=beds,
         active_page="bed_setup"
     )
-
 
 # =========================================================
 # ADD BED

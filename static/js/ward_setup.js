@@ -1,78 +1,50 @@
+javascript
 function initWardSetup() {
 
     console.log("WARD SETUP JS INITIALIZING");
-
 
     // =====================================================
     // ELEMENTS
     // =====================================================
 
     const openBtn =
-        document.getElementById(
-            "openWardFormBtn"
-        );
+        document.getElementById("openWardFormBtn");
 
     const closeBtn =
-        document.getElementById(
-            "closeWardFormBtn"
-        );
+        document.getElementById("closeWardFormBtn");
 
     const cancelBtn =
-        document.getElementById(
-            "cancelWardBtn"
-        );
+        document.getElementById("cancelWardBtn");
 
     const formCard =
-        document.getElementById(
-            "wardFormCard"
-        );
+        document.getElementById("wardFormCard");
 
     const form =
-        document.getElementById(
-            "wardForm"
-        );
+        document.getElementById("wardForm");
 
     const saveBtn =
-        document.getElementById(
-            "saveWardBtn"
-        );
-
+        document.getElementById("saveWardBtn");
 
     const successPopup =
-        document.getElementById(
-            "wardSuccessPopup"
-        );
+        document.getElementById("wardSuccessPopup");
 
     const errorPopup =
-        document.getElementById(
-            "wardErrorPopup"
-        );
-
+        document.getElementById("wardErrorPopup");
 
     const successMessage =
-        document.getElementById(
-            "wardSuccessMessage"
-        );
-
+        document.getElementById("wardSuccessMessage");
 
     const errorMessage =
-        document.getElementById(
-            "wardErrorMessage"
-        );
+        document.getElementById("wardErrorMessage");
 
 
     // =====================================================
-    // CHECK PAGE
+    // PAGE CHECK
     // =====================================================
 
-    if (
-        !formCard ||
-        !form
-    ) {
+    if (!formCard || !form) {
 
-        console.log(
-            "WARD SETUP ELEMENTS NOT FOUND"
-        );
+        console.log("WARD SETUP ELEMENTS NOT FOUND");
 
         return;
 
@@ -80,165 +52,69 @@ function initWardSetup() {
 
 
     // =====================================================
-    // OPEN WARD FORM
+    // PREVENT DOUBLE INITIALIZATION
     // =====================================================
 
-    function openWardForm() {
+    if (form.dataset.initialized === "true") {
 
-        console.log(
-            "OPEN WARD FORM"
-        );
+        console.log("WARD SETUP ALREADY INITIALIZED");
 
-
-        formCard.style.display =
-            "block";
-
-
-        if (openBtn) {
-
-            openBtn.style.display =
-                "none";
-
-        }
-
-
-        setTimeout(function () {
-
-            const wardCode =
-                document.getElementById(
-                    "wardCode"
-                );
-
-
-            if (wardCode) {
-
-                wardCode.focus();
-
-            }
-
-        }, 100);
+        return;
 
     }
 
-
-    // =====================================================
-    // CLOSE WARD FORM
-    // =====================================================
-
-    function closeWardForm() {
-
-        console.log(
-            "CLOSING WARD FORM"
-        );
-
-
-        formCard.style.display =
-            "none";
-
-
-        if (openBtn) {
-
-            openBtn.style.display =
-                "inline-flex";
-
-        }
-
-
-        form.reset();
-
-
-        // Reset status
-        const status =
-            document.getElementById(
-                "wardStatus"
-            );
-
-
-        if (status) {
-
-            status.value =
-                "Active";
-
-        }
-
-    }
+    form.dataset.initialized = "true";
 
 
     // =====================================================
-    // CLOSE POPUP
+    // POPUP FUNCTIONS
     // =====================================================
 
     function hidePopup(popup) {
 
         if (!popup) {
-
             return;
-
         }
 
-
-        popup.classList.remove(
-            "show"
-        );
+        popup.classList.remove("show");
+        popup.style.display = "none";
 
     }
 
 
-    // =====================================================
-    // SUCCESS POPUP
-    // =====================================================
-
     function showSuccess(message) {
 
         if (!successPopup) {
-
             return;
-
         }
-
 
         if (successMessage) {
 
             successMessage.textContent =
-                message ||
-                "Ward added successfully.";
+                message || "Ward added successfully.";
 
         }
 
+        hidePopup(errorPopup);
 
-        hidePopup(
-            errorPopup
-        );
-
-
-        successPopup.classList.add(
-            "show"
-        );
+        successPopup.style.display = "flex";
+        successPopup.classList.add("show");
 
 
         setTimeout(function () {
 
-            hidePopup(
-                successPopup
-            );
+            hidePopup(successPopup);
 
         }, 4000);
 
     }
 
 
-    // =====================================================
-    // ERROR POPUP
-    // =====================================================
-
     function showError(message) {
 
         if (!errorPopup) {
-
             return;
-
         }
-
 
         if (errorMessage) {
 
@@ -248,22 +124,15 @@ function initWardSetup() {
 
         }
 
+        hidePopup(successPopup);
 
-        hidePopup(
-            successPopup
-        );
-
-
-        errorPopup.classList.add(
-            "show"
-        );
+        errorPopup.style.display = "flex";
+        errorPopup.classList.add("show");
 
 
         setTimeout(function () {
 
-            hidePopup(
-                errorPopup
-            );
+            hidePopup(errorPopup);
 
         }, 5000);
 
@@ -277,13 +146,75 @@ function initWardSetup() {
 
 
     // =====================================================
-    // CLOSE POPUPS
+    // OPEN FORM
+    // =====================================================
+
+    function openWardForm() {
+
+        console.log("OPEN WARD FORM");
+
+        formCard.style.display = "block";
+
+        if (openBtn) {
+
+            openBtn.style.display = "none";
+
+        }
+
+
+        const wardCode =
+            document.getElementById("wardCode");
+
+        if (wardCode) {
+
+            setTimeout(function () {
+
+                wardCode.focus();
+
+            }, 100);
+
+        }
+
+    }
+
+
+    // =====================================================
+    // CLOSE FORM
+    // =====================================================
+
+    function closeWardForm() {
+
+        console.log("CLOSE WARD FORM");
+
+        formCard.style.display = "none";
+
+        if (openBtn) {
+
+            openBtn.style.display = "inline-flex";
+
+        }
+
+        form.reset();
+
+
+        const status =
+            document.getElementById("wardStatus");
+
+        if (status) {
+
+            status.value = "Active";
+
+        }
+
+    }
+
+
+    // =====================================================
+    // POPUP CLOSE BUTTONS
     // =====================================================
 
     document
-        .querySelectorAll(
-            ".ward-popup-close"
-        )
+        .querySelectorAll(".ward-popup-close")
         .forEach(function (button) {
 
             button.addEventListener(
@@ -291,20 +222,12 @@ function initWardSetup() {
                 function () {
 
                     const popupId =
-                        button.getAttribute(
-                            "data-popup"
-                        );
-
+                        button.getAttribute("data-popup");
 
                     const popup =
-                        document.getElementById(
-                            popupId
-                        );
+                        document.getElementById(popupId);
 
-
-                    hidePopup(
-                        popup
-                    );
+                    hidePopup(popup);
 
                 }
             );
@@ -373,7 +296,7 @@ function initWardSetup() {
 
 
     // =====================================================
-    // WARD FORM SUBMIT
+    // SAVE WARD
     // =====================================================
 
     form.addEventListener(
@@ -382,10 +305,7 @@ function initWardSetup() {
 
             event.preventDefault();
 
-
-            console.log(
-                "WARD FORM SUBMITTED"
-            );
+            console.log("WARD FORM SUBMITTED");
 
 
             // =================================================
@@ -393,34 +313,22 @@ function initWardSetup() {
             // =================================================
 
             const wardCodeElement =
-                document.getElementById(
-                    "wardCode"
-                );
+                document.getElementById("wardCode");
 
             const wardNameElement =
-                document.getElementById(
-                    "wardName"
-                );
+                document.getElementById("wardName");
 
             const wardTypeElement =
-                document.getElementById(
-                    "wardType"
-                );
+                document.getElementById("wardType");
 
             const floorElement =
-                document.getElementById(
-                    "wardFloor"
-                );
+                document.getElementById("wardFloor");
 
             const descriptionElement =
-                document.getElementById(
-                    "wardDescription"
-                );
+                document.getElementById("wardDescription");
 
             const statusElement =
-                document.getElementById(
-                    "wardStatus"
-                );
+                document.getElementById("wardStatus");
 
 
             const wardCode =
@@ -428,30 +336,25 @@ function initWardSetup() {
                     ? wardCodeElement.value.trim()
                     : "";
 
-
             const wardName =
                 wardNameElement
                     ? wardNameElement.value.trim()
                     : "";
-
 
             const wardType =
                 wardTypeElement
                     ? wardTypeElement.value.trim()
                     : "";
 
-
             const floor =
                 floorElement
                     ? floorElement.value.trim()
                     : "";
 
-
             const description =
                 descriptionElement
                     ? descriptionElement.value.trim()
                     : "";
-
 
             const status =
                 statusElement
@@ -465,15 +368,10 @@ function initWardSetup() {
 
             if (!wardCode) {
 
-                showError(
-                    "Ward code is required."
-                );
-
+                showError("Ward code is required.");
 
                 if (wardCodeElement) {
-
                     wardCodeElement.focus();
-
                 }
 
                 return;
@@ -483,15 +381,10 @@ function initWardSetup() {
 
             if (!wardName) {
 
-                showError(
-                    "Ward name is required."
-                );
-
+                showError("Ward name is required.");
 
                 if (wardNameElement) {
-
                     wardNameElement.focus();
-
                 }
 
                 return;
@@ -501,15 +394,10 @@ function initWardSetup() {
 
             if (!wardType) {
 
-                showError(
-                    "Ward type is required."
-                );
-
+                showError("Ward type is required.");
 
                 if (wardTypeElement) {
-
                     wardTypeElement.focus();
-
                 }
 
                 return;
@@ -518,18 +406,39 @@ function initWardSetup() {
 
 
             // =================================================
+            // DATA
+            // =================================================
+
+            const data = {
+
+                ward_code: wardCode,
+
+                ward_name: wardName,
+
+                ward_type: wardType,
+
+                floor: floor,
+
+                description: description,
+
+                status: status || "Active"
+
+            };
+
+
+            console.log("WARD DATA:", data);
+
+
+            // =================================================
             // DISABLE BUTTON
             // =================================================
 
             if (saveBtn) {
 
-                saveBtn.disabled =
-                    true;
-
+                saveBtn.disabled = true;
 
                 saveBtn.dataset.originalText =
                     saveBtn.textContent;
-
 
                 saveBtn.textContent =
                     "Saving...";
@@ -538,14 +447,18 @@ function initWardSetup() {
 
 
             // =================================================
-            // SEND REQUEST
+            // SEND TO FLASK
+            //
+            // IMPORTANT:
+            // Flask route:
+            // POST /ward/save
             // =================================================
 
             try {
 
                 const response =
                     await fetch(
-                        "/ward/add",
+                        "/ward/save",
                         {
                             method: "POST",
 
@@ -555,7 +468,10 @@ function initWardSetup() {
                                     "application/json",
 
                                 "Accept":
-                                    "application/json"
+                                    "application/json",
+
+                                "X-Requested-With":
+                                    "XMLHttpRequest"
 
                             },
 
@@ -563,48 +479,27 @@ function initWardSetup() {
                                 "same-origin",
 
                             body:
-                                JSON.stringify({
-
-                                    ward_code:
-                                        wardCode,
-
-                                    ward_name:
-                                        wardName,
-
-                                    ward_type:
-                                        wardType,
-
-                                    floor:
-                                        floor,
-
-                                    description:
-                                        description,
-
-                                    status:
-                                        status ||
-                                        "Active"
-
-                                })
+                                JSON.stringify(data)
 
                         }
                     );
 
 
                 console.log(
-                    "WARD SERVER STATUS:",
+                    "WARD SAVE STATUS:",
                     response.status
                 );
 
-
-                // =================================================
-                // READ RESPONSE
-                // =================================================
 
                 const contentType =
                     response.headers.get(
                         "content-type"
                     ) || "";
 
+
+                // =================================================
+                // NON JSON RESPONSE
+                // =================================================
 
                 if (
                     !contentType.includes(
@@ -615,9 +510,8 @@ function initWardSetup() {
                     const text =
                         await response.text();
 
-
                     console.error(
-                        "NON-JSON SERVER RESPONSE:",
+                        "WARD NON-JSON RESPONSE:",
                         text
                     );
 
@@ -625,7 +519,6 @@ function initWardSetup() {
                     showError(
                         "Unable to connect to the server."
                     );
-
 
                     return;
 
@@ -637,13 +530,13 @@ function initWardSetup() {
 
 
                 console.log(
-                    "WARD SERVER DATA:",
+                    "WARD SAVE RESPONSE:",
                     result
                 );
 
 
                 // =================================================
-                // SERVER ERROR
+                // ERROR
                 // =================================================
 
                 if (
@@ -656,7 +549,6 @@ function initWardSetup() {
                         result.error ||
                         "Unable to add ward."
                     );
-
 
                     return;
 
@@ -698,7 +590,6 @@ function initWardSetup() {
                         "wardStatus"
                     );
 
-
                 if (status) {
 
                     status.value =
@@ -722,10 +613,11 @@ function initWardSetup() {
 
                 }
 
+
             } catch (error) {
 
                 console.error(
-                    "ADD WARD ERROR:",
+                    "SAVE WARD ERROR:",
                     error
                 );
 
@@ -734,13 +626,13 @@ function initWardSetup() {
                     "Unable to connect to the server."
                 );
 
+
             } finally {
 
                 if (saveBtn) {
 
                     saveBtn.disabled =
                         false;
-
 
                     saveBtn.textContent =
                         saveBtn.dataset.originalText ||
@@ -777,10 +669,6 @@ function initWardSetup() {
         }
 
 
-        // =================================================
-        // REMOVE EMPTY ROW
-        // =================================================
-
         const emptyRow =
             document.getElementById(
                 "emptyWardRow"
@@ -794,27 +682,15 @@ function initWardSetup() {
         }
 
 
-        // =================================================
-        // ROW NUMBER
-        // =================================================
+        const row =
+            document.createElement("tr");
 
-        const rowNumber =
-            tableBody.querySelectorAll(
-                "tr"
-            ).length + 1;
-
-
-        // =================================================
-        // STATUS CLASS
-        // =================================================
 
         let statusClass =
             "inactive";
 
 
-        if (
-            ward.status === "Active"
-        ) {
+        if (ward.status === "Active") {
 
             statusClass =
                 "active";
@@ -829,84 +705,51 @@ function initWardSetup() {
         }
 
 
-        // =================================================
-        // CREATE ROW
-        // =================================================
-
-        const row =
-            document.createElement(
-                "tr"
-            );
-
-
         row.innerHTML = `
 
-            <td>
-                ${rowNumber}
-            </td>
+            <td></td>
 
             <td>
                 <span class="ward-code">
-                    ${escapeHtml(
-                        ward.ward_code
-                    )}
+                    ${escapeHtml(ward.ward_code)}
                 </span>
             </td>
 
             <td>
                 <strong>
-                    ${escapeHtml(
-                        ward.ward_name
-                    )}
+                    ${escapeHtml(ward.ward_name)}
                 </strong>
             </td>
 
             <td>
-                ${escapeHtml(
-                    ward.ward_type || ""
-                )}
+                ${escapeHtml(ward.ward_type || "")}
             </td>
 
             <td>
                 ${
                     ward.floor
-                        ? escapeHtml(
-                            ward.floor
-                        )
+                        ? escapeHtml(ward.floor)
                         : "—"
                 }
             </td>
 
             <td>
                 <span class="status-badge ${statusClass}">
-                    ${escapeHtml(
-                        ward.status || ""
-                    )}
+                    ${escapeHtml(ward.status || "")}
                 </span>
             </td>
 
             <td>
-                ${
-                    ward.created_at ||
-                    "—"
-                }
+                ${ward.created_at || "—"}
             </td>
 
         `;
 
 
-        // =================================================
-        // INSERT AT TOP
-        // =================================================
-
-        tableBody.prepend(
-            row
-        );
+        tableBody.prepend(row);
 
 
-        // =================================================
-        // UPDATE COUNT
-        // =================================================
+        renumberWardRows();
 
         updateWardCount();
 
@@ -914,16 +757,51 @@ function initWardSetup() {
 
 
     // =====================================================
-    // UPDATE WARD COUNT
+    // NUMBER TABLE ROWS
+    // =====================================================
+
+    function renumberWardRows() {
+
+        const tableBody =
+            document.getElementById(
+                "wardTableBody"
+            );
+
+
+        if (!tableBody) {
+            return;
+        }
+
+
+        const rows =
+            tableBody.querySelectorAll("tr");
+
+
+        rows.forEach(
+            function (row, index) {
+
+                if (row.children.length > 0) {
+
+                    row.children[0]
+                        .textContent =
+                        index + 1;
+
+                }
+
+            }
+        );
+
+    }
+
+
+    // =====================================================
+    // UPDATE COUNT
     // =====================================================
 
     function updateWardCount() {
 
         const countElement =
-            document.querySelector(
-                ".ward-count"
-            );
-
+            document.querySelector(".ward-count");
 
         const tableBody =
             document.getElementById(
@@ -941,10 +819,12 @@ function initWardSetup() {
         }
 
 
+        const rows =
+            tableBody.querySelectorAll("tr");
+
+
         const count =
-            tableBody.querySelectorAll(
-                "tr"
-            ).length;
+            rows.length;
 
 
         countElement.textContent =
@@ -960,7 +840,7 @@ function initWardSetup() {
 
 
     // =====================================================
-    // HTML ESCAPE
+    // ESCAPE HTML
     // =====================================================
 
     function escapeHtml(value) {
@@ -976,26 +856,11 @@ function initWardSetup() {
 
 
         return String(value)
-            .replace(
-                /&/g,
-                "&amp;"
-            )
-            .replace(
-                /</g,
-                "&lt;"
-            )
-            .replace(
-                />/g,
-                "&gt;"
-            )
-            .replace(
-                /"/g,
-                "&quot;"
-            )
-            .replace(
-                /'/g,
-                "&#039;"
-            );
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
 
     }
 
@@ -1008,7 +873,7 @@ function initWardSetup() {
 
 
 // =========================================================
-// INITIAL PAGE LOAD
+// INITIAL LOAD
 // =========================================================
 
 if (
@@ -1038,10 +903,13 @@ document.addEventListener(
     "page:loaded",
     function () {
 
+        console.log(
+            "WARD PAGE LOADED THROUGH AJAX"
+        );
+
+
         if (
-            document.getElementById(
-                "wardForm"
-            )
+            document.getElementById("wardForm")
         ) {
 
             initWardSetup();
@@ -1050,3 +918,4 @@ document.addEventListener(
 
     }
 );
+
