@@ -1,0 +1,405 @@
+.collection-page {
+    width: 100%;
+    max-width: 1450px;
+    margin: 0 auto;
+    padding: 28px 32px 45px;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+    color: #1f2937;
+}
+
+
+/* HEADER */
+
+.collection-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 25px;
+    margin-bottom: 28px;
+}
+
+.collection-header h1 {
+    margin: 0 0 6px;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.collection-header p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.header-actions {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+.date-box {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+.date-box label {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.date-box input {
+    height: 40px;
+    border: 1px solid #d1d5db;
+    border-radius: 7px;
+    padding: 0 10px;
+    font-size: 14px;
+}
+
+
+/* BUTTONS */
+
+.btn-primary,
+.btn-secondary {
+    height: 40px;
+    padding: 0 18px;
+    border-radius: 7px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-primary {
+    background: #2563eb;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+
+.btn-secondary {
+    background: white;
+    color: #374151;
+    border: 1px solid #d1d5db;
+}
+
+
+/* SUMMARY */
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 24px;
+}
+
+.summary-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 20px;
+    min-height: 105px;
+    box-sizing: border-box;
+}
+
+.card-label {
+    color: #6b7280;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.card-value {
+    font-size: 23px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.card-note {
+    margin-top: 7px;
+    font-size: 11px;
+    color: #9ca3af;
+}
+
+.deposit-card {
+    border-left: 4px solid #16a34a;
+}
+
+.refund-card {
+    border-left: 4px solid #dc2626;
+}
+
+.refund-card .card-value {
+    color: #dc2626;
+}
+
+.net-card {
+    border-left: 4px solid #2563eb;
+}
+
+.net-card .card-value {
+    color: #2563eb;
+}
+
+
+/* SECTION */
+
+.section-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+
+.section-header {
+    padding: 18px 20px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.section-header h2 {
+    margin: 0;
+    font-size: 17px;
+}
+
+.section-header p {
+    margin: 5px 0 0;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+
+/* PAYMENT */
+
+.payment-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.payment-item {
+    padding: 22px 25px;
+    border-right: 1px solid #e5e7eb;
+}
+
+.payment-item:last-child {
+    border-right: none;
+}
+
+.payment-item span {
+    display: block;
+    color: #6b7280;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.payment-item strong {
+    font-size: 18px;
+}
+
+
+/* SEARCH */
+
+.search-input {
+    width: 270px;
+    height: 38px;
+    border: 1px solid #d1d5db;
+    border-radius: 7px;
+    padding: 0 12px;
+    font-size: 13px;
+    box-sizing: border-box;
+}
+
+.search-input:focus,
+.date-box input:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+
+/* TABLE */
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1150px;
+}
+
+thead {
+    background: #f9fafb;
+}
+
+th {
+    padding: 13px 14px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: #4b5563;
+    border-bottom: 1px solid #e5e7eb;
+    white-space: nowrap;
+}
+
+td {
+    padding: 13px 14px;
+    font-size: 13px;
+    border-bottom: 1px solid #f0f0f0;
+    white-space: nowrap;
+}
+
+tbody tr:hover {
+    background: #fafafa;
+}
+
+.amount {
+    font-weight: 600;
+}
+
+.refund-amount {
+    color: #dc2626;
+    font-weight: 600;
+}
+
+.net-amount {
+    font-weight: 700;
+}
+
+.net-amount.negative {
+    color: #dc2626;
+}
+
+
+/* TYPE BADGES */
+
+.type-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.type-badge.bill {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.type-badge.deposit {
+    background: #f0fdf4;
+    color: #16a34a;
+}
+
+.type-badge.refund {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+
+/* NO DATA */
+
+.no-data {
+    text-align: center;
+    padding: 45px;
+    color: #9ca3af;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 1100px) {
+
+    .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .payment-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .payment-item:nth-child(2) {
+        border-right: none;
+    }
+
+    .payment-item {
+        border-bottom: 1px solid #e5e7eb;
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .collection-page {
+        padding: 20px 15px;
+    }
+
+    .collection-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header-actions {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .payment-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .payment-item {
+        border-right: none;
+    }
+
+    .section-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .search-input {
+        width: 100%;
+    }
+}
+
+
+/* PRINT */
+
+@media print {
+
+    .collection-page {
+        max-width: none;
+        padding: 0;
+    }
+
+    .header-actions,
+    .search-input {
+        display: none;
+    }
+
+    .section-card {
+        border: 1px solid #ddd;
+        break-inside: avoid;
+    }
+
+    .summary-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    body {
+        background: white;
+    }
+}

@@ -1,0 +1,846 @@
+{% extends "base.html" %}
+
+{% block title %}
+Patient Discharge - SwasthaCare
+{% endblock %}
+
+
+{% block extra_css %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/patient_discharge.css') }}"
+>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="dis-page">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <div class="dis-header">
+
+        <div>
+
+            <p class="dis-eyebrow">
+                Inpatient Department
+            </p>
+
+            <h1>
+                Patient Discharge
+            </h1>
+
+            <p>
+                Discharge admitted patients and review discharge history.
+            </p>
+
+        </div>
+
+
+        <div class="dis-header-nav">
+
+            <a
+                class="dis-nav-link"
+                href="{{ url_for('admission.patient_admission', tab='list') }}"
+            >
+                👥 Patient List
+            </a>
+
+            <a
+                class="dis-nav-link"
+                href="{{ url_for('admission.patient_admission', tab='admit') }}"
+            >
+                🛏️ Admit Patient
+            </a>
+
+            <a
+                class="adm-nav-link active"
+                href="{{ url_for('admission.patient_discharge') }}"
+            >
+                📋 Discharge
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         STATS
+    ====================================================== -->
+
+    <div class="dis-stats">
+
+        <div class="dis-stat accent">
+
+            <span>
+                Currently Admitted
+            </span>
+
+            <strong>
+                {{ admitted_patients|length }}
+            </strong>
+
+        </div>
+
+
+        <div class="dis-stat">
+
+            <span>
+                Discharged (All Time)
+            </span>
+
+            <strong>
+                {{ discharged_patients|length }}
+            </strong>
+
+        </div>
+
+
+        <div class="dis-stat warn">
+
+            <span>
+                Discharged Today
+            </span>
+
+            <strong>
+                {{ discharged_today }}
+            </strong>
+
+        </div>
+
+
+        <div class="dis-stat">
+
+            <span>
+                Available Beds
+            </span>
+
+            <strong>
+                {{ available_beds_count }}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         TABS
+    ====================================================== -->
+
+    <div class="dis-tabs">
+
+        <button
+            type="button"
+            class="dis-tab-btn is-active"
+            data-tab="admittedPanel"
+        >
+            Admitted Patients
+        </button>
+
+
+        <button
+            type="button"
+            class="dis-tab-btn"
+            data-tab="dischargedPanel"
+        >
+            Discharged Patients
+        </button>
+
+    </div>
+
+
+    <!-- =====================================================
+         ADMITTED PANEL
+    ====================================================== -->
+
+    <div
+        class="dis-tab-panel is-active"
+        id="admittedPanel"
+    >
+
+        <div class="dis-card">
+
+            <div class="dis-card-head">
+
+                <div>
+
+                    <h2>
+                        Admitted Patients
+                    </h2>
+
+                    <p>
+                        Patients currently occupying a bed in IPD.
+                    </p>
+
+                </div>
+
+
+                <input
+                    type="text"
+                    class="dis-filter"
+                    id="admittedFilter"
+                    placeholder="Search by name, hospital no. or admission no."
+                >
+
+            </div>
+
+
+            <div class="dis-table-scroll">
+
+                <table
+                    class="dis-table"
+                    id="admittedTable"
+                >
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Admission No.
+                            </th>
+
+                            <th>
+                                Hospital No.
+                            </th>
+
+                            <th>
+                                Patient Name
+                            </th>
+
+                            <th>
+                                Department
+                            </th>
+
+                            <th>
+                                Ward / Room / Bed
+                            </th>
+
+                            <th>
+                                Admitted On
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                    {% if admitted_patients %}
+
+                        {% for a in admitted_patients %}
+
+                        <tr>
+
+                            <td>
+                                <span class="dis-hosp-no">
+                                    {{ a.admission_no }}
+                                </span>
+                            </td>
+
+
+                            <td>
+                                {{ a.patient_no }}
+                            </td>
+
+
+                            <td>
+                                <span class="dis-name">
+                                    {{ a.patient_name }}
+                                </span>
+                            </td>
+
+
+                            <td>
+                                {{ a.department_name or "—" }}
+                            </td>
+
+
+                            <td>
+                                {{ a.ward_name }}
+                                /
+                                {{ a.room_name }}
+                                /
+                                {{ a.bed_name }}
+                            </td>
+
+
+                            <td>
+                                {{
+                                    a.admission_date.strftime(
+                                        "%d %b %Y, %I:%M %p"
+                                    )
+                                    if a.admission_date
+                                    else "—"
+                                }}
+                            </td>
+
+
+                            <td>
+
+                                <span class="dis-badge admitted">
+                                    ● Admitted
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <button
+                                    type="button"
+                                    class="dis-discharge-btn"
+
+                                    data-id="{{ a.id }}"
+
+                                    data-admission-no="{{ a.admission_no }}"
+
+                                    data-patient-name="{{ a.patient_name }}"
+
+                                    data-patient-no="{{ a.patient_no }}"
+
+                                    data-bed="{{ a.ward_name }} / {{ a.room_name }} / {{ a.bed_name }}"
+
+                                    data-admitted-on="{{
+                                        a.admission_date.strftime(
+                                            '%d %b %Y, %I:%M %p'
+                                        )
+                                        if a.admission_date
+                                        else '—'
+                                    }}"
+                                >
+                                    Discharge
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <tr>
+
+                            <td
+                                colspan="8"
+                                class="dis-empty"
+                            >
+                                No patients are currently admitted.
+                            </td>
+
+                        </tr>
+
+                    {% endif %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         DISCHARGED PANEL
+    ====================================================== -->
+
+    <div
+        class="dis-tab-panel"
+        id="dischargedPanel"
+    >
+
+        <div class="dis-card">
+
+            <div class="dis-card-head">
+
+                <div>
+
+                    <h2>
+                        Discharged Patients
+                    </h2>
+
+                    <p>
+                        History of patients who have completed IPD treatment.
+                    </p>
+
+                </div>
+
+
+                <input
+                    type="text"
+                    class="dis-filter"
+                    id="dischargedFilter"
+                    placeholder="Search by name, hospital no. or admission no."
+                >
+
+            </div>
+
+
+            <div class="dis-table-scroll">
+
+                <table
+                    class="dis-table"
+                    id="dischargedTable"
+                >
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Admission No.
+                            </th>
+
+                            <th>
+                                Hospital No.
+                            </th>
+
+                            <th>
+                                Patient Name
+                            </th>
+
+                            <th>
+                                Ward / Room / Bed
+                            </th>
+
+                            <th>
+                                Admitted On
+                            </th>
+
+                            <th>
+                                Discharged On
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                    {% if discharged_patients %}
+
+                        {% for d in discharged_patients %}
+
+                        <tr>
+
+                            <td>
+                                <span class="dis-hosp-no">
+                                    {{ d.admission_no }}
+                                </span>
+                            </td>
+
+
+                            <td>
+                                {{ d.patient_no }}
+                            </td>
+
+
+                            <td>
+                                <span class="dis-name">
+                                    {{ d.patient_name }}
+                                </span>
+                            </td>
+
+
+                            <td>
+                                {{ d.ward_name }}
+                                /
+                                {{ d.room_name }}
+                                /
+                                {{ d.bed_name }}
+                            </td>
+
+
+                            <td>
+                                {{
+                                    d.admission_date.strftime(
+                                        "%d %b %Y, %I:%M %p"
+                                    )
+                                    if d.admission_date
+                                    else "—"
+                                }}
+                            </td>
+
+
+                            <td>
+                                {{
+                                    d.discharge_date.strftime(
+                                        "%d %b %Y, %I:%M %p"
+                                    )
+                                    if d.discharge_date
+                                    else "—"
+                                }}
+                            </td>
+
+
+                            <td>
+
+                                <span class="dis-badge discharged">
+                                    ● Discharged
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <tr>
+
+                            <td
+                                colspan="7"
+                                class="dis-empty"
+                            >
+                                No discharge records yet.
+                            </td>
+
+                        </tr>
+
+                    {% endif %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     DISCHARGE CONFIRMATION MODAL
+========================================================= -->
+
+<div
+    class="dis-modal-backdrop"
+    id="dischargeModalBackdrop"
+>
+
+    <div class="dis-modal">
+
+        <h3>
+            Discharge Patient
+        </h3>
+
+        <p class="dis-modal-sub">
+            Confirm discharge details for this patient.
+        </p>
+
+
+        <div class="dis-modal-summary">
+
+            <div>
+
+                <span>
+                    Admission No.
+                </span>
+
+                <strong id="modalAdmissionNo">
+                    —
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Hospital No.
+                </span>
+
+                <strong id="modalPatientNo">
+                    —
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Patient Name
+                </span>
+
+                <strong id="modalPatientName">
+                    —
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Bed
+                </span>
+
+                <strong id="modalBed">
+                    —
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Admitted On
+                </span>
+
+                <strong id="modalAdmittedOn">
+                    —
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <form id="dischargeForm">
+
+            <input
+                type="hidden"
+                id="dischargeAdmissionId"
+            >
+
+
+            <div class="dis-field">
+
+                <label for="dischargeReason">
+                    Discharge Reason
+                    <em>*</em>
+                </label>
+
+                <select
+                    id="dischargeReason"
+                    required
+                >
+
+                    <option
+                        value=""
+                        selected
+                        disabled
+                    >
+                        Select Reason
+                    </option>
+
+                    <option value="Recovered">
+                        Recovered
+                    </option>
+
+                    <option value="Transferred">
+                        Transferred to another facility
+                    </option>
+
+                    <option value="Discharged Against Medical Advice">
+                        Discharged against medical advice
+                    </option>
+
+                    <option value="Deceased">
+                        Deceased
+                    </option>
+
+                    <option value="Other">
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="dis-field">
+
+                <label for="dischargeSummary">
+                    Discharge Summary / Notes
+                </label>
+
+                <textarea
+                    id="dischargeSummary"
+                    rows="4"
+                    placeholder="Enter condition at discharge, follow-up advice, etc."
+                ></textarea>
+
+            </div>
+
+
+            <div class="dis-modal-actions">
+
+                <button
+                    type="button"
+                    class="dis-btn dis-btn-ghost"
+                    id="cancelDischargeBtn"
+                >
+                    Cancel
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="dis-btn dis-btn-primary"
+                    id="confirmDischargeBtn"
+                >
+                    Confirm Discharge
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     PROFESSIONAL SUCCESS MODAL
+========================================================= -->
+
+<div
+    class="success-modal-overlay"
+    id="successModal"
+>
+
+    <div
+        class="success-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="successModalTitle"
+    >
+
+        <button
+            type="button"
+            class="success-modal-close"
+            id="successCloseBtn"
+            aria-label="Close"
+        >
+            &times;
+        </button>
+
+
+        <div class="success-icon">
+            ✓
+        </div>
+
+
+        <h2 id="successModalTitle">
+            Patient Discharged
+        </h2>
+
+
+        <p class="success-message">
+            Patient has been discharged successfully.
+        </p>
+
+
+        <div class="admission-number-box">
+
+            <span class="admission-label">
+                Admission Number
+            </span>
+
+            <strong id="successAdmissionNo">
+                —
+            </strong>
+
+        </div>
+
+
+        <button
+            type="button"
+            class="success-ok-btn"
+            id="successOkBtn"
+        >
+            Done
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     PROFESSIONAL ERROR MODAL
+========================================================= -->
+
+<div
+    class="error-modal-overlay"
+    id="errorModal"
+>
+
+    <div class="error-modal">
+
+        <div class="error-icon">
+            !
+        </div>
+
+
+        <h2>
+            Unable to Complete
+        </h2>
+
+
+        <p
+            class="error-message"
+            id="errorMessage"
+        >
+            Unable to process the request.
+        </p>
+
+
+        <button
+            type="button"
+            class="error-ok-btn"
+            id="errorOkBtn"
+        >
+            OK
+        </button>
+
+    </div>
+
+</div>
+
+
+<script
+    src="{{ url_for('static', filename='js/patient_discharge.js') }}"
+></script>
+
+{% endblock %}

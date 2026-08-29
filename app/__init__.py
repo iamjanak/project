@@ -1,3 +1,4 @@
+
 from flask import Flask
 from flask_migrate import Migrate
 
@@ -41,40 +42,46 @@ def create_app():
     from app.routes import main
 
     # =====================================================
-    # FOLLOW-UP ROUTES
+    # FOLLOW-UP
     # =====================================================
 
     from app.followup_routes import followup_bp
 
     # =====================================================
-    # PATIENT INFO CORRECTION ROUTES
+    # PATIENT CORRECTION
     # =====================================================
 
     from app.patient_correction import patient_correction
 
     # =====================================================
-    # WARD ROUTES
+    # WARD
     # =====================================================
 
     from app.ward_routes import ward_bp
 
     # =====================================================
-    # ROOM ROUTES
+    # ROOM
     # =====================================================
 
     from app.room_routes import room_bp
 
     # =====================================================
-    # BED ROUTES
+    # BED
     # =====================================================
 
     from app.bed import bed_bp
 
     # =====================================================
-    # PATIENT ADMISSION ROUTES
+    # PATIENT ADMISSION
     # =====================================================
 
     from app.admission_routes import admission_bp
+
+    # # =====================================================
+    # # BILLING REPORTS
+    # # =====================================================
+
+    # from app.routes.billing_reports import billing_reports_bp
 
     # =====================================================
     # REGISTER BLUEPRINTS
@@ -94,6 +101,8 @@ def create_app():
 
     app.register_blueprint(admission_bp)
 
+    # app.register_blueprint(billing_reports_bp)
+
     return app
 
 
@@ -101,3 +110,4 @@ __all__ = [
     "db",
     "create_app"
 ]
+

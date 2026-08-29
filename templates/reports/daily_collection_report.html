@@ -1,0 +1,405 @@
+{% extends "base.html" %}
+
+{% block title %}Daily Collection Report{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/daily_collection_report.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+
+<div class="collection-page">
+
+    <!-- HEADER -->
+    <div class="collection-header">
+
+        <div>
+            <h1>Daily Collection Report</h1>
+            <p>
+                Daily billing, deposit and refund collection summary
+            </p>
+        </div>
+
+        <div class="header-actions">
+
+            <div class="date-box">
+
+                <label for="reportDate">
+                    Report Date
+                </label>
+
+                <input
+                    type="date"
+                    id="reportDate"
+                    value="{{ report_date.strftime('%Y-%m-%d') }}"
+                >
+
+                <button
+                    type="button"
+                    id="loadReportBtn"
+                    class="btn-primary"
+                >
+                    View Report
+                </button>
+
+            </div>
+
+            <button
+                type="button"
+                class="btn-secondary"
+                onclick="window.print()"
+            >
+                Print
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- SUMMARY CARDS -->
+    <div class="summary-grid">
+
+        <div class="summary-card">
+            <div class="card-label">
+                Total Bills
+            </div>
+
+            <div class="card-value">
+                {{ total_bills }}
+            </div>
+        </div>
+
+
+        <div class="summary-card">
+            <div class="card-label">
+                Gross Billing
+            </div>
+
+            <div class="card-value">
+                Rs. {{ "{:,.2f}".format(gross_billing) }}
+            </div>
+        </div>
+
+
+        <div class="summary-card">
+            <div class="card-label">
+                Discount
+            </div>
+
+            <div class="card-value">
+                Rs. {{ "{:,.2f}".format(total_discount) }}
+            </div>
+        </div>
+
+
+        <div class="summary-card">
+            <div class="card-label">
+                Net Billing
+            </div>
+
+            <div class="card-value">
+                Rs. {{ "{:,.2f}".format(net_billing) }}
+            </div>
+        </div>
+
+
+        <!-- DEPOSIT -->
+        <div class="summary-card deposit-card">
+
+            <div class="card-label">
+                Deposit Collection
+            </div>
+
+            <div class="card-value">
+                Rs. {{ "{:,.2f}".format(total_deposit) }}
+            </div>
+
+            <div class="card-note">
+                Patient deposit transactions
+            </div>
+
+        </div>
+
+
+        <!-- REFUND -->
+        <div class="summary-card refund-card">
+
+            <div class="card-label">
+                Total Refund
+            </div>
+
+            <div class="card-value">
+                Rs. {{ "{:,.2f}".format(total_refund) }}
+            </div>
+
+        </div>
+
+
+        <!-- NET COLLECTION -->
+        <div class="summary-card net-card">
+
+            <div class="card-label">
+                Net Collection
+            </div>
+
+            <div class="card-value">
+                Rs. {{ "{:,.2f}".format(net_collection) }}
+            </div>
+
+            <div class="card-note">
+                Net Billing + Deposit - Refund
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PAYMENT COLLECTION -->
+    <div class="section-card">
+
+        <div class="section-header">
+            <h2>Collection by Payment Type</h2>
+        </div>
+
+        <div class="payment-grid">
+
+            <div class="payment-item">
+                <span>Cash</span>
+
+                <strong>
+                    Rs. {{ "{:,.2f}".format(cash_collection) }}
+                </strong>
+            </div>
+
+
+            <div class="payment-item">
+                <span>Card</span>
+
+                <strong>
+                    Rs. {{ "{:,.2f}".format(card_collection) }}
+                </strong>
+            </div>
+
+
+            <div class="payment-item">
+                <span>Online</span>
+
+                <strong>
+                    Rs. {{ "{:,.2f}".format(online_collection) }}
+                </strong>
+            </div>
+
+
+            <div class="payment-item">
+                <span>Other</span>
+
+                <strong>
+                    Rs. {{ "{:,.2f}".format(other_collection) }}
+                </strong>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- TRANSACTIONS -->
+    <div class="section-card">
+
+        <div class="section-header">
+
+            <div>
+                <h2>Daily Transactions</h2>
+
+                <p>
+                    Bills, deposits and refunds for
+                    {{ report_date.strftime('%d/%m/%Y') }}
+                </p>
+            </div>
+
+            <input
+                type="text"
+                id="transactionSearch"
+                class="search-input"
+                placeholder="Search patient or transaction..."
+            >
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table id="transactionTable">
+
+                <thead>
+
+                    <tr>
+                        <th>SN</th>
+                        <th>Date / Time</th>
+                        <th>Type</th>
+                        <th>Reference No.</th>
+                        <th>Patient No.</th>
+                        <th>Patient Name</th>
+                        <th>Payment Type</th>
+                        <th>Amount</th>
+                        <th>Refund</th>
+                        <th>Net Amount</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% if transactions %}
+
+                        {% for transaction in transactions %}
+
+                        <tr>
+
+                            <td>
+                                {{ loop.index }}
+                            </td>
+
+                            <td>
+                                {% if transaction.date %}
+                                    {{ transaction.date.strftime('%d/%m/%Y %I:%M %p') }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+
+                            <td>
+
+                                {% if transaction.type == "Bill" %}
+
+                                    <span class="type-badge bill">
+                                        Bill
+                                    </span>
+
+                                {% elif transaction.type == "Deposit" %}
+
+                                    <span class="type-badge deposit">
+                                        Deposit
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="type-badge refund">
+                                        Refund
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+                                {{ transaction.reference }}
+                            </td>
+
+
+                            <td>
+                                {{ transaction.patient_no }}
+                            </td>
+
+
+                            <td>
+                                {{ transaction.patient_name }}
+                            </td>
+
+
+                            <td>
+                                {{ transaction.payment_type }}
+                            </td>
+
+
+                            <td class="amount">
+
+                                {% if transaction.amount > 0 %}
+
+                                    Rs.
+                                    {{ "{:,.2f}".format(transaction.amount) }}
+
+                                {% else %}
+
+                                    -
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td class="refund-amount">
+
+                                {% if transaction.refund > 0 %}
+
+                                    Rs.
+                                    {{ "{:,.2f}".format(transaction.refund) }}
+
+                                {% else %}
+
+                                    -
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td
+                                class="
+                                net-amount
+                                {% if transaction.net < 0 %}
+                                    negative
+                                {% endif %}
+                                "
+                            >
+
+                                Rs.
+                                {{ "{:,.2f}".format(transaction.net) }}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <tr>
+
+                            <td
+                                colspan="10"
+                                class="no-data"
+                            >
+                                No transactions found for this date.
+                            </td>
+
+                        </tr>
+
+                    {% endif %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script
+    src="{{ url_for('static', filename='js/daily_collection_report.js') }}"
+></script>
+
+{% endblock %}

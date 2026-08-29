@@ -2,14 +2,13 @@
 // REGISTRATION JAVASCRIPT
 // ==========================================
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
+(function () {
 
+    // ==========================================
+    // INITIALIZE REGISTRATION PAGE
+    // ==========================================
 
-        // ==========================================
-        // GET DOB AND AGE ELEMENTS
-        // ==========================================
+    function initRegistrationPage() {
 
         const dobInput =
             document.getElementById("dob");
@@ -17,93 +16,31 @@ document.addEventListener(
         const ageInput =
             document.getElementById("age");
 
+        const departmentSelect =
+            document.getElementById("department");
+
+        const doctorSelect =
+            document.getElementById("doctor");
+
+
+        // ==========================================
+        // MAKE SURE REGISTRATION PAGE EXISTS
+        // ==========================================
 
         if (!dobInput || !ageInput) {
             return;
         }
 
 
-
         // ==========================================
-        // DATE OF BIRTH INPUT
+        // PREVENT DUPLICATE EVENT LISTENERS
         // ==========================================
 
-        dobInput.addEventListener(
-            "input",
-            function () {
+        if (dobInput.dataset.registrationInitialized === "true") {
+            return;
+        }
 
-                // Keep numbers only
-                let value =
-                    this.value.replace(/\D/g, "");
-
-
-                // Maximum 8 digits
-                value =
-                    value.substring(0, 8);
-
-
-                // ==========================================
-                // FORMAT DD
-                // ==========================================
-
-                if (value.length <= 2) {
-
-                    this.value = value;
-
-                }
-
-
-                // ==========================================
-                // FORMAT DD/MM
-                // ==========================================
-
-                else if (value.length <= 4) {
-
-                    this.value =
-                        value.substring(0, 2) +
-                        "/" +
-                        value.substring(2, 4);
-
-                }
-
-
-                // ==========================================
-                // FORMAT DD/MM/YYYY
-                // ==========================================
-
-                else {
-
-                    this.value =
-                        value.substring(0, 2) +
-                        "/" +
-                        value.substring(2, 4) +
-                        "/" +
-                        value.substring(4, 8);
-
-                }
-
-
-                // ==========================================
-                // CALCULATE AGE
-                // ==========================================
-
-                if (
-                    this.value.length === 10
-                ) {
-
-                    calculateAge();
-
-                }
-
-                else {
-
-                    ageInput.value = "";
-
-                }
-
-            }
-        );
-
+        dobInput.dataset.registrationInitialized = "true";
 
 
         // ==========================================
@@ -116,7 +53,19 @@ document.addEventListener(
                 dobInput.value.trim();
 
 
-            // Make sure DOB is DD/MM/YYYY
+            // Empty DOB
+            if (!dob) {
+
+                ageInput.value = "";
+
+                return;
+            }
+
+
+            // ==========================================
+            // CHECK DD/MM/YYYY FORMAT
+            // ==========================================
+
             if (
                 !/^\d{2}\/\d{2}\/\d{4}$/.test(dob)
             ) {
@@ -124,7 +73,6 @@ document.addEventListener(
                 ageInput.value = "";
 
                 return;
-
             }
 
 
@@ -139,31 +87,47 @@ document.addEventListener(
             const day =
                 parseInt(parts[0], 10);
 
-
             const month =
                 parseInt(parts[1], 10);
-
 
             const year =
                 parseInt(parts[2], 10);
 
+
+            // ==========================================
+            // CHECK BASIC DATE VALUES
+            // ==========================================
+
+            if (
+                day < 1 ||
+                day > 31 ||
+                month < 1 ||
+                month > 12
+            ) {
+
+                ageInput.value = "";
+
+                return;
+            }
 
 
             // ==========================================
             // CHECK YEAR
             // ==========================================
 
+            const currentYear =
+                new Date().getFullYear();
+
+
             if (
                 year < 1900 ||
-                year > new Date().getFullYear()
+                year > currentYear
             ) {
 
                 ageInput.value = "";
 
                 return;
-
             }
-
 
 
             // ==========================================
@@ -176,7 +140,6 @@ document.addEventListener(
                     month - 1,
                     day
                 );
-
 
 
             // ==========================================
@@ -192,9 +155,7 @@ document.addEventListener(
                 ageInput.value = "";
 
                 return;
-
             }
-
 
 
             // ==========================================
@@ -205,21 +166,20 @@ document.addEventListener(
                 new Date();
 
 
+            // Remove time
+            today.setHours(0, 0, 0, 0);
+
 
             // ==========================================
             // FUTURE DATE CHECK
             // ==========================================
 
-            if (
-                birthDate > today
-            ) {
+            if (birthDate > today) {
 
                 ageInput.value = "";
 
                 return;
-
             }
-
 
 
             // ==========================================
@@ -231,31 +191,24 @@ document.addEventListener(
                 birthDate.getFullYear();
 
 
-
             // Birthday has not happened yet
             // this year
 
             if (
                 today.getMonth() <
                 birthDate.getMonth()
-
                 ||
-
                 (
                     today.getMonth() ===
                     birthDate.getMonth()
-
                     &&
-
                     today.getDate() <
                     birthDate.getDate()
                 )
             ) {
 
                 age--;
-
             }
-
 
 
             // ==========================================
@@ -263,9 +216,82 @@ document.addEventListener(
             // ==========================================
 
             ageInput.value = age;
-
         }
 
+
+        // ==========================================
+        // DOB INPUT
+        // ==========================================
+
+        dobInput.addEventListener(
+            "input",
+            function () {
+
+                // Keep numbers only
+
+                let value =
+                    this.value.replace(/\D/g, "");
+
+
+                // Maximum 8 digits
+
+                value =
+                    value.substring(0, 8);
+
+
+                // ==========================================
+                // FORMAT DD
+                // ==========================================
+
+                if (value.length <= 2) {
+
+                    this.value = value;
+                }
+
+
+                // ==========================================
+                // FORMAT DD/MM
+                // ==========================================
+
+                else if (value.length <= 4) {
+
+                    this.value =
+                        value.substring(0, 2) +
+                        "/" +
+                        value.substring(2, 4);
+                }
+
+
+                // ==========================================
+                // FORMAT DD/MM/YYYY
+                // ==========================================
+
+                else {
+
+                    this.value =
+                        value.substring(0, 2) +
+                        "/" +
+                        value.substring(2, 4) +
+                        "/" +
+                        value.substring(4, 8);
+                }
+
+
+                // ==========================================
+                // CALCULATE AGE
+                // ==========================================
+
+                if (this.value.length === 10) {
+
+                    calculateAge();
+
+                } else {
+
+                    ageInput.value = "";
+                }
+
+            }
+        );
 
 
         // ==========================================
@@ -277,8 +303,135 @@ document.addEventListener(
         ) {
 
             calculateAge();
+        }
 
+
+        // ==========================================
+        // DEPARTMENT → DOCTOR FILTER
+        // ==========================================
+
+        if (
+            departmentSelect &&
+            doctorSelect
+        ) {
+
+            // Store original doctor options
+
+            const doctorOptions =
+                Array.from(
+                    doctorSelect.querySelectorAll(
+                        "option[data-department]"
+                    )
+                );
+
+
+            // Prevent duplicate listener
+
+            if (
+                departmentSelect.dataset.doctorFilterInitialized !==
+                "true"
+            ) {
+
+                departmentSelect.dataset.doctorFilterInitialized =
+                    "true";
+
+
+                departmentSelect.addEventListener(
+                    "change",
+                    function () {
+
+                        const selectedDepartment =
+                            this.value;
+
+
+                        // Clear doctor dropdown
+
+                        doctorSelect.innerHTML = "";
+
+
+                        // Default option
+
+                        const defaultOption =
+                            document.createElement("option");
+
+
+                        defaultOption.value = "";
+
+                        defaultOption.textContent =
+                            "Select doctor";
+
+                        defaultOption.disabled = true;
+
+                        defaultOption.selected = true;
+
+
+                        doctorSelect.appendChild(
+                            defaultOption
+                        );
+
+
+                        // Add matching doctors
+
+                        doctorOptions.forEach(
+                            function (option) {
+
+                                if (
+                                    option.dataset.department ===
+                                    selectedDepartment
+                                ) {
+
+                                    doctorSelect.appendChild(
+                                        option.cloneNode(true)
+                                    );
+
+                                }
+
+                            }
+                        );
+
+                    }
+                );
+            }
         }
 
     }
-);
+
+
+    // ==========================================
+    // NORMAL PAGE LOAD
+    // ==========================================
+
+    if (
+        document.readyState === "loading"
+    ) {
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            initRegistrationPage
+        );
+
+    } else {
+
+        // Important for AJAX navigation
+
+        initRegistrationPage();
+    }
+
+
+    // ==========================================
+    // AJAX NAVIGATION SUPPORT
+    // ==========================================
+    //
+    // Your base.html replaces #page-content.
+    // The registration script can therefore be
+    // loaded after DOMContentLoaded.
+    //
+    // initRegistrationPage() is also safe to
+    // call multiple times because duplicate
+    // listeners are prevented above.
+    // ==========================================
+
+    window.initRegistrationPage =
+        initRegistrationPage;
+
+})();

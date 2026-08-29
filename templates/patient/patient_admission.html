@@ -1,659 +1,218 @@
 {% extends "base.html" %}
 
-{% block title %}
-Patient Admission - SwasthaCare
-{% endblock %}
-
+{% block title %}Patient Discharge - SwasthaCare{% endblock %}
 
 {% block extra_css %}
 
-<style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    /* =====================================================
-       PAGE
-    ====================================================== */
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet">
 
-    .admission-page {
-        padding: 24px 30px;
-    }
+      
 
 
-    /* =====================================================
-       HEADER
-    ====================================================== */
-
-    .admission-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 25px;
-    }
-
-    .admission-header h1 {
-        margin: 0;
-        font-size: 30px;
-    }
-
-    .admission-header p {
-        margin: 7px 0 0;
-        color: #6b7280;
-        font-size: 15px;
-    }
-
-
-    /* =====================================================
-       CARD
-    ====================================================== */
-
-    .admission-card {
-        background: #ffffff;
-        border: 1px solid #e1e5eb;
-        border-radius: 14px;
-        padding: 25px;
-        margin-bottom: 25px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    }
-
-    .admission-card h2 {
-        margin: 0;
-        font-size: 21px;
-    }
-
-    .admission-card-description {
-        margin: 7px 0 22px;
-        color: #737b87;
-        font-size: 14px;
-    }
-
-
-    /* =====================================================
-       SEARCH
-    ====================================================== */
-
-    .search-row {
-        display: flex;
-        gap: 12px;
-        align-items: stretch;
-    }
-
-    .search-input-wrapper {
-        flex: 1;
-    }
-
-    .search-input-wrapper label {
-        display: block;
-        font-size: 14px;
-        font-weight: 600;
-        margin-bottom: 7px;
-    }
-
-    .search-input-wrapper label span {
-        color: red;
-    }
-
-    .search-input-wrapper input {
-        width: 100%;
-        height: 48px;
-        box-sizing: border-box;
-        padding: 0 15px;
-        border: 1px solid #cfd5dd;
-        border-radius: 8px;
-        font-size: 15px;
-        outline: none;
-    }
-
-    .search-input-wrapper input:focus {
-        border-color: #2f80ed;
-    }
-
-    .search-button-wrapper {
-        display: flex;
-        align-items: flex-end;
-    }
-
-    .search-patient-btn {
-        height: 48px;
-        padding: 0 25px;
-        border: none;
-        border-radius: 8px;
-        background: #2f80ed;
-        color: white;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-    }
-
-    .search-patient-btn:hover {
-        opacity: 0.9;
-    }
-
-
-    /* =====================================================
-       PATIENT LIST
-    ====================================================== */
-
-    .patient-list-card {
-        background: #ffffff;
-        border: 1px solid #e1e5eb;
-        border-radius: 14px;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    }
-
-    .patient-list-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 22px 25px;
-        border-bottom: 1px solid #e5e7eb;
-    }
-
-    .patient-list-header h2 {
-        margin: 0;
-        font-size: 21px;
-    }
-
-    .patient-list-header p {
-        margin: 5px 0 0;
-        color: #737b87;
-        font-size: 14px;
-    }
-
-    .patient-count {
-        background: #eef4ff;
-        color: #2f80ed;
-        padding: 8px 14px;
-        border-radius: 20px;
-        font-size: 13px;
-        font-weight: 600;
-    }
-
-
-    /* =====================================================
-       TABLE
-    ====================================================== */
-
-    .patient-table-wrapper {
-        width: 100%;
-        overflow-x: auto;
-    }
-
-    .patient-table {
-        width: 100%;
-        border-collapse: collapse;
-        min-width: 900px;
-    }
-
-    .patient-table th {
-        background: #f8fafc;
-        padding: 14px 16px;
-        text-align: left;
-        font-size: 12px;
-        text-transform: uppercase;
-        letter-spacing: 0.3px;
-        color: #596273;
-        border-bottom: 1px solid #e5e7eb;
-    }
-
-    .patient-table td {
-        padding: 15px 16px;
-        border-bottom: 1px solid #edf0f3;
-        font-size: 14px;
-        vertical-align: middle;
-    }
-
-    .patient-table tbody tr:hover {
-        background: #fafcff;
-    }
-
-
-    /* =====================================================
-       HOSPITAL NUMBER
-    ====================================================== */
-
-    .hospital-number {
-        font-weight: 600;
-        color: #2f80ed;
-    }
-
-
-    /* =====================================================
-       PATIENT NAME
-    ====================================================== */
-
-    .patient-name {
-        font-weight: 600;
-        color: #20252b;
-    }
-
-
-    /* =====================================================
-       ADMIT BUTTON
-    ====================================================== */
-
-    .admit-btn {
-        border: none;
-        padding: 8px 16px;
-        border-radius: 7px;
-        background: #198754;
-        color: white;
-        font-size: 13px;
-        font-weight: 600;
-        cursor: pointer;
-    }
-
-    .admit-btn:hover {
-        opacity: 0.9;
-    }
-
-
-    /* =====================================================
-       SELECTED PATIENT
-    ====================================================== */
-
-    .selected-patient-card {
-        display: none;
-        background: #f1f8f4;
-        border: 1px solid #b9dfc7;
-        border-radius: 10px;
-        padding: 18px;
-        margin-top: 20px;
-    }
-
-    .selected-patient-title {
-        font-weight: 700;
-        margin-bottom: 14px;
-        color: #198754;
-    }
-
-    .selected-patient-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 15px;
-    }
-
-    .selected-patient-item {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-    }
-
-    .selected-patient-item small {
-        color: #6b7280;
-    }
-
-    .selected-patient-item strong {
-        color: #20252b;
-    }
-
-
-    /* =====================================================
-       ADMISSION FORM
-    ====================================================== */
-
-    #admissionDetailsCard {
-        display: none;
-    }
-
-    .admission-form-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-    }
-
-    .admission-field {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .admission-field-full {
-        grid-column: 1 / -1;
-    }
-
-    .admission-field label {
-        font-size: 14px;
-        font-weight: 600;
-        margin-bottom: 7px;
-    }
-
-    .admission-field label span {
-        color: red;
-    }
-
-    .admission-field select,
-    .admission-field textarea {
-        width: 100%;
-        box-sizing: border-box;
-        padding: 11px 13px;
-        border: 1px solid #cfd5dd;
-        border-radius: 8px;
-        font-size: 14px;
-        outline: none;
-        background: white;
-    }
-
-    .admission-field select:focus,
-    .admission-field textarea:focus {
-        border-color: #2f80ed;
-    }
-
-    .admission-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-        margin-top: 25px;
-    }
-
-    .reset-admission-btn {
-        border: none;
-        padding: 11px 22px;
-        border-radius: 8px;
-        background: #e9ecef;
-        cursor: pointer;
-        font-weight: 600;
-    }
-
-    .save-admission-btn {
-        border: none;
-        padding: 11px 25px;
-        border-radius: 8px;
-        background: #198754;
-        color: white;
-        cursor: pointer;
-        font-weight: 600;
-    }
-
-    .save-admission-btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-
-
-    /* =====================================================
-       EMPTY LIST
-    ====================================================== */
-
-    .patient-empty {
-        text-align: center;
-        padding: 45px 20px !important;
-        color: #777;
-    }
-
-
-    /* =====================================================
-       RESPONSIVE
-    ====================================================== */
-
-    @media (max-width: 900px) {
-
-        .admission-form-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .admission-field-full {
-            grid-column: auto;
-        }
-
-        .selected-patient-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-    }
-
-
-    @media (max-width: 600px) {
-
-        .admission-page {
-            padding: 18px;
-        }
-
-        .search-row {
-            flex-direction: column;
-        }
-
-        .search-button-wrapper {
-            align-items: stretch;
-        }
-
-        .search-patient-btn {
-            width: 100%;
-        }
-
-        .selected-patient-grid {
-            grid-template-columns: 1fr;
-        }
-
-    }
-
-</style>
 
 {% endblock %}
 
-
 {% block content %}
 
-<div class="admission-page">
+<div class="dis-page">
 
+```
+<!-- ==========================================
+     HEADER
+=========================================== -->
 
-    <!-- =====================================================
-         PAGE HEADER
-    ====================================================== -->
+<div class="dis-header">
 
-    <div class="admission-header">
+    <div>
 
-        <div>
-
-            <h1>
-                Patient Admission
-            </h1>
-
-            <p>
-                Admit an OPD patient to the inpatient department.
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <!-- =====================================================
-         SEARCH PATIENT
-    ====================================================== -->
-
-    <div class="admission-card">
-
-        <h2>
-            Search Patient
-        </h2>
-
-        <p class="admission-card-description">
-            Enter the patient's hospital number to find the registered patient.
+        <p class="dis-eyebrow">
+            Inpatient Department
         </p>
 
+        <h1>
+            Patient Discharge
+        </h1>
 
-        <div class="search-row">
-
-            <div class="search-input-wrapper">
-
-                <label for="patientNo">
-
-                    Hospital Number
-                    <span>*</span>
-
-                </label>
-
-                <input
-                    type="text"
-                    id="patientNo"
-                    placeholder="Enter hospital number e.g. 20260008"
-                    autocomplete="off"
-                >
-
-            </div>
-
-
-            <div class="search-button-wrapper">
-
-                <button
-                    type="button"
-                    class="search-patient-btn"
-                    id="searchPatientBtn"
-                >
-                    🔍 Search Patient
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <!-- =================================================
-             SELECTED PATIENT
-        ================================================== -->
-
-        <div
-            class="selected-patient-card"
-            id="selectedPatientCard"
-        >
-
-            <div class="selected-patient-title">
-                Selected Patient
-            </div>
-
-
-            <div class="selected-patient-grid">
-
-
-                <div class="selected-patient-item">
-
-                    <small>
-                        Hospital Number
-                    </small>
-
-                    <strong id="selectedPatientNo">
-                        —
-                    </strong>
-
-                </div>
-
-
-                <div class="selected-patient-item">
-
-                    <small>
-                        Patient Name
-                    </small>
-
-                    <strong id="selectedPatientName">
-                        —
-                    </strong>
-
-                </div>
-
-
-                <div class="selected-patient-item">
-
-                    <small>
-                        Age
-                    </small>
-
-                    <strong id="selectedPatientAge">
-                        —
-                    </strong>
-
-                </div>
-
-
-                <div class="selected-patient-item">
-
-                    <small>
-                        Gender
-                    </small>
-
-                    <strong id="selectedPatientGender">
-                        —
-                    </strong>
-
-                </div>
-
-
-                <div class="selected-patient-item">
-
-                    <small>
-                        Department
-                    </small>
-
-                    <strong id="selectedPatientDepartment">
-                        —
-                    </strong>
-
-                </div>
-
-
-                <div class="selected-patient-item">
-
-                    <small>
-                        Doctor
-                    </small>
-
-                    <strong id="selectedPatientDoctor">
-                        —
-                    </strong>
-
-                </div>
-
-
-            </div>
-
-        </div>
+        <p>
+            Discharge admitted patients and review
+            discharge history.
+        </p>
 
     </div>
 
 
-    <!-- =====================================================
-         PATIENT LIST
-    ====================================================== -->
+    <div class="dis-header-nav">
 
-    <div
-        class="patient-list-card"
-        id="patientListCard"
-    >
 
-        <div class="patient-list-header">
+        <a class="dis-nav-link"
+           href="{{ url_for('main.patient_list') }}">
+
+            👥 Patient List
+
+        </a>
+
+
+        <a class="adm-nav-link"
+   href="{{ url_for('admission.admit_patient') }}">
+    🛏️ Admit Patient
+</a>
+
+<a class="dis-nav-link active"
+   href="{{ url_for('admission.patient_discharge') }}">
+    📋 Discharge
+</a>
+
+    </div>
+
+</div>
+
+
+
+<!-- ==========================================
+     STATS
+=========================================== -->
+
+<div class="dis-stats">
+
+
+    <div class="dis-stat accent">
+
+        <span>
+            Currently Admitted
+        </span>
+
+        <strong>
+            {{ admitted_patients|length }}
+        </strong>
+
+    </div>
+
+
+    <div class="dis-stat">
+
+        <span>
+            Discharged (All Time)
+        </span>
+
+        <strong>
+            {{ discharged_patients|length }}
+        </strong>
+
+    </div>
+
+
+    <div class="dis-stat warn">
+
+        <span>
+            Discharged Today
+        </span>
+
+        <strong>
+            {{ discharged_today }}
+        </strong>
+
+    </div>
+
+
+    <div class="dis-stat">
+
+        <span>
+            Available Beds
+        </span>
+
+        <strong>
+            {{ available_beds_count }}
+        </strong>
+
+    </div>
+
+</div>
+
+
+
+<!-- ==========================================
+     TABS
+=========================================== -->
+
+<div class="dis-tabs">
+
+    <button
+        type="button"
+        class="dis-tab-btn is-active"
+        data-tab="admittedPanel">
+
+        Admitted Patients
+
+    </button>
+
+
+    <button
+        type="button"
+        class="dis-tab-btn"
+        data-tab="dischargedPanel">
+
+        Discharged Patients
+
+    </button>
+
+</div>
+
+
+
+<!-- ==========================================
+     CURRENTLY ADMITTED
+=========================================== -->
+
+<div class="dis-tab-panel is-active"
+     id="admittedPanel">
+
+
+    <div class="dis-card">
+
+
+        <div class="dis-card-head">
 
             <div>
 
                 <h2>
-                    Registered Patient List
+                    Admitted Patients
                 </h2>
 
                 <p>
-                    Select a registered OPD patient for admission.
+                    Patients currently occupying a bed
+                    in IPD.
                 </p>
 
             </div>
 
 
-            <div class="patient-count">
-
-                {{ patients|length }}
-
-                Patient{% if patients|length != 1 %}s{% endif %}
-
-            </div>
+            <input
+                type="text"
+                class="dis-filter"
+                id="admittedFilter"
+                placeholder="Search by name, hospital no. or admission no.">
 
         </div>
 
 
-        <div class="patient-table-wrapper">
 
-            <table class="patient-table">
+        <div class="dis-table-scroll">
+
+            <table
+                class="dis-table"
+                id="admittedTable">
+
 
                 <thead>
 
                     <tr>
 
                         <th>
-                            S.N.
+                            Admission No.
                         </th>
 
                         <th>
@@ -665,19 +224,19 @@ Patient Admission - SwasthaCare
                         </th>
 
                         <th>
-                            Age
-                        </th>
-
-                        <th>
-                            Gender
-                        </th>
-
-                        <th>
                             Department
                         </th>
 
                         <th>
-                            Doctor
+                            Ward / Room / Bed
+                        </th>
+
+                        <th>
+                            Admitted On
+                        </th>
+
+                        <th>
+                            Status
                         </th>
 
                         <th>
@@ -689,24 +248,78 @@ Patient Admission - SwasthaCare
                 </thead>
 
 
-                <tbody id="patientTableBody">
+                <tbody>
 
-                    {% if patients %}
 
-                        {% for patient in patients %}
+                    {% if admitted_patients %}
+
+
+                        {% for a in admitted_patients %}
 
                         <tr>
 
+
                             <td>
-                                {{ loop.index }}
+
+                                <span class="dis-hosp-no">
+                                    {{ a.admission_no }}
+                                </span>
+
+                            </td>
+
+
+                            <td>
+                                {{ a.patient_no }}
                             </td>
 
 
                             <td>
 
-                                <span class="hospital-number">
+                                <span class="dis-name">
+                                    {{ a.patient_name }}
+                                </span>
 
-                                    {{ patient.patient_no }}
+                            </td>
+
+
+                            <td>
+                                {{ a.department_name or "—" }}
+                            </td>
+
+
+                            <td>
+
+                                {{ a.ward_name }}
+                                /
+                                {{ a.room_name }}
+                                /
+                                {{ a.bed_name }}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if a.admission_date %}
+
+                                    {{ a.admission_date.strftime(
+                                        "%d %b %Y, %I:%M %p"
+                                    ) }}
+
+                                {% else %}
+
+                                    —
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="dis-badge admitted">
+
+                                    ● Admitted
 
                                 </span>
 
@@ -715,50 +328,27 @@ Patient Admission - SwasthaCare
 
                             <td>
 
-                                <span class="patient-name">
-
-                                    {{ patient.full_name }}
-
-                                </span>
-
-                            </td>
-
-
-                            <td>
-                                {{ patient.age or "—" }}
-                            </td>
-
-
-                            <td>
-                                {{ patient.gender or "—" }}
-                            </td>
-
-
-                            <td>
-                                {{ patient.department or "—" }}
-                            </td>
-
-
-                            <td>
-                                {{ patient.doctor or "—" }}
-                            </td>
-
-
-                            <td>
 
                                 <button
                                     type="button"
-                                    class="admit-btn"
-                                    data-patient-id="{{ patient.id }}"
-                                    data-patient-no="{{ patient.patient_no }}"
-                                    data-patient-name="{{ patient.full_name }}"
-                                    data-patient-age="{{ patient.age or '' }}"
-                                    data-patient-gender="{{ patient.gender or '' }}"
-                                    data-patient-department="{{ patient.department or '' }}"
-                                    data-patient-doctor="{{ patient.doctor or '' }}"
-                                >
-                                    Admit
+                                    class="dis-discharge-btn"
+
+                                    data-id="{{ a.id }}"
+
+                                    data-admission-no="{{ a.admission_no }}"
+
+                                    data-patient-name="{{ a.patient_name }}"
+
+                                    data-patient-no="{{ a.patient_no }}"
+
+                                    data-bed="{{ a.ward_name }} / {{ a.room_name }} / {{ a.bed_name }}"
+
+                                    data-admitted-on="{% if a.admission_date %}{{ a.admission_date.strftime('%d %b %Y, %I:%M %p') }}{% else %}—{% endif %}">
+
+                                    Discharge
+
                                 </button>
+
 
                             </td>
 
@@ -766,20 +356,24 @@ Patient Admission - SwasthaCare
 
                         {% endfor %}
 
+
                     {% else %}
+
 
                         <tr>
 
-                            <td
-                                colspan="8"
-                                class="patient-empty"
-                            >
-                                No registered patients found.
+                            <td colspan="8"
+                                class="dis-empty">
+
+                                No patients are currently admitted.
+
                             </td>
 
                         </tr>
 
+
                     {% endif %}
+
 
                 </tbody>
 
@@ -789,732 +383,422 @@ Patient Admission - SwasthaCare
 
     </div>
 
-
-    <!-- =====================================================
-         ADMISSION DETAILS
-    ====================================================== -->
-
-    <div
-        class="admission-card"
-        id="admissionDetailsCard"
-    >
-
-        <h2>
-            Admission Details
-        </h2>
-
-        <p class="admission-card-description">
-            Select the department, ward, room and bed for this patient.
-        </p>
+</div>
 
 
-        <form id="admissionForm">
+
+<!-- ==========================================
+     DISCHARGED PATIENTS
+=========================================== -->
+
+<div class="dis-tab-panel"
+     id="dischargedPanel">
+
+
+    <div class="dis-card">
+
+
+        <div class="dis-card-head">
+
+            <div>
+
+                <h2>
+                    Discharged Patients
+                </h2>
+
+                <p>
+                    History of patients who have completed
+                    IPD treatment.
+                </p>
+
+            </div>
 
 
             <input
-                type="hidden"
-                id="patientId"
-                name="patient_id"
-            >
+                type="text"
+                class="dis-filter"
+                id="dischargedFilter"
+                placeholder="Search by name, hospital no. or admission no.">
+
+        </div>
 
 
-            <div class="admission-form-grid">
+
+        <div class="dis-table-scroll">
 
 
-                <!-- DEPARTMENT -->
-
-                <div class="admission-field">
-
-                    <label for="department">
-
-                        Department
-                        <span>*</span>
-
-                    </label>
-
-                    <select
-                        id="department"
-                        name="department_id"
-                        required
-                    >
-
-                        <option
-                            value=""
-                            selected
-                            disabled
-                        >
-                            Select Department
-                        </option>
+            <table
+                class="dis-table"
+                id="dischargedTable">
 
 
-                        {% for department in departments %}
+                <thead>
 
-                        <option value="{{ department.id }}">
+                    <tr>
 
-                            {{ department.department_name }}
+                        <th>
+                            Admission No.
+                        </th>
 
-                            {% if department.dep_code %}
-                                ({{ department.dep_code }})
-                            {% endif %}
+                        <th>
+                            Hospital No.
+                        </th>
 
-                        </option>
+                        <th>
+                            Patient Name
+                        </th>
+
+                        <th>
+                            Ward / Room / Bed
+                        </th>
+
+                        <th>
+                            Admitted On
+                        </th>
+
+                        <th>
+                            Discharged On
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                    {% if discharged_patients %}
+
+
+                        {% for d in discharged_patients %}
+
+                        <tr>
+
+
+                            <td>
+
+                                <span class="dis-hosp-no">
+                                    {{ d.admission_no }}
+                                </span>
+
+                            </td>
+
+
+                            <td>
+                                {{ d.patient_no }}
+                            </td>
+
+
+                            <td>
+
+                                <span class="dis-name">
+                                    {{ d.patient_name }}
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                {{ d.ward_name }}
+                                /
+                                {{ d.room_name }}
+                                /
+                                {{ d.bed_name }}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if d.admission_date %}
+
+                                    {{ d.admission_date.strftime(
+                                        "%d %b %Y, %I:%M %p"
+                                    ) }}
+
+                                {% else %}
+
+                                    —
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if d.discharge_date %}
+
+                                    {{ d.discharge_date.strftime(
+                                        "%d %b %Y, %I:%M %p"
+                                    ) }}
+
+                                {% else %}
+
+                                    —
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="dis-badge discharged">
+
+                                    ● Discharged
+
+                                </span>
+
+                            </td>
+
+                        </tr>
 
                         {% endfor %}
 
-                    </select>
 
-                </div>
-
-
-                <!-- ADMISSION TYPE -->
-
-                <div class="admission-field">
-
-                    <label for="admissionType">
-                        Admission Type
-                    </label>
-
-                    <select
-                        id="admissionType"
-                        name="admission_type"
-                    >
-
-                        <option value="IPD">
-                            IPD
-                        </option>
-
-                        <option value="Emergency">
-                            Emergency
-                        </option>
-
-                    </select>
-
-                </div>
+                    {% else %}
 
 
-                <!-- WARD -->
+                        <tr>
 
-                <div class="admission-field">
+                            <td colspan="7"
+                                class="dis-empty">
 
-                    <label for="ward">
+                                No discharge records yet.
 
-                        Ward
-                        <span>*</span>
+                            </td>
 
-                    </label>
-
-                    <select
-                        id="ward"
-                        name="ward_id"
-                        required
-                    >
-
-                        <option
-                            value=""
-                            selected
-                            disabled
-                        >
-                            Select Ward
-                        </option>
+                        </tr>
 
 
-                        {% for ward in wards %}
-
-                        <option value="{{ ward.id }}">
-
-                            {{ ward.ward_name }}
-
-                            {% if ward.ward_code %}
-                                ({{ ward.ward_code }})
-                            {% endif %}
-
-                        </option>
-
-                        {% endfor %}
-
-                    </select>
-
-                </div>
+                    {% endif %}
 
 
-                <!-- ROOM -->
+                </tbody>
 
-                <div class="admission-field">
+            </table>
 
-                    <label for="room">
-
-                        Room
-                        <span>*</span>
-
-                    </label>
-
-                    <select
-                        id="room"
-                        name="room_id"
-                        required
-                        disabled
-                    >
-
-                        <option value="">
-                            Select Ward First
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <!-- BED -->
-
-                <div class="admission-field">
-
-                    <label for="bed">
-
-                        Bed
-                        <span>*</span>
-
-                    </label>
-
-                    <select
-                        id="bed"
-                        name="bed_id"
-                        required
-                        disabled
-                    >
-
-                        <option value="">
-                            Select Room First
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <!-- REMARKS -->
-
-                <div class="admission-field admission-field-full">
-
-                    <label for="remarks">
-                        Remarks
-                    </label>
-
-                    <textarea
-                        id="remarks"
-                        name="remarks"
-                        rows="3"
-                        placeholder="Enter admission remarks..."
-                    ></textarea>
-
-                </div>
-
-            </div>
-
-
-            <div class="admission-actions">
-
-                <button
-                    type="button"
-                    class="reset-admission-btn"
-                    id="resetAdmissionBtn"
-                >
-                    Reset
-                </button>
-
-
-                <button
-                    type="submit"
-                    class="save-admission-btn"
-                    id="admitPatientBtn"
-                    disabled
-                >
-                    Admit Patient
-                </button>
-
-            </div>
-
-        </form>
+        </div>
 
     </div>
 
 </div>
+```
 
+</div>
 
-<!-- =========================================================
-     JAVASCRIPT
-========================================================= -->
+<!-- ==========================================
+     DISCHARGE MODAL
+========================================== -->
 
-<script>
+<div class="dis-modal-backdrop"
+     id="dischargeModalBackdrop">
 
-document.addEventListener("DOMContentLoaded", function () {
+```
+<div class="dis-modal">
 
-    const patientNoInput =
-        document.getElementById("patientNo");
 
-    const searchPatientBtn =
-        document.getElementById("searchPatientBtn");
+    <h3>
+        Discharge Patient
+    </h3>
 
-    const selectedPatientCard =
-        document.getElementById("selectedPatientCard");
 
-    const admissionDetailsCard =
-        document.getElementById("admissionDetailsCard");
+    <p class="dis-modal-sub">
 
-    const patientIdInput =
-        document.getElementById("patientId");
+        Confirm discharge details for this patient.
 
-    const wardSelect =
-        document.getElementById("ward");
+    </p>
 
-    const roomSelect =
-        document.getElementById("room");
 
-    const bedSelect =
-        document.getElementById("bed");
 
-    const departmentSelect =
-        document.getElementById("department");
+    <div class="dis-modal-summary">
 
-    const admitPatientBtn =
-        document.getElementById("admitPatientBtn");
 
+        <div>
 
-    // =====================================================
-    // SELECT PATIENT FROM LIST
-    // =====================================================
+            <span>
+                Admission No.
+            </span>
 
-    document.querySelectorAll(".admit-btn").forEach(
-        function (button) {
+            <strong id="modalAdmissionNo">
+                —
+            </strong>
 
-            button.addEventListener(
-                "click",
-                function () {
+        </div>
 
-                    selectPatient({
-                        id:
-                            this.dataset.patientId,
 
-                        patient_no:
-                            this.dataset.patientNo,
+        <div>
 
-                        full_name:
-                            this.dataset.patientName,
+            <span>
+                Hospital No.
+            </span>
 
-                        age:
-                            this.dataset.patientAge,
+            <strong id="modalPatientNo">
+                —
+            </strong>
 
-                        gender:
-                            this.dataset.patientGender,
+        </div>
 
-                        department:
-                            this.dataset.patientDepartment,
 
-                        doctor:
-                            this.dataset.patientDoctor
-                    });
+        <div>
 
-                }
-            );
+            <span>
+                Patient Name
+            </span>
 
-        }
-    );
+            <strong id="modalPatientName">
+                —
+            </strong>
 
+        </div>
 
-    // =====================================================
-    // SEARCH PATIENT
-    // =====================================================
 
-    searchPatientBtn.addEventListener(
-        "click",
-        async function () {
+        <div>
 
-            const number =
-                patientNoInput.value.trim();
+            <span>
+                Bed
+            </span>
 
+            <strong id="modalBed">
+                —
+            </strong>
 
-            if (!number) {
+        </div>
 
-                alert(
-                    "Please enter hospital number."
-                );
 
-                return;
-            }
+        <div>
 
+            <span>
+                Admitted On
+            </span>
 
-            try {
+            <strong id="modalAdmittedOn">
+                —
+            </strong>
 
-                const response =
-                    await fetch(
-                        `/admission/search_patient/${encodeURIComponent(number)}`
-                    );
+        </div>
 
+    </div>
 
-                const data =
-                    await response.json();
 
 
-                if (!data.success) {
+    <form id="dischargeForm">
 
-                    alert(
-                        data.message ||
-                        "Patient not found."
-                    );
 
-                    return;
-                }
+        <input type="hidden"
+               id="dischargeAdmissionId">
 
 
-                selectPatient(
-                    data.patient
-                );
 
-            }
-            catch (error) {
+        <div class="dis-field">
 
-                console.error(error);
+            <label for="dischargeReason">
 
-                alert(
-                    "Unable to connect to server."
-                );
+                Discharge Reason <em>*</em>
 
-            }
+            </label>
 
-        }
-    );
 
+            <select
+                id="dischargeReason"
+                required>
 
-    // =====================================================
-    // SELECT PATIENT
-    // =====================================================
+                <option value=""
+                        selected
+                        disabled>
 
-    function selectPatient(patient) {
+                    Select Reason
 
-        patientIdInput.value =
-            patient.id;
+                </option>
 
+                <option value="Recovered">
+                    Recovered
+                </option>
 
-        patientNoInput.value =
-            patient.patient_no || "";
+                <option value="Transferred">
+                    Transferred to another facility
+                </option>
 
+                <option value="Discharged Against Medical Advice">
+                    Discharged against medical advice
+                </option>
 
-        document.getElementById(
-            "selectedPatientNo"
-        ).textContent =
-            patient.patient_no || "—";
+                <option value="Deceased">
+                    Deceased
+                </option>
 
+                <option value="Other">
+                    Other
+                </option>
 
-        document.getElementById(
-            "selectedPatientName"
-        ).textContent =
-            patient.full_name || "—";
+            </select>
 
+        </div>
 
-        document.getElementById(
-            "selectedPatientAge"
-        ).textContent =
-            patient.age || "—";
 
 
-        document.getElementById(
-            "selectedPatientGender"
-        ).textContent =
-            patient.gender || "—";
+        <div class="dis-field">
 
+            <label for="dischargeSummary">
 
-        document.getElementById(
-            "selectedPatientDepartment"
-        ).textContent =
-            patient.department || "—";
+                Discharge Summary / Notes
 
+            </label>
 
-        document.getElementById(
-            "selectedPatientDoctor"
-        ).textContent =
-            patient.doctor || "—";
 
+            <textarea
+                id="dischargeSummary"
+                rows="4"
+                placeholder="Enter condition at discharge, follow-up advice, etc."></textarea>
 
-        selectedPatientCard.style.display =
-            "block";
+        </div>
 
 
-        admissionDetailsCard.style.display =
-            "block";
 
+        <div class="dis-modal-actions">
 
-        admissionDetailsCard.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
 
+            <button
+                type="button"
+                class="dis-btn dis-btn-ghost"
+                id="cancelDischargeBtn">
 
-        checkAdmissionReady();
+                Cancel
 
-    }
+            </button>
 
 
-    // =====================================================
-    // WARD → ROOM
-    // =====================================================
+            <button
+                type="submit"
+                class="dis-btn dis-btn-primary"
+                id="confirmDischargeBtn">
 
-    wardSelect.addEventListener(
-        "change",
-        async function () {
+                Confirm Discharge
 
-            const wardId =
-                this.value;
+            </button>
 
+        </div>
 
-            roomSelect.innerHTML =
-                '<option value="">Loading rooms...</option>';
+    </form>
 
-            roomSelect.disabled =
-                true;
+</div>
+```
 
+</div>
 
-            bedSelect.innerHTML =
-                '<option value="">Select Room First</option>';
+{% endblock %}
 
-            bedSelect.disabled =
-                true;
+{% block extra_js %}
 
+<script src="{{ url_for('static', filename='js/patient_discharge.js') }}"></script>
 
-            if (!wardId) {
-                return;
-            }
 
-
-            try {
-
-                const response =
-                    await fetch(
-                        `/admission/rooms/${wardId}`
-                    );
-
-
-                const data =
-                    await response.json();
-
-
-                roomSelect.innerHTML =
-                    '<option value="">Select Room</option>';
-
-
-                if (
-                    data.success &&
-                    data.rooms.length
-                ) {
-
-                    data.rooms.forEach(
-                        function (room) {
-
-                            const option =
-                                document.createElement(
-                                    "option"
-                                );
-
-                            option.value =
-                                room.id;
-
-                            option.textContent =
-                                `${room.room_name} (${room.room_code})`;
-
-                            roomSelect.appendChild(
-                                option
-                            );
-
-                        }
-                    );
-
-                    roomSelect.disabled =
-                        false;
-
-                }
-                else {
-
-                    roomSelect.innerHTML =
-                        '<option value="">No rooms available</option>';
-
-                }
-
-            }
-            catch (error) {
-
-                console.error(error);
-
-                roomSelect.innerHTML =
-                    '<option value="">Unable to load rooms</option>';
-
-            }
-
-        }
-    );
-
-
-    // =====================================================
-    // ROOM → BED
-    // =====================================================
-
-    roomSelect.addEventListener(
-        "change",
-        async function () {
-
-            const roomId =
-                this.value;
-
-
-            bedSelect.innerHTML =
-                '<option value="">Loading beds...</option>';
-
-            bedSelect.disabled =
-                true;
-
-
-            if (!roomId) {
-                return;
-            }
-
-
-            try {
-
-                const response =
-                    await fetch(
-                        `/admission/beds/${roomId}`
-                    );
-
-
-                const data =
-                    await response.json();
-
-
-                bedSelect.innerHTML =
-                    '<option value="">Select Bed</option>';
-
-
-                if (
-                    data.success &&
-                    data.beds.length
-                ) {
-
-                    data.beds.forEach(
-                        function (bed) {
-
-                            const option =
-                                document.createElement(
-                                    "option"
-                                );
-
-                            option.value =
-                                bed.id;
-
-                            option.textContent =
-                                `${bed.bed_name} (${bed.bed_code})`;
-
-                            bedSelect.appendChild(
-                                option
-                            );
-
-                        }
-                    );
-
-                    bedSelect.disabled =
-                        false;
-
-                }
-                else {
-
-                    bedSelect.innerHTML =
-                        '<option value="">No available beds</option>';
-
-                }
-
-            }
-            catch (error) {
-
-                console.error(error);
-
-                bedSelect.innerHTML =
-                    '<option value="">Unable to load beds</option>';
-
-            }
-
-        }
-    );
-
-
-    // =====================================================
-    // CHECK FORM
-    // =====================================================
-
-    function checkAdmissionReady() {
-
-        admitPatientBtn.disabled =
-            !patientIdInput.value ||
-            !departmentSelect.value ||
-            !wardSelect.value ||
-            !roomSelect.value ||
-            !bedSelect.value;
-
-    }
-
-
-    departmentSelect.addEventListener(
-        "change",
-        checkAdmissionReady
-    );
-
-
-    bedSelect.addEventListener(
-        "change",
-        checkAdmissionReady
-    );
-
-
-    // =====================================================
-    // RESET
-    // =====================================================
-
-    document.getElementById(
-        "resetAdmissionBtn"
-    ).addEventListener(
-        "click",
-        function () {
-
-            patientIdInput.value = "";
-
-            patientNoInput.value = "";
-
-            selectedPatientCard.style.display =
-                "none";
-
-            admissionDetailsCard.style.display =
-                "none";
-
-            departmentSelect.value = "";
-
-            wardSelect.value = "";
-
-            roomSelect.innerHTML =
-                '<option value="">Select Ward First</option>';
-
-            roomSelect.disabled =
-                true;
-
-            bedSelect.innerHTML =
-                '<option value="">Select Room First</option>';
-
-            bedSelect.disabled =
-                true;
-
-            admitPatientBtn.disabled =
-                true;
-
-        }
-    );
-
-
-});
-
-</script>
 
 {% endblock %}

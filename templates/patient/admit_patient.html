@@ -1,0 +1,448 @@
+{% extends "base.html" %}
+
+{% block title %}Admit Patient - SwasthaCare{% endblock %}
+
+{% block extra_css %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/admit_patient.css') }}">
+
+{% endblock %}
+
+{% block content %}
+
+<div class="adm-page" id="admPage">
+
+
+<!-- HEADER -->
+
+<div class="adm-header">
+
+    <div>
+
+        <p class="adm-eyebrow">
+            Inpatient Department
+        </p>
+
+        <h1>
+            Admit Patient
+        </h1>
+
+        <p>
+            Admit a registered patient into IPD by assigning
+            department, ward, room and bed.
+        </p>
+
+    </div>
+
+
+    <div class="adm-header-nav">
+
+        <a class="adm-nav-link"
+           href="{{ url_for('main.patient_list') }}">
+            👥 Patient List
+        </a>
+
+        <a class="adm-nav-link active"
+   href="{{ url_for('admission.patient_admission') }}">
+    🛏️ Admit Patient
+</a>
+
+        <a class="adm-nav-link"
+           href="{{ url_for('admission.patient_discharge') }}">
+            📋 Discharge
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- SELECT PATIENT -->
+
+<div class="adm-card">
+
+    <h2>
+        Find Patient
+    </h2>
+
+    <p class="adm-card-desc">
+        Enter the patient's hospital number to select
+        a registered patient for admission.
+    </p>
+
+
+    <div class="adm-search-row">
+
+        <div class="adm-field">
+
+            <label for="patientNo">
+                Hospital Number <em>*</em>
+            </label>
+
+            <input
+                type="text"
+                id="patientNo"
+                placeholder="Enter hospital number e.g. 20260008"
+                autocomplete="off">
+
+        </div>
+
+
+        <div class="adm-search-btn-wrap">
+
+            <button
+                type="button"
+                class="adm-btn adm-btn-primary"
+                id="searchPatientBtn">
+
+                🔍 Search Patient
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- SELECTED PATIENT -->
+
+<div class="adm-card"
+     id="selectedPatientCardWrap"
+     style="display:none;">
+
+    <div class="adm-selected">
+
+        <div class="adm-selected-title">
+            ✅ Selected Patient
+        </div>
+
+
+        <div class="adm-selected-grid">
+
+            <div class="adm-selected-item">
+
+                <small>
+                    Hospital No.
+                </small>
+
+                <strong id="selectedPatientNo">
+                    —
+                </strong>
+
+            </div>
+
+
+            <div class="adm-selected-item">
+
+                <small>
+                    Patient Name
+                </small>
+
+                <strong id="selectedPatientName">
+                    —
+                </strong>
+
+            </div>
+
+
+            <div class="adm-selected-item">
+
+                <small>
+                    Age
+                </small>
+
+                <strong id="selectedPatientAge">
+                    —
+                </strong>
+
+            </div>
+
+
+            <div class="adm-selected-item">
+
+                <small>
+                    Gender
+                </small>
+
+                <strong id="selectedPatientGender">
+                    —
+                </strong>
+
+            </div>
+
+
+            <div class="adm-selected-item">
+
+                <small>
+                    Department
+                </small>
+
+                <strong id="selectedPatientDepartment">
+                    —
+                </strong>
+
+            </div>
+
+
+            <div class="adm-selected-item">
+
+                <small>
+                    Doctor
+                </small>
+
+                <strong id="selectedPatientDoctor">
+                    —
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ADMISSION DETAILS -->
+
+<div class="adm-card"
+     id="admissionDetailsCard"
+     style="display:none;">
+
+    <h2>
+        Admission Details
+    </h2>
+
+    <p class="adm-card-desc">
+        Select the department, ward, room and available bed.
+    </p>
+
+
+    <form id="admissionForm">
+
+        <input type="hidden"
+               id="patientId"
+               name="patient_id">
+
+
+        <div class="adm-form-grid">
+
+
+            <!-- DEPARTMENT -->
+
+            <div class="adm-field">
+
+                <label for="department">
+                    Department <em>*</em>
+                </label>
+
+                <select
+                    id="department"
+                    name="department_id"
+                    required>
+
+                    <option value=""
+                            selected
+                            disabled>
+
+                        Select Department
+
+                    </option>
+
+                    {% for department in departments %}
+
+                    <option value="{{ department.id }}">
+
+                        {{ department.department_name }}
+
+                        {% if department.dep_code %}
+                            ({{ department.dep_code }})
+                        {% endif %}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <!-- ADMISSION TYPE -->
+
+            <div class="adm-field">
+
+                <label for="admissionType">
+                    Admission Type
+                </label>
+
+                <select
+                    id="admissionType"
+                    name="admission_type">
+
+                    <option value="IPD">
+                        IPD
+                    </option>
+
+                    <option value="Emergency">
+                        Emergency
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- WARD -->
+
+            <div class="adm-field">
+
+                <label for="ward">
+                    Ward <em>*</em>
+                </label>
+
+                <select
+                    id="ward"
+                    name="ward_id"
+                    required>
+
+                    <option value=""
+                            selected
+                            disabled>
+
+                        Select Ward
+
+                    </option>
+
+                    {% for ward in wards %}
+
+                    <option value="{{ ward.id }}">
+
+                        {{ ward.ward_name }}
+
+                        {% if ward.ward_code %}
+                            ({{ ward.ward_code }})
+                        {% endif %}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <!-- ROOM -->
+
+            <div class="adm-field">
+
+                <label for="room">
+                    Room <em>*</em>
+                </label>
+
+                <select
+                    id="room"
+                    name="room_id"
+                    required
+                    disabled>
+
+                    <option value="">
+                        Select Ward First
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- BED -->
+
+            <div class="adm-field">
+
+                <label for="bed">
+                    Bed <em>*</em>
+                </label>
+
+                <select
+                    id="bed"
+                    name="bed_id"
+                    required
+                    disabled>
+
+                    <option value="">
+                        Select Room First
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- REMARKS -->
+
+            <div class="adm-field adm-field-full">
+
+                <label for="remarks">
+                    Remarks
+                </label>
+
+                <textarea
+                    id="remarks"
+                    name="remarks"
+                    rows="3"
+                    placeholder="Enter admission remarks..."></textarea>
+
+            </div>
+
+        </div>
+
+
+        <!-- ACTIONS -->
+
+        <div class="adm-actions">
+
+            <button
+                type="button"
+                class="adm-btn adm-btn-ghost"
+                id="resetAdmissionBtn">
+
+                Reset
+
+            </button>
+
+
+            <button
+                type="submit"
+                class="adm-btn adm-btn-dark"
+                id="admitPatientBtn"
+                disabled>
+
+                Admit Patient
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+
+<script src="{{ url_for('static', filename='js/admit_patient.js') }}">
+
+</script>
+
+{% endblock %}

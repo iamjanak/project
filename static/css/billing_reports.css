@@ -1,0 +1,626 @@
+/* =========================================================
+   BILLING REPORTS
+   SwasthaCare
+========================================================= */
+
+.billing-report-page {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 28px 32px 50px;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+    color: #1f2937;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.billing-report-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.billing-report-header h1 {
+    margin: 0 0 6px;
+    font-size: 26px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.billing-report-header p {
+    margin: 0;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.billing-report-actions {
+    display: flex;
+    gap: 10px;
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.btn {
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-search {
+    background: #2563eb;
+    color: white;
+}
+
+.btn-search:hover {
+    background: #1d4ed8;
+}
+
+.btn-reset {
+    background: #f3f4f6;
+    color: #374151;
+    border: 1px solid #d1d5db;
+}
+
+.btn-reset:hover {
+    background: #e5e7eb;
+}
+
+.btn-print {
+    background: #111827;
+    color: white;
+}
+
+.btn-print:hover {
+    background: #1f2937;
+}
+
+
+/* =========================================================
+   EXCEL BUTTON
+========================================================= */
+
+.excel-btn {
+    border: 1px solid #198754;
+    background: #198754;
+    color: #fff;
+    padding: 9px 18px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.excel-btn:hover {
+    background: #157347;
+}
+
+
+/* =========================================================
+   FILTER CARD
+========================================================= */
+
+.billing-filter-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.filter-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 16px;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.filter-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.filter-group input,
+.filter-group select {
+    width: 100%;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 7px;
+    outline: none;
+    box-sizing: border-box;
+    font-size: 14px;
+    background: white;
+}
+
+.filter-group input:focus,
+.filter-group select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}
+
+.filter-actions {
+    margin-top: 18px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+
+/* =========================================================
+   SUMMARY
+========================================================= */
+
+.billing-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.summary-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 18px;
+    min-height: 90px;
+    box-sizing: border-box;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+}
+
+.summary-card span {
+    font-size: 12px;
+    color: #6b7280;
+    font-weight: 600;
+}
+
+.summary-card strong {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   TABLE CARD
+========================================================= */
+
+.billing-table-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.table-header {
+    padding: 18px 20px;
+    border-bottom: 1px solid #e5e7eb;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.table-header h2 {
+    margin: 0;
+    font-size: 17px;
+    color: #111827;
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.billing-table {
+    width: 100%;
+    min-width: 1100px;
+    border-collapse: collapse;
+}
+
+.billing-table thead {
+    background: #f9fafb;
+}
+
+.billing-table th {
+    padding: 12px 14px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 700;
+    color: #4b5563;
+    border-bottom: 1px solid #e5e7eb;
+    white-space: nowrap;
+}
+
+.billing-table td {
+    padding: 12px 14px;
+    font-size: 13px;
+    border-bottom: 1px solid #f0f0f0;
+    white-space: nowrap;
+}
+
+.billing-table tbody tr:hover {
+    background: #f9fafb;
+}
+
+.empty-row {
+    text-align: center;
+    padding: 30px;
+    color: #9ca3af;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1200px) {
+
+    .filter-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .billing-summary-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .billing-report-page {
+        padding: 20px 15px;
+    }
+
+    .billing-report-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .filter-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .billing-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .billing-report-actions {
+        width: 100%;
+    }
+}
+
+
+/* =========================================================
+   PRINT
+   ONLY BILLING REPORT CONTENT WILL BE PRINTED
+========================================================= */
+
+@media print {
+
+    /* -----------------------------------------------------
+       HIDE SIDEBAR
+    ----------------------------------------------------- */
+
+    .sidebar,
+    #sidebar,
+    .sidebar-container,
+    .side-bar,
+    .app-sidebar,
+    aside {
+        display: none !important;
+    }
+
+
+    /* -----------------------------------------------------
+       HIDE TOP HEADER
+    ----------------------------------------------------- */
+
+    .app-header,
+    .top-header,
+    .topbar,
+    .top-bar,
+    .navbar,
+    .navbar-container,
+    header {
+        display: none !important;
+    }
+
+
+    /* -----------------------------------------------------
+       HIDE NAVIGATION
+    ----------------------------------------------------- */
+
+    nav,
+    .navigation,
+    .nav,
+    .main-nav {
+        display: none !important;
+    }
+
+
+    /* -----------------------------------------------------
+       HIDE NOTIFICATION
+    ----------------------------------------------------- */
+
+    .notification,
+    .notification-area,
+    .notification-icon,
+    .notifications,
+    .bell,
+    .admin-notification {
+        display: none !important;
+    }
+
+
+    /* -----------------------------------------------------
+       HIDE ADMIN / USER AREA
+    ----------------------------------------------------- */
+
+    .admin-info,
+    .admin,
+    .user-info,
+    .user-menu,
+    .profile,
+    .profile-menu {
+        display: none !important;
+    }
+
+
+    /* -----------------------------------------------------
+       HIDE LOGOUT
+    ----------------------------------------------------- */
+
+    .logout,
+    .logout-btn,
+    .logout-button {
+        display: none !important;
+    }
+
+
+    /* -----------------------------------------------------
+       HIDE ALL BUTTONS
+    ----------------------------------------------------- */
+
+    button,
+    .billing-report-actions,
+    .print-btn,
+    .print-button,
+    .btn-print,
+    .excel-btn,
+    #printBtn {
+        display: none !important;
+    }
+
+
+    /* -----------------------------------------------------
+       HIDE FILTER SECTION
+    ----------------------------------------------------- */
+
+    .billing-filter-card,
+    .billing-report-filters,
+    .report-filters,
+    .filter-section,
+    .search-section {
+        display: none !important;
+    }
+
+
+    /* -----------------------------------------------------
+       REMOVE APP LAYOUT
+    ----------------------------------------------------- */
+
+    html,
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        background: white !important;
+    }
+
+
+    main,
+    .main-content,
+    .content,
+    .page-content,
+    #page-content {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        left: 0 !important;
+        transform: none !important;
+    }
+
+
+    /* -----------------------------------------------------
+       REPORT CONTAINER
+    ----------------------------------------------------- */
+
+    .billing-report-page,
+    .billing-reports-page,
+    .report-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+
+    /* -----------------------------------------------------
+       REPORT HEADER
+       Keep Billing Reports title
+    ----------------------------------------------------- */
+
+    .billing-report-header {
+        display: flex !important;
+        margin-bottom: 20px !important;
+    }
+
+    .billing-report-header h1 {
+        font-size: 22px !important;
+        color: #000 !important;
+    }
+
+    .billing-report-header p {
+        color: #000 !important;
+    }
+
+
+    /* -----------------------------------------------------
+       SUMMARY
+    ----------------------------------------------------- */
+
+    .billing-summary-grid {
+        display: grid !important;
+        grid-template-columns: repeat(6, 1fr) !important;
+        gap: 8px !important;
+        margin-bottom: 20px !important;
+    }
+
+    .summary-card {
+        min-height: auto !important;
+        padding: 10px !important;
+        border: 1px solid #000 !important;
+        box-shadow: none !important;
+    }
+
+    .summary-card span {
+        color: #000 !important;
+        font-size: 10px !important;
+    }
+
+    .summary-card strong {
+        color: #000 !important;
+        font-size: 14px !important;
+    }
+
+
+    /* -----------------------------------------------------
+       TABLE CARDS
+    ----------------------------------------------------- */
+
+    .billing-table-card {
+        width: 100% !important;
+        margin-bottom: 20px !important;
+        border: none !important;
+        box-shadow: none !important;
+        overflow: visible !important;
+        break-inside: avoid;
+    }
+
+
+    .table-header {
+        padding: 8px 0 !important;
+        border-bottom: 1px solid #000 !important;
+    }
+
+    .table-header h2 {
+        color: #000 !important;
+        font-size: 15px !important;
+    }
+
+
+    /* -----------------------------------------------------
+       TABLE WRAPPER
+    ----------------------------------------------------- */
+
+    .table-wrapper {
+        width: 100% !important;
+        overflow: visible !important;
+    }
+
+
+    /* -----------------------------------------------------
+       TABLE
+    ----------------------------------------------------- */
+
+    .billing-table {
+        width: 100% !important;
+        min-width: 0 !important;
+        border-collapse: collapse !important;
+    }
+
+    .billing-table th,
+    .billing-table td {
+        border: 1px solid #000 !important;
+        color: #000 !important;
+        padding: 5px 6px !important;
+        font-size: 9px !important;
+        white-space: normal !important;
+    }
+
+    .billing-table th {
+        background: #f2f2f2 !important;
+        font-weight: 700 !important;
+    }
+
+    .billing-table tbody tr:hover {
+        background: transparent !important;
+    }
+
+
+    /* -----------------------------------------------------
+       PAGE BREAK
+    ----------------------------------------------------- */
+
+    tr {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .billing-table-card {
+        page-break-inside: avoid !important;
+    }
+
+
+    /* -----------------------------------------------------
+       REMOVE SHADOWS
+    ----------------------------------------------------- */
+
+    * {
+        box-shadow: none !important;
+    }
+
+
+    /* -----------------------------------------------------
+       LINKS
+    ----------------------------------------------------- */
+
+    a {
+        color: #000 !important;
+        text-decoration: none !important;
+    }
+}

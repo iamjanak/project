@@ -1,0 +1,870 @@
+/* =========================================================
+   PATIENT DISCHARGE
+   SwasthaCare - Common UI Style
+========================================================= */
+
+.dis-page {
+    font-family: "Inter", sans-serif;
+    color: #1f2937;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 28px 32px 40px;
+    box-sizing: border-box;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.dis-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 30px;
+    margin-bottom: 28px;
+}
+
+.dis-header h1 {
+    margin: 4px 0 8px;
+    font-family: "Manrope", sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+    line-height: 1.2;
+    color: #111827;
+}
+
+.dis-header > div:first-child > p:last-child {
+    margin: 0;
+    color: #6b7280;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.dis-eyebrow {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 700;
+    color: #2563eb;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+/* =========================================================
+   HEADER NAV
+========================================================= */
+
+.dis-header-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.dis-nav-link,
+.adm-nav-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 0 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #4b5563;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.dis-nav-link:hover,
+.adm-nav-link:hover {
+    border-color: #2563eb;
+    color: #2563eb;
+    background: #f8fbff;
+}
+
+.dis-nav-link.active,
+.adm-nav-link.active {
+    background: #eff6ff;
+    border-color: #2563eb;
+    color: #2563eb;
+}
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.dis-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.dis-stat {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 18px 20px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.dis-stat span {
+    display: block;
+    margin-bottom: 8px;
+    color: #6b7280;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.dis-stat strong {
+    display: block;
+    color: #111827;
+    font-family: "Manrope", sans-serif;
+    font-size: 25px;
+    font-weight: 800;
+}
+
+.dis-stat.accent {
+    border-left: 3px solid #2563eb;
+}
+
+.dis-stat.warn {
+    border-left: 3px solid #f59e0b;
+}
+
+/* =========================================================
+   TABS
+========================================================= */
+
+.dis-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 18px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.dis-tab-btn {
+    position: relative;
+    border: 0;
+    background: transparent;
+    padding: 12px 17px;
+    color: #6b7280;
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.dis-tab-btn::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 2px;
+    background: transparent;
+}
+
+.dis-tab-btn:hover {
+    color: #2563eb;
+}
+
+.dis-tab-btn.is-active {
+    color: #2563eb;
+}
+
+.dis-tab-btn.is-active::after {
+    background: #2563eb;
+}
+
+/* =========================================================
+   TAB PANELS
+========================================================= */
+
+.dis-tab-panel {
+    display: none;
+}
+
+.dis-tab-panel.is-active {
+    display: block;
+}
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.dis-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 22px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.dis-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.dis-card-head h2 {
+    margin: 0 0 5px;
+    font-family: "Manrope", sans-serif;
+    font-size: 19px;
+    font-weight: 800;
+    color: #111827;
+}
+
+.dis-card-head p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* =========================================================
+   SEARCH FILTER
+========================================================= */
+
+.dis-filter {
+    width: 290px;
+    height: 40px;
+    box-sizing: border-box;
+    padding: 0 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    outline: none;
+    background: #ffffff;
+    color: #111827;
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+}
+
+.dis-filter::placeholder {
+    color: #9ca3af;
+}
+
+.dis-filter:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.dis-table-scroll {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.dis-table {
+    width: 100%;
+    min-width: 950px;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.dis-table thead th {
+    padding: 12px 13px;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f9fafb;
+    color: #6b7280;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+
+.dis-table tbody td {
+    padding: 14px 13px;
+    border-bottom: 1px solid #eef0f3;
+    color: #374151;
+    vertical-align: middle;
+}
+
+.dis-table tbody tr:hover {
+    background: #fafcff;
+}
+
+.dis-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* =========================================================
+   TABLE TEXT
+========================================================= */
+
+.dis-hosp-no {
+    color: #2563eb;
+    font-weight: 700;
+}
+
+.dis-name {
+    color: #111827;
+    font-weight: 600;
+}
+
+/* =========================================================
+   STATUS BADGES
+========================================================= */
+
+.dis-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.dis-badge.admitted {
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.dis-badge.discharged {
+    background: #f3f4f6;
+    color: #4b5563;
+}
+
+/* =========================================================
+   DISCHARGE BUTTON
+========================================================= */
+
+.dis-discharge-btn {
+    border: 1px solid #fecaca;
+    background: #fffafa;
+    color: #dc2626;
+    border-radius: 7px;
+    padding: 7px 12px;
+    font-family: "Inter", sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.dis-discharge-btn:hover {
+    background: #fef2f2;
+    border-color: #ef4444;
+}
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.dis-empty {
+    padding: 45px 20px !important;
+    text-align: center !important;
+    color: #9ca3af !important;
+}
+
+/* =========================================================
+   DISCHARGE MODAL BACKDROP
+========================================================= */
+
+.dis-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(15, 23, 42, 0.50);
+    backdrop-filter: blur(2px);
+    box-sizing: border-box;
+}
+
+.dis-modal-backdrop.is-open {
+    display: flex;
+}
+
+/* =========================================================
+   DISCHARGE MODAL
+========================================================= */
+
+.dis-modal {
+    width: 100%;
+    max-width: 570px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding: 25px;
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 25px 70px rgba(15, 23, 42, 0.25);
+}
+
+.dis-modal h3 {
+    margin: 0 0 6px;
+    font-family: "Manrope", sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    color: #111827;
+}
+
+.dis-modal-sub {
+    margin: 0 0 20px;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+/* =========================================================
+   MODAL SUMMARY
+========================================================= */
+
+.dis-modal-summary {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 13px;
+    padding: 16px;
+    margin-bottom: 20px;
+    border: 1px solid #e5e7eb;
+    border-radius: 9px;
+    background: #f9fafb;
+}
+
+.dis-modal-summary div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.dis-modal-summary span {
+    color: #6b7280;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.dis-modal-summary strong {
+    color: #111827;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* =========================================================
+   MODAL FIELDS
+========================================================= */
+
+.dis-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: 17px;
+}
+
+.dis-field label {
+    color: #374151;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.dis-field label em {
+    color: #dc2626;
+    font-style: normal;
+}
+
+.dis-field select,
+.dis-field textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #111827;
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    outline: none;
+}
+
+.dis-field select {
+    height: 42px;
+    padding: 0 12px;
+}
+
+.dis-field textarea {
+    padding: 11px 12px;
+    resize: vertical;
+}
+
+.dis-field select:focus,
+.dis-field textarea:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+/* =========================================================
+   MODAL ACTIONS
+========================================================= */
+
+.dis-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 18px;
+    border-top: 1px solid #eef0f3;
+}
+
+.dis-btn {
+    min-height: 40px;
+    padding: 0 16px;
+    border-radius: 8px;
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.dis-btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.dis-btn-ghost {
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    color: #374151;
+}
+
+.dis-btn-ghost:hover {
+    background: #f9fafb;
+}
+
+.dis-btn-primary {
+    border: 1px solid #2563eb;
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.dis-btn-primary:hover {
+    background: #1d4ed8;
+}
+
+/* =========================================================
+   SUCCESS MODAL
+========================================================= */
+
+.success-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(15, 23, 42, 0.52);
+    backdrop-filter: blur(3px);
+    box-sizing: border-box;
+}
+
+.success-modal-overlay.is-open {
+    display: flex;
+}
+
+/* =========================================================
+   SUCCESS BOX
+========================================================= */
+
+.success-modal {
+    position: relative;
+    width: 100%;
+    max-width: 430px;
+    padding: 32px 30px 26px;
+    box-sizing: border-box;
+    background: #ffffff;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 25px 70px rgba(15, 23, 42, 0.25);
+    animation: successModalPop 0.22s ease-out;
+}
+
+@keyframes successModalPop {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* =========================================================
+   SUCCESS CLOSE
+========================================================= */
+
+.success-modal-close {
+    position: absolute;
+    top: 13px;
+    right: 15px;
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: #9ca3af;
+    font-size: 23px;
+    line-height: 1;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.success-modal-close:hover {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+/* =========================================================
+   SUCCESS ICON
+========================================================= */
+
+.success-icon {
+    width: 62px;
+    height: 62px;
+    margin: 2px auto 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    color: #059669;
+    font-size: 30px;
+    font-weight: 800;
+}
+
+/* =========================================================
+   SUCCESS TEXT
+========================================================= */
+
+.success-modal h2 {
+    margin: 0 0 8px;
+    font-family: "Manrope", sans-serif;
+    font-size: 21px;
+    font-weight: 800;
+    color: #111827;
+}
+
+.success-message {
+    margin: 0 0 20px;
+    color: #6b7280;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+/* =========================================================
+   ADMISSION NUMBER BOX
+========================================================= */
+
+.admission-number-box {
+    padding: 13px 16px;
+    margin: 0 0 22px;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+    background: #f8fbff;
+}
+
+.admission-label {
+    display: block;
+    margin-bottom: 5px;
+    color: #6b7280;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.admission-number-box strong {
+    display: block;
+    color: #2563eb;
+    font-family: "Manrope", sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+/* =========================================================
+   SUCCESS DONE BUTTON
+========================================================= */
+
+.success-ok-btn {
+    width: 100%;
+    min-height: 42px;
+    border: 1px solid #2563eb;
+    border-radius: 8px;
+    background: #2563eb;
+    color: #ffffff;
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.success-ok-btn:hover {
+    background: #1d4ed8;
+    border-color: #1d4ed8;
+}
+
+/* =========================================================
+   ERROR MODAL
+========================================================= */
+
+.error-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10001;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(15, 23, 42, 0.52);
+    backdrop-filter: blur(3px);
+}
+
+.error-modal-overlay.is-open {
+    display: flex;
+}
+
+.error-modal {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    padding: 30px;
+    border-radius: 15px;
+    background: #ffffff;
+    text-align: center;
+    box-shadow: 0 25px 70px rgba(15, 23, 42, 0.25);
+    animation: successModalPop 0.22s ease-out;
+}
+
+.error-icon {
+    width: 58px;
+    height: 58px;
+    margin: 0 auto 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    font-size: 28px;
+    font-weight: 800;
+}
+
+.error-modal h2 {
+    margin: 0 0 8px;
+    font-family: "Manrope", sans-serif;
+    font-size: 20px;
+    color: #111827;
+}
+
+.error-message {
+    margin: 0 0 20px;
+    color: #6b7280;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.error-ok-btn {
+    width: 100%;
+    min-height: 42px;
+    border: 1px solid #dc2626;
+    border-radius: 8px;
+    background: #dc2626;
+    color: #ffffff;
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.error-ok-btn:hover {
+    background: #b91c1c;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1000px) {
+
+    .dis-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dis-header {
+        flex-direction: column;
+    }
+
+    .dis-header-nav {
+        width: 100%;
+    }
+}
+
+@media (max-width: 700px) {
+
+    .dis-page {
+        padding: 20px 16px 30px;
+    }
+
+    .dis-header h1 {
+        font-size: 25px;
+    }
+
+    .dis-header-nav {
+        display: grid;
+        grid-template-columns: 1fr;
+        width: 100%;
+    }
+
+    .dis-nav-link,
+    .adm-nav-link {
+        width: 100%;
+    }
+
+    .dis-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .dis-card {
+        padding: 17px;
+    }
+
+    .dis-card-head {
+        flex-direction: column;
+    }
+
+    .dis-filter {
+        width: 100%;
+    }
+
+    .dis-modal-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .dis-modal-actions {
+        flex-direction: column-reverse;
+    }
+
+    .dis-btn {
+        width: 100%;
+    }
+
+    .success-modal {
+        padding: 28px 22px 22px;
+    }
+}

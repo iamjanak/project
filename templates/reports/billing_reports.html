@@ -1,0 +1,296 @@
+{% extends "base.html" %}
+
+{% block title %}Billing Reports{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/billing_reports.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+
+<div class="billing-report-page">
+
+    <!-- HEADER -->
+    <div class="billing-report-header">
+        <div>
+            <h1>Billing Reports</h1>
+            <p>View and analyze billing, refund and deposit transactions.</p>
+        </div>
+
+        <div class="billing-report-actions">
+
+    <button
+        type="button"
+        class="btn btn-print"
+        onclick="printBillingReport()"
+    >
+        🖨️ Print
+    </button>
+
+    <button
+        type="button"
+        class="btn btn-excel"
+        onclick="exportBillingExcel()"
+    >
+        📊 Excel
+    </button>
+
+</div>
+    </div>
+
+
+    <!-- FILTER CARD -->
+    <div class="billing-filter-card no-print">
+
+        <div class="filter-grid">
+
+            <div class="filter-group">
+                <label>Start Date</label>
+                <input
+                    type="date"
+                    id="start_date"
+                >
+            </div>
+
+            <div class="filter-group">
+                <label>End Date</label>
+                <input
+                    type="date"
+                    id="end_date"
+                >
+            </div>
+
+            <div class="filter-group">
+                <label>Hospital No.</label>
+                <input
+                    type="text"
+                    id="hospital_no"
+                    placeholder="Hospital number"
+                >
+            </div>
+
+            <div class="filter-group">
+                <label>Bill No.</label>
+                <input
+                    type="text"
+                    id="bill_no"
+                    placeholder="Bill number"
+                >
+            </div>
+
+            <div class="filter-group">
+                <label>Patient Name</label>
+                <input
+                    type="text"
+                    id="patient_name"
+                    placeholder="Patient name"
+                >
+            </div>
+
+            <div class="filter-group">
+                <label>Payment Type</label>
+                <select id="payment_type">
+                    <option value="">All</option>
+                    <option value="Cash">Cash</option>
+                    <option value="Card">Card</option>
+                    <option value="Online">Online</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="filter-actions">
+
+            <button
+                type="button"
+                class="btn btn-search"
+                onclick="loadBillingReport()"
+            >
+                Search
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-reset"
+                onclick="resetBillingReport()"
+            >
+                Reset
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- SUMMARY -->
+    <div class="billing-summary-grid">
+
+        <div class="summary-card">
+            <span>Total Bills</span>
+            <strong id="total_bills">0</strong>
+        </div>
+
+        <div class="summary-card">
+            <span>Gross Billing</span>
+            <strong id="gross_billing">0.00</strong>
+        </div>
+
+        <div class="summary-card">
+            <span>Discount</span>
+            <strong id="discount">0.00</strong>
+        </div>
+
+        <div class="summary-card">
+            <span>Net Billing</span>
+            <strong id="net_billing">0.00</strong>
+        </div>
+
+        <div class="summary-card">
+            <span>Total Refund</span>
+            <strong id="total_refund">0.00</strong>
+        </div>
+
+        <div class="summary-card">
+            <span>Net Revenue</span>
+            <strong id="net_revenue">0.00</strong>
+        </div>
+
+    </div>
+
+
+    <!-- BILL TABLE -->
+    <div class="billing-table-card">
+
+        <div class="table-header">
+            <h2>Billing Transactions</h2>
+        </div>
+
+        <div class="table-wrapper">
+
+            <table class="billing-table">
+
+                <thead>
+                    <tr>
+                        <th>SN</th>
+                        <th>Bill No.</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Hospital No.</th>
+                        <th>Patient Name</th>
+                        <th>Department</th>
+                        <th>Subtotal</th>
+                        <th>Discount</th>
+                        <th>Total</th>
+                        <th>Payment</th>
+                    </tr>
+                </thead>
+
+                <tbody id="billing_table_body">
+
+                    <tr>
+                        <td colspan="11" class="empty-row">
+                            No billing records found.
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- REFUND TABLE -->
+    <div class="billing-table-card">
+
+        <div class="table-header">
+            <h2>Refund Transactions</h2>
+        </div>
+
+        <div class="table-wrapper">
+
+            <table class="billing-table">
+
+                <thead>
+                    <tr>
+                        <th>SN</th>
+                        <th>Refund No.</th>
+                        <th>Bill No.</th>
+                        <th>Date</th>
+                        <th>Hospital No.</th>
+                        <th>Patient Name</th>
+                        <th>Bill Amount</th>
+                        <th>Refund Amount</th>
+                        <th>Reason</th>
+                    </tr>
+                </thead>
+
+                <tbody id="refund_table_body">
+
+                    <tr>
+                        <td colspan="9" class="empty-row">
+                            No refund records found.
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- DEPOSIT TABLE -->
+    <div class="billing-table-card">
+
+        <div class="table-header">
+            <h2>Deposit Transactions</h2>
+        </div>
+
+        <div class="table-wrapper">
+
+            <table class="billing-table">
+
+                <thead>
+                    <tr>
+                        <th>SN</th>
+                        <th>Receipt No.</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Hospital No.</th>
+                        <th>Patient Name</th>
+                        <th>Amount</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+
+                <tbody id="deposit_table_body">
+
+                    <tr>
+                        <td colspan="8" class="empty-row">
+                            No deposit records found.
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/billing_reports.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,668 @@
+/* =========================================================
+   ADMIT PATIENT
+   SwasthaCare - Common UI Style
+========================================================= */
+
+.adm-page {
+    font-family: "Inter", sans-serif;
+    color: #1f2937;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 28px 32px 40px;
+    box-sizing: border-box;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.adm-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 30px;
+    margin-bottom: 28px;
+}
+
+.adm-header h1 {
+    margin: 4px 0 8px;
+    font-family: "Manrope", sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+    line-height: 1.2;
+    color: #111827;
+}
+
+.adm-header > div:first-child > p:last-child {
+    margin: 0;
+    color: #6b7280;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.adm-eyebrow {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 700;
+    color: #2563eb;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+/* =========================================================
+   HEADER NAV
+========================================================= */
+
+.adm-header-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.adm-nav-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 0 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #4b5563;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.adm-nav-link:hover {
+    border-color: #2563eb;
+    color: #2563eb;
+    background: #f8fbff;
+}
+
+.adm-nav-link.active {
+    background: #eff6ff;
+    border-color: #2563eb;
+    color: #2563eb;
+}
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.adm-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    box-sizing: border-box;
+}
+
+.adm-card h2 {
+    margin: 0 0 6px;
+    font-family: "Manrope", sans-serif;
+    font-size: 19px;
+    font-weight: 800;
+    color: #111827;
+}
+
+.adm-card-desc {
+    margin: 0 0 22px;
+    color: #6b7280;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.adm-search-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 16px;
+}
+
+.adm-search-btn-wrap {
+    padding-bottom: 1px;
+}
+
+/* =========================================================
+   FIELDS
+========================================================= */
+
+.adm-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.adm-field label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.adm-field label em {
+    color: #dc2626;
+    font-style: normal;
+}
+
+.adm-field input,
+.adm-field select,
+.adm-field textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #111827;
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s ease,
+                box-shadow 0.2s ease;
+}
+
+.adm-field input,
+.adm-field select {
+    height: 42px;
+    padding: 0 12px;
+}
+
+.adm-field textarea {
+    padding: 11px 12px;
+    resize: vertical;
+    min-height: 90px;
+}
+
+.adm-field input::placeholder,
+.adm-field textarea::placeholder {
+    color: #9ca3af;
+}
+
+.adm-field input:focus,
+.adm-field select:focus,
+.adm-field textarea:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.adm-btn {
+    min-height: 42px;
+    padding: 0 17px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.adm-btn-primary {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.adm-btn-primary:hover {
+    background: #1d4ed8;
+}
+
+.adm-btn-dark {
+    background: #111827;
+    color: #ffffff;
+}
+
+.adm-btn-dark:hover:not(:disabled) {
+    background: #1f2937;
+}
+
+.adm-btn-ghost {
+    background: #ffffff;
+    border-color: #d1d5db;
+    color: #374151;
+}
+
+.adm-btn-ghost:hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
+}
+
+.adm-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* =========================================================
+   SELECTED PATIENT
+========================================================= */
+
+.adm-selected {
+    border: 1px solid #bfdbfe;
+    border-radius: 10px;
+    background: #f8fbff;
+    padding: 20px;
+}
+
+.adm-selected-title {
+    margin-bottom: 18px;
+    color: #1d4ed8;
+    font-family: "Manrope", sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.adm-selected-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.adm-selected-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.adm-selected-item small {
+    color: #6b7280;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.adm-selected-item strong {
+    color: #111827;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+/* =========================================================
+   ADMISSION FORM
+========================================================= */
+
+.adm-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.adm-field-full {
+    grid-column: 1 / -1;
+}
+
+.adm-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #eef0f3;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .adm-header {
+        flex-direction: column;
+    }
+
+    .adm-header-nav {
+        width: 100%;
+    }
+
+    .adm-search-row {
+        grid-template-columns: 1fr;
+    }
+
+    .adm-selected-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 650px) {
+
+    .adm-page {
+        padding: 20px 16px 30px;
+    }
+
+    .adm-header h1 {
+        font-size: 25px;
+    }
+
+    .adm-header-nav {
+        display: grid;
+        grid-template-columns: 1fr;
+        width: 100%;
+    }
+
+    .adm-nav-link {
+        width: 100%;
+    }
+
+    .adm-card {
+        padding: 18px;
+    }
+
+    .adm-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .adm-field-full {
+        grid-column: auto;
+    }
+
+    .adm-selected-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .adm-actions {
+        flex-direction: column-reverse;
+    }
+
+    .adm-actions .adm-btn {
+        width: 100%;
+    }
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   ADMISSION SUCCESS MODAL
+   ===================================================== */
+
+.admission-success-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.48);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    z-index: 99999;
+
+    animation: admissionFadeIn 0.2s ease;
+}
+
+
+/* =====================================================
+   MODAL
+   ===================================================== */
+
+.admission-success-modal {
+    width: 430px;
+    max-width: 100%;
+
+    background: #ffffff;
+
+    border-radius: 18px;
+
+    padding: 32px;
+
+    text-align: center;
+
+    box-shadow:
+        0 25px 70px rgba(0, 0, 0, 0.20);
+
+    animation: admissionModalIn 0.25s ease;
+}
+
+
+/* =====================================================
+   SUCCESS ICON
+   ===================================================== */
+
+.admission-success-icon {
+    width: 68px;
+    height: 68px;
+
+    margin: 0 auto 18px;
+
+    border-radius: 50%;
+
+    background: #ecfdf5;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 6px solid #f0fdf4;
+}
+
+
+.admission-success-icon span {
+    color: #16a34a;
+
+    font-size: 34px;
+
+    font-weight: 700;
+
+    line-height: 1;
+}
+
+
+/* =====================================================
+   TITLE
+   ===================================================== */
+
+.admission-success-modal h3 {
+    margin: 0 0 9px;
+
+    color: #1e293b;
+
+    font-size: 21px;
+
+    font-weight: 700;
+
+    line-height: 1.4;
+}
+
+
+/* =====================================================
+   MESSAGE
+   ===================================================== */
+
+.admission-success-message {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+}
+
+
+/* =====================================================
+   ADMISSION NUMBER BOX
+   ===================================================== */
+
+.admission-success-number {
+    margin: 22px 0;
+
+    padding: 15px 18px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 11px;
+}
+
+
+.admission-success-number span {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: #64748b;
+
+    font-size: 12px;
+
+    font-weight: 500;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.5px;
+}
+
+
+.admission-success-number strong {
+    display: block;
+
+    color: #0f172a;
+
+    font-size: 18px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.6px;
+}
+
+
+/* =====================================================
+   CONTINUE BUTTON
+   ===================================================== */
+
+.admission-success-btn {
+    width: 100%;
+
+    border: none;
+
+    border-radius: 9px;
+
+    padding: 12px 18px;
+
+    background: #2563eb;
+
+    color: #ffffff;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.admission-success-btn:hover {
+    background: #1d4ed8;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 5px 15px rgba(37, 99, 235, 0.25);
+}
+
+
+.admission-success-btn:active {
+    transform: translateY(0);
+}
+
+
+.admission-success-btn:focus {
+    outline: none;
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.20);
+}
+
+
+/* =====================================================
+   ANIMATIONS
+   ===================================================== */
+
+@keyframes admissionFadeIn {
+
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+
+}
+
+
+@keyframes admissionModalIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(15px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+}
+
+
+/* =====================================================
+   MOBILE
+   ===================================================== */
+
+@media (max-width: 480px) {
+
+    .admission-success-modal {
+        padding: 26px 20px;
+
+        border-radius: 15px;
+    }
+
+
+    .admission-success-icon {
+        width: 60px;
+        height: 60px;
+    }
+
+
+    .admission-success-icon span {
+        font-size: 29px;
+    }
+
+
+    .admission-success-modal h3 {
+        font-size: 19px;
+    }
+
+
+    .admission-success-number strong {
+        font-size: 16px;
+    }
+
+}

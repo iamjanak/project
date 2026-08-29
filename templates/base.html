@@ -340,9 +340,9 @@
                             </a>
                         </li>
 
-                        <li>
+                        <!-- <li>
                            <a href="{{ url_for('main.patient_report') }}">
-    📄 Patient Reports
+    📄 Patient Reports -->
 </a>
                         </li>
 
@@ -490,7 +490,8 @@
                         <!-- Billing Reports -->
                         <li>
 
-                            <a href="#">
+<a href="{{ url_for('main.billing_reports') }}">
+   
                                 💵 Billing Reports
                             </a>
 
@@ -500,11 +501,15 @@
                         <!-- Daily Collection -->
                         <li>
 
-                            <a href="#">
+                         <a href="{{ url_for('main.daily_collection_report') }}">
+
                                 📅 Daily Collection
                             </a>
 
                         </li>
+
+
+                        
 
 
                         <!-- Department Reports -->

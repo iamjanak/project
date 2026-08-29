@@ -1,374 +1,506 @@
 /* =========================================================
-   PATIENT ADMISSION
+   SWASTHACARE — PATIENT ADMISSION
+   Design tokens are namespaced with --sc- so they can be
+   safely shared with patient_discharge.css
 ========================================================= */
 
-.admission-page {
-    padding: 24px;
-    max-width: 1400px;
-    margin: 0 auto;
+:root {
+    --sc-teal-900: #0b3d3a;
+    --sc-teal-700: #0f766e;
+    --sc-teal-600: #0d9488;
+    --sc-teal-500: #14b8a6;
+    --sc-teal-100: #e7f6f4;
+    --sc-teal-50:  #f2faf9;
+
+    --sc-navy-900: #0f1b2d;
+    --sc-navy-700: #24344a;
+    --sc-navy-500: #5b6b83;
+    --sc-navy-300: #93a1b6;
+
+    --sc-amber-600: #b7791f;
+    --sc-amber-100: #fdf3dd;
+
+    --sc-red-600: #c23b3b;
+    --sc-red-100: #fbe9e9;
+
+    --sc-line: #e3e8ee;
+    --sc-bg: #f5f8fa;
+    --sc-surface: #ffffff;
+
+    --sc-radius-lg: 16px;
+    --sc-radius-md: 10px;
+    --sc-radius-sm: 7px;
+
+    --sc-shadow: 0 1px 2px rgba(15, 27, 45, 0.04), 0 8px 24px -12px rgba(15, 27, 45, 0.10);
 }
 
+/* =====================================================
+   PAGE
+====================================================== */
 
-/* =========================================================
+.adm-page {
+    background: var(--sc-bg);
+    padding: 28px 32px 60px;
+    font-family: "Manrope", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--sc-navy-900);
+}
+
+/* =====================================================
    HEADER
-========================================================= */
+====================================================== */
 
-.admission-header {
+.adm-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 16px 20px;
     margin-bottom: 24px;
 }
 
-.admission-header h1 {
+.adm-eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--sc-teal-600);
+    margin: 0 0 6px;
+}
+
+.adm-header h1 {
     margin: 0;
     font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    color: var(--sc-navy-900);
+}
+
+.adm-header p {
+    margin: 6px 0 0;
+    color: var(--sc-navy-500);
+    font-size: 14.5px;
+}
+
+.adm-header-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.adm-nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--sc-line);
+    background: var(--sc-surface);
+    color: var(--sc-navy-700);
+    font-size: 13.5px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: border-color .15s ease, color .15s ease;
+}
+
+.adm-nav-link:hover {
+    border-color: var(--sc-teal-500);
+    color: var(--sc-teal-700);
+}
+
+.adm-nav-link.is-active {
+    background: var(--sc-navy-900);
+    border-color: var(--sc-navy-900);
+    color: #fff;
+}
+
+button.adm-nav-link {
+    font-family: inherit;
+    cursor: pointer;
+}
+
+/* =====================================================
+   TAB PANELS
+====================================================== */
+
+.adm-tab-panel { display: none; }
+.adm-tab-panel.is-active { display: block; }
+
+.adm-admit-empty {
+    text-align: center;
+    padding: 60px 30px;
+}
+
+.adm-empty-icon {
+    font-size: 34px;
+    margin-bottom: 14px;
+}
+
+.adm-admit-empty h2 {
+    margin-bottom: 6px;
+}
+
+.adm-admit-empty .adm-card-desc {
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.adm-admit-empty .adm-btn {
+    margin-top: 18px;
+}
+
+.adm-empty-divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 22px 0;
+    color: var(--sc-navy-300);
+    font-size: 12.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.adm-empty-divider::before,
+.adm-empty-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--sc-line);
+}
+
+#admitEmptyState .adm-btn-ghost {
+    width: 100%;
+}
+
+/* =====================================================
+   STAT STRIP
+====================================================== */
+
+.adm-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+}
+
+.adm-stat {
+    background: var(--sc-surface);
+    border: 1px solid var(--sc-line);
+    border-radius: var(--sc-radius-md);
+    padding: 16px 18px;
+    box-shadow: var(--sc-shadow);
+}
+
+.adm-stat span {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--sc-navy-500);
+    margin-bottom: 8px;
+}
+
+.adm-stat strong {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--sc-navy-900);
+}
+
+.adm-stat.accent strong { color: var(--sc-teal-600); }
+
+/* =====================================================
+   CARD
+====================================================== */
+
+.adm-card {
+    background: var(--sc-surface);
+    border: 1px solid var(--sc-line);
+    border-radius: var(--sc-radius-lg);
+    padding: 26px;
+    margin-bottom: 22px;
+    box-shadow: var(--sc-shadow);
+}
+
+.adm-card h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--sc-navy-900);
+}
+
+.adm-card-desc {
+    margin: 6px 0 20px;
+    color: var(--sc-navy-500);
+    font-size: 13.5px;
+}
+
+/* =====================================================
+   SEARCH
+====================================================== */
+
+.adm-search-row {
+    display: flex;
+    gap: 12px;
+    align-items: stretch;
+}
+
+.adm-field { flex: 1; }
+
+.adm-field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 7px;
+    color: var(--sc-navy-700);
+}
+
+.adm-field label em {
+    color: var(--sc-red-600);
+    font-style: normal;
+    margin-left: 2px;
+}
+
+.adm-field input,
+.adm-field select,
+.adm-field textarea {
+    width: 100%;
+    box-sizing: border-box;
+    height: 46px;
+    padding: 0 14px;
+    border: 1px solid var(--sc-line);
+    border-radius: var(--sc-radius-sm);
+    font-size: 14.5px;
+    font-family: inherit;
+    outline: none;
+    background: var(--sc-surface);
+    color: var(--sc-navy-900);
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.adm-field textarea {
+    height: auto;
+    padding: 12px 14px;
+    resize: vertical;
+}
+
+.adm-field input:focus,
+.adm-field select:focus,
+.adm-field textarea:focus {
+    border-color: var(--sc-teal-500);
+    box-shadow: 0 0 0 3px var(--sc-teal-100);
+}
+
+.adm-field select:disabled {
+    background: #f4f6f8;
+    color: var(--sc-navy-300);
+}
+
+.adm-search-btn-wrap {
+    display: flex;
+    align-items: flex-end;
+}
+
+.adm-btn {
+    height: 46px;
+    padding: 0 22px;
+    border: none;
+    border-radius: var(--sc-radius-sm);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: opacity .15s ease, transform .05s ease;
+}
+
+.adm-btn:active { transform: translateY(1px); }
+.adm-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+.adm-btn-primary {
+    background: var(--sc-teal-600);
+    color: #fff;
+}
+.adm-btn-primary:hover:not(:disabled) { background: var(--sc-teal-700); }
+
+.adm-btn-ghost {
+    background: #eef1f4;
+    color: var(--sc-navy-700);
+}
+.adm-btn-ghost:hover { background: #e3e7ec; }
+
+.adm-btn-dark {
+    background: var(--sc-navy-900);
+    color: #fff;
+}
+.adm-btn-dark:hover:not(:disabled) { opacity: .9; }
+
+/* =====================================================
+   SELECTED PATIENT
+====================================================== */
+
+.adm-selected {
+    background: var(--sc-teal-50);
+    border: 1px solid var(--sc-teal-100);
+    border-radius: var(--sc-radius-md);
+    padding: 18px 20px;
+    margin-top: 18px;
+}
+
+.adm-selected-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+    color: var(--sc-teal-700);
+    font-size: 13.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 16px;
+}
+
+.adm-selected-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 16px;
+}
+
+.adm-selected-item small {
+    display: block;
+    color: var(--sc-navy-500);
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+}
+
+.adm-selected-item strong {
+    color: var(--sc-navy-900);
+    font-size: 14.5px;
     font-weight: 700;
 }
 
-.admission-header p {
-    margin: 6px 0 0;
-    color: #6b7280;
-    font-size: 14px;
-}
+/* =====================================================
+   TABLE
+====================================================== */
 
+.adm-table-card { padding: 0; overflow: hidden; }
 
-/* =========================================================
-   CARD
-========================================================= */
-
-.admission-card {
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 14px;
-    padding: 24px;
-    margin-bottom: 22px;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
-}
-
-
-/* =========================================================
-   CARD HEADER
-========================================================= */
-
-.admission-card-header {
-    margin-bottom: 22px;
-}
-
-.admission-card-header h2 {
-    margin: 0;
-    font-size: 19px;
-    font-weight: 650;
-}
-
-.admission-card-header p {
-    margin: 5px 0 0;
-    color: #6b7280;
-    font-size: 13px;
-}
-
-
-/* =========================================================
-   SEARCH
-========================================================= */
-
-.patient-search-row {
+.adm-table-head {
     display: flex;
-    align-items: flex-end;
-    gap: 14px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 26px;
+    border-bottom: 1px solid var(--sc-line);
 }
 
-.patient-search-row .admission-field {
-    flex: 1;
+.adm-table-head h2 { font-size: 18px; }
+.adm-table-head p { margin: 5px 0 0; color: var(--sc-navy-500); font-size: 13.5px; }
+
+.adm-pill {
+    background: var(--sc-teal-100);
+    color: var(--sc-teal-700);
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 800;
+    white-space: nowrap;
 }
 
-.admission-search-btn {
-    height: 44px;
-    padding: 0 22px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    background: var(--doc-accent);
-    color: #ffffff;
-}
+.adm-table-scroll { width: 100%; overflow-x: auto; }
 
-
-/* =========================================================
-   FORM GRID
-========================================================= */
-
-.admission-form-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 20px;
-}
-
-.admission-field {
-    display: flex;
-    flex-direction: column;
-}
-
-.admission-field-full {
-    grid-column: 1 / -1;
-}
-
-
-/* =========================================================
-   LABEL
-========================================================= */
-
-.admission-field label {
-    margin-bottom: 7px;
-    font-size: 13px;
-    font-weight: 600;
-    color: #374151;
-}
-
-.admission-field label span {
-    color: #dc2626;
-}
-
-
-/* =========================================================
-   INPUT
-========================================================= */
-
-.admission-field input,
-.admission-field select,
-.admission-field textarea {
+.adm-table {
     width: 100%;
-    box-sizing: border-box;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    padding: 11px 13px;
+    border-collapse: collapse;
+    min-width: 920px;
+}
+
+.adm-table th {
+    background: #fafbfc;
+    padding: 13px 18px;
+    text-align: left;
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--sc-navy-500);
+    border-bottom: 1px solid var(--sc-line);
+    font-weight: 700;
+}
+
+.adm-table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid #eef1f4;
     font-size: 14px;
-    background: #ffffff;
-    outline: none;
-    transition: border-color 0.2s;
+    vertical-align: middle;
+    color: var(--sc-navy-700);
 }
 
-.admission-field input,
-.admission-field select {
-    height: 44px;
+.adm-table tbody tr:hover { background: var(--sc-teal-50); }
+
+.adm-hosp-no { font-weight: 800; color: var(--sc-teal-700); }
+.adm-name { font-weight: 700; color: var(--sc-navy-900); }
+
+.adm-admit-btn {
+    border: none;
+    padding: 8px 16px;
+    border-radius: var(--sc-radius-sm);
+    background: var(--sc-teal-600);
+    color: #fff;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.adm-admit-btn:hover { background: var(--sc-teal-700); }
+
+.adm-empty {
+    text-align: center;
+    padding: 50px 20px !important;
+    color: var(--sc-navy-300);
+    font-size: 14px;
 }
 
-.admission-field textarea {
-    resize: vertical;
-    min-height: 90px;
-}
+/* =====================================================
+   ADMISSION FORM
+====================================================== */
 
-.admission-field input:focus,
-.admission-field select:focus,
-.admission-field textarea:focus {
-    border-color: var(--doc-accent);
-}
+#admissionDetailsCard { display: none; }
 
-
-/* =========================================================
-   DISABLED SELECT
-========================================================= */
-
-.admission-field select:disabled {
-    background: #f3f4f6;
-    color: #9ca3af;
-    cursor: not-allowed;
-}
-
-
-/* =========================================================
-   PATIENT INFO
-========================================================= */
-
-.patient-info-grid {
+.adm-form-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 18px;
 }
 
-.patient-info-item {
-    padding: 15px;
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
-    border-radius: 9px;
-}
+.adm-field-full { grid-column: 1 / -1; }
 
-.patient-info-item span {
-    display: block;
-    color: #6b7280;
-    font-size: 12px;
-    margin-bottom: 5px;
-}
-
-.patient-info-item strong {
-    display: block;
-    font-size: 14px;
-    color: #111827;
-}
-
-
-/* =========================================================
-   ACTIONS
-========================================================= */
-
-.admission-form-actions {
+.adm-actions {
     display: flex;
     justify-content: flex-end;
-    gap: 12px;
-    margin-top: 25px;
-    padding-top: 20px;
-    border-top: 1px solid #e5e7eb;
+    gap: 10px;
+    margin-top: 24px;
 }
 
-.admission-cancel-btn,
-.admission-save-btn {
-    min-width: 130px;
-    height: 44px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.admission-cancel-btn {
-    background: #ffffff;
-    border: 1px solid #d1d5db;
-    color: #374151;
-}
-
-.admission-save-btn {
-    background: var(--doc-accent);
-    border: 1px solid var(--doc-accent);
-    color: #ffffff;
-}
-
-
-/* =========================================================
-   POPUPS
-========================================================= */
-
-.admission-popup {
-    position: fixed;
-    right: 25px;
-    bottom: 25px;
-    min-width: 340px;
-    max-width: 450px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 15px 17px;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-    transform: translateY(30px);
-    opacity: 0;
-    visibility: hidden;
-    transition: 0.25s ease;
-    z-index: 9999;
-}
-
-.admission-popup.show {
-    transform: translateY(0);
-    opacity: 1;
-    visibility: visible;
-}
-
-.admission-popup-icon {
-    width: 32px;
-    height: 32px;
-    min-width: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    font-weight: 700;
-}
-
-.admission-popup.success .admission-popup-icon {
-    background: #dcfce7;
-    color: #15803d;
-}
-
-.admission-popup.error .admission-popup-icon {
-    background: #fee2e2;
-    color: #dc2626;
-}
-
-.admission-popup-content {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    flex: 1;
-}
-
-.admission-popup-content strong {
-    font-size: 14px;
-}
-
-.admission-popup-content span {
-    font-size: 13px;
-    color: #6b7280;
-}
-
-.admission-popup-close {
-    border: none;
-    background: transparent;
-    font-size: 20px;
-    color: #6b7280;
-    cursor: pointer;
-}
-
-
-/* =========================================================
+/* =====================================================
    RESPONSIVE
-========================================================= */
+====================================================== */
+
+@media (max-width: 1080px) {
+    .adm-stats { grid-template-columns: repeat(2, 1fr); }
+    .adm-selected-grid { grid-template-columns: repeat(3, 1fr); }
+}
 
 @media (max-width: 900px) {
-
-    .patient-info-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .admission-form-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .admission-field-full {
-        grid-column: auto;
-    }
-
+    .adm-form-grid { grid-template-columns: 1fr; }
+    .adm-field-full { grid-column: auto; }
 }
 
-
 @media (max-width: 600px) {
-
-    .admission-page {
-        padding: 15px;
-    }
-
-    .patient-search-row {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .patient-info-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .admission-form-actions {
-        flex-direction: column-reverse;
-    }
-
-    .admission-cancel-btn,
-    .admission-save-btn {
-        width: 100%;
-    }
-
-    .admission-popup {
-        left: 15px;
-        right: 15px;
-        min-width: auto;
-    }
-
+    .adm-page { padding: 18px; }
+    .adm-header { flex-direction: column; align-items: flex-start; }
+    .adm-search-row { flex-direction: column; }
+    .adm-search-btn-wrap .adm-btn { width: 100%; }
+    .adm-stats { grid-template-columns: 1fr; }
+    .adm-selected-grid { grid-template-columns: repeat(2, 1fr); }
 }
