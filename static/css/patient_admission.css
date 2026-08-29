@@ -1,0 +1,374 @@
+/* =========================================================
+   PATIENT ADMISSION
+========================================================= */
+
+.admission-page {
+    padding: 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.admission-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.admission-header h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.admission-header p {
+    margin: 6px 0 0;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.admission-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 22px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+}
+
+
+/* =========================================================
+   CARD HEADER
+========================================================= */
+
+.admission-card-header {
+    margin-bottom: 22px;
+}
+
+.admission-card-header h2 {
+    margin: 0;
+    font-size: 19px;
+    font-weight: 650;
+}
+
+.admission-card-header p {
+    margin: 5px 0 0;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.patient-search-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 14px;
+}
+
+.patient-search-row .admission-field {
+    flex: 1;
+}
+
+.admission-search-btn {
+    height: 44px;
+    padding: 0 22px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    background: var(--doc-accent);
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   FORM GRID
+========================================================= */
+
+.admission-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.admission-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.admission-field-full {
+    grid-column: 1 / -1;
+}
+
+
+/* =========================================================
+   LABEL
+========================================================= */
+
+.admission-field label {
+    margin-bottom: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.admission-field label span {
+    color: #dc2626;
+}
+
+
+/* =========================================================
+   INPUT
+========================================================= */
+
+.admission-field input,
+.admission-field select,
+.admission-field textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 11px 13px;
+    font-size: 14px;
+    background: #ffffff;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.admission-field input,
+.admission-field select {
+    height: 44px;
+}
+
+.admission-field textarea {
+    resize: vertical;
+    min-height: 90px;
+}
+
+.admission-field input:focus,
+.admission-field select:focus,
+.admission-field textarea:focus {
+    border-color: var(--doc-accent);
+}
+
+
+/* =========================================================
+   DISABLED SELECT
+========================================================= */
+
+.admission-field select:disabled {
+    background: #f3f4f6;
+    color: #9ca3af;
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   PATIENT INFO
+========================================================= */
+
+.patient-info-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.patient-info-item {
+    padding: 15px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 9px;
+}
+
+.patient-info-item span {
+    display: block;
+    color: #6b7280;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.patient-info-item strong {
+    display: block;
+    font-size: 14px;
+    color: #111827;
+}
+
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.admission-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.admission-cancel-btn,
+.admission-save-btn {
+    min-width: 130px;
+    height: 44px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.admission-cancel-btn {
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    color: #374151;
+}
+
+.admission-save-btn {
+    background: var(--doc-accent);
+    border: 1px solid var(--doc-accent);
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   POPUPS
+========================================================= */
+
+.admission-popup {
+    position: fixed;
+    right: 25px;
+    bottom: 25px;
+    min-width: 340px;
+    max-width: 450px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 17px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    transform: translateY(30px);
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.25s ease;
+    z-index: 9999;
+}
+
+.admission-popup.show {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+}
+
+.admission-popup-icon {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: 700;
+}
+
+.admission-popup.success .admission-popup-icon {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.admission-popup.error .admission-popup-icon {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.admission-popup-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+}
+
+.admission-popup-content strong {
+    font-size: 14px;
+}
+
+.admission-popup-content span {
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.admission-popup-close {
+    border: none;
+    background: transparent;
+    font-size: 20px;
+    color: #6b7280;
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .patient-info-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .admission-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admission-field-full {
+        grid-column: auto;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .admission-page {
+        padding: 15px;
+    }
+
+    .patient-search-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .patient-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admission-form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .admission-cancel-btn,
+    .admission-save-btn {
+        width: 100%;
+    }
+
+    .admission-popup {
+        left: 15px;
+        right: 15px;
+        min-width: auto;
+    }
+
+}

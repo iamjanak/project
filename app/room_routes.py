@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify, redirect, session
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from app.database import db
 from app.models import Room, Ward
@@ -24,12 +24,20 @@ def room_setup():
 
     try:
 
+        # -------------------------------------------------
+        # GET ACTIVE WARDS
+        # -------------------------------------------------
+
         wards = (
             Ward.query
             .filter_by(status="Active")
             .order_by(Ward.ward_name.asc())
             .all()
         )
+
+        # -------------------------------------------------
+        # GET ROOMS
+        # -------------------------------------------------
 
         rooms = (
             Room.query
@@ -46,12 +54,56 @@ def room_setup():
 
     except Exception as e:
 
+        print("========================================")
         print("ROOM SETUP ERROR:", repr(e))
+        print("========================================")
 
         return (
             "Unable to load Room Setup.",
             500
         )
+
+
+# =========================================================
+# ADD ROOM PAGE
+# =========================================================
+
+@room_bp.route("/add", methods=["GET"])
+def add_room_page():
+
+    if "user" not in session:
+        return redirect("/")
+
+    try:
+
+        # -------------------------------------------------
+        # GET ACTIVE WARDS
+        # -------------------------------------------------
+
+        wards = (
+            Ward.query
+            .filter_by(status="Active")
+            .order_by(Ward.ward_name.asc())
+            .all()
+        )
+
+        return render_template(
+            "setup/add_room.html",
+            wards=wards,
+            active_page="room_setup"
+        )
+
+    except Exception as e:
+
+        print("========================================")
+        print("ADD ROOM PAGE ERROR:", repr(e))
+        print("========================================")
+
+        return (
+            "Unable to load Add Room page.",
+            500
+        )
+
 
 # =========================================================
 # ADD ROOM
@@ -62,18 +114,35 @@ def add_room():
 
     if "user" not in session:
 
-        return jsonify({
-            "success": False,
-            "message": "Unauthorized"
-        }), 401
+        # AJAX request
+        if request.is_json:
+
+            return jsonify({
+                "success": False,
+                "message": "Unauthorized"
+            }), 401
+
+        return redirect("/")
+
 
     try:
 
         # =================================================
-        # READ JSON
+        # READ REQUEST DATA
         # =================================================
 
-        data = request.get_json(silent=True) or {}
+        if request.is_json:
+
+            data = request.get_json(silent=True) or {}
+
+        else:
+
+            data = request.form.to_dict()
+
+
+        # =================================================
+        # READ FIELDS
+        # =================================================
 
         ward_id = data.get("ward_id")
 
@@ -94,8 +163,8 @@ def add_room():
         ).strip()
 
         status = (
-    data.get("status") or "Active"
-).strip()
+            data.get("status") or "Active"
+        ).strip()
 
         description = (
             data.get("description") or ""
@@ -108,10 +177,10 @@ def add_room():
 
         if not ward_id:
 
-            return jsonify({
-                "success": False,
-                "message": "Please select a ward."
-            }), 400
+            return room_error(
+                "Please select a ward.",
+                400
+            )
 
 
         try:
@@ -120,10 +189,10 @@ def add_room():
 
         except (TypeError, ValueError):
 
-            return jsonify({
-                "success": False,
-                "message": "Invalid ward selected."
-            }), 400
+            return room_error(
+                "Invalid ward selected.",
+                400
+            )
 
 
         # =================================================
@@ -132,10 +201,10 @@ def add_room():
 
         if not room_code:
 
-            return jsonify({
-                "success": False,
-                "message": "Room code is required."
-            }), 400
+            return room_error(
+                "Room code is required.",
+                400
+            )
 
 
         # =================================================
@@ -144,10 +213,10 @@ def add_room():
 
         if not room_name:
 
-            return jsonify({
-                "success": False,
-                "message": "Room name is required."
-            }), 400
+            return room_error(
+                "Room name is required.",
+                400
+            )
 
 
         # =================================================
@@ -156,10 +225,28 @@ def add_room():
 
         if not room_type:
 
-            return jsonify({
-                "success": False,
-                "message": "Room type is required."
-            }), 400
+            return room_error(
+                "Room type is required.",
+                400
+            )
+
+
+        # =================================================
+        # VALIDATE STATUS
+        # =================================================
+
+        allowed_statuses = [
+            "Active",
+            "Inactive",
+            "Maintenance"
+        ]
+
+        if status not in allowed_statuses:
+
+            return room_error(
+                "Invalid room status.",
+                400
+            )
 
 
         # =================================================
@@ -177,10 +264,10 @@ def add_room():
 
         if not ward:
 
-            return jsonify({
-                "success": False,
-                "message": "Selected ward was not found or is inactive."
-            }), 404
+            return room_error(
+                "Selected ward was not found or is inactive.",
+                404
+            )
 
 
         # =================================================
@@ -199,30 +286,34 @@ def add_room():
 
         if existing_room:
 
-            return jsonify({
-                "success": False,
-                "message": "Room code already exists."
-            }), 400
+            return room_error(
+                "Room code already exists.",
+                400
+            )
+
+
+        # =================================================
+        # CURRENT NEPAL TIME
+        # =================================================
+
+        now = datetime.utcnow() + timedelta(hours=5, minutes=45)
 
 
         # =================================================
         # CREATE ROOM
         # =================================================
 
-        now = datetime.utcnow()
-
         room = Room(
 
             ward_id=ward.id,
 
+            # Room code
             room_code=room_code,
 
-            # ---------------------------------------------
-            # IMPORTANT
-            # Room model requires room_number.
-            # Current UI does not have a separate field,
-            # therefore use room_code as room_number.
-            # ---------------------------------------------
+            # Your Room model requires room_number.
+            # Using room_code as room_number because
+            # there is currently no separate room number
+            # field in the UI.
 
             room_number=room_code,
 
@@ -232,7 +323,7 @@ def add_room():
 
             floor=floor,
 
-            # Default capacity
+            # Default room capacity
             capacity=1,
 
             description=description,
@@ -255,98 +346,120 @@ def add_room():
 
 
         # =================================================
-        # RESPONSE
+        # AJAX RESPONSE
         # =================================================
 
-        return jsonify({
+        room_data = {
 
-            "success": True,
+            "id": room.id,
 
-            "message":
-                "Room added successfully.",
+            "ward_id": room.ward_id,
 
-            "room": {
+            "ward_name": ward.ward_name,
 
-                "id":
-                    room.id,
+            "room_code": room.room_code,
 
-                "ward_id":
-                    room.ward_id,
+            "room_number": room.room_number,
 
-                "ward_name":
-                    ward.ward_name,
+            "room_name": room.room_name,
 
-                "room_code":
-                    room.room_code,
+            "room_type": room.room_type,
 
-                "room_number":
-                    room.room_number,
+            "floor": room.floor,
 
-                "room_name":
-                    room.room_name,
+            "capacity": room.capacity,
 
-                "room_type":
-                    room.room_type,
+            "description": room.description,
 
-                "floor":
-                    room.floor,
+            "status": room.status,
 
-                "capacity":
-                    room.capacity,
+            "created_at": (
+                room.created_at.strftime(
+                    "%d/%m/%Y %I:%M %p"
+                )
+                if room.created_at
+                else ""
+            ),
 
-                "description":
-                    room.description,
+            "updated_at": (
+                room.updated_at.strftime(
+                    "%d/%m/%Y %I:%M %p"
+                )
+                if room.updated_at
+                else ""
+            )
+        }
 
-                "status":
-                    room.status,
 
-                "created_at":
-                    (
-                        room.created_at.strftime(
-                            "%d/%m/%Y %I:%M %p"
-                        )
-                        if room.created_at
-                        else ""
-                    ),
+        # =================================================
+        # IF AJAX / JSON REQUEST
+        # =================================================
 
-                "updated_at":
-                    (
-                        room.updated_at.strftime(
-                            "%d/%m/%Y %I:%M %p"
-                        )
-                        if room.updated_at
-                        else ""
-                    )
-            }
+        if request.is_json:
 
-        }), 201
+            return jsonify({
+
+                "success": True,
+
+                "message":
+                    "Room added successfully.",
+
+                "room":
+                    room_data
+
+            }), 201
+
+
+        # =================================================
+        # NORMAL FORM SUBMISSION
+        # =================================================
+
+        return redirect("/room/room_setup")
 
 
     except Exception as e:
 
         db.session.rollback()
 
-        print(
-            "========================================"
+        print("========================================")
+        print("ADD ROOM ERROR:", repr(e))
+        print("========================================")
+
+        return room_error(
+            "Unable to add room.",
+            500,
+            error=str(e)
         )
 
-        print(
-            "ADD ROOM ERROR:",
-            repr(e)
-        )
 
-        print(
-            "========================================"
-        )
+# =========================================================
+# ROOM ERROR HELPER
+# =========================================================
 
-        return jsonify({
+def room_error(message, status_code=400, error=None):
 
+    # -----------------------------------------------------
+    # JSON / AJAX RESPONSE
+    # -----------------------------------------------------
+
+    if request.is_json:
+
+        response = {
             "success": False,
+            "message": message
+        }
 
-            "message":
-                "Unable to add room.",
+        if error:
+            response["error"] = error
 
-            "error":
-                str(e)
+        return jsonify(response), status_code
 
-        }), 500
+
+    # -----------------------------------------------------
+    # NORMAL FORM REQUEST
+    # -----------------------------------------------------
+
+    return (
+        message,
+        status_code
+    )

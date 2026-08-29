@@ -1,8 +1,7 @@
-
 {% extends "base.html" %}
 
 {% block title %}
-Bed Setup - SwasthaCare
+Add Bed - SwasthaCare
 {% endblock %}
 
 
@@ -20,33 +19,29 @@ Bed Setup - SwasthaCare
 
 <div class="bed-page">
 
+
+    <!-- ==========================================
+         BACK BUTTON
+    =========================================== -->
+
+    <div class="bed-header-row">
+
+    <div>
+        <h1>Add New Bed</h1>
+        <p>Add a new hospital bed and assign it to a room.</p>
+    </div>
+
+    <a href="{{ url_for('bed.bed_setup') }}"
+       class="bed-cancel-btn">
+        ← Back to Bed Setup
+    </a>
+
+</div>
+
+
     <!-- ==========================================
          HEADER
     =========================================== -->
-
-    <div class="bed-header">
-
-        <div>
-
-            <h1>
-                Bed Setup
-            </h1>
-
-            <p>
-                Manage hospital beds and their basic information.
-            </p>
-
-        </div>
-
-
-       <a
-    href="{{ url_for('bed.add_bed_page') }}"
-    class="bed-add-btn"
->
-    + Add Bed
-</a>
-
-    </div>
 
 
     <!-- ==========================================
@@ -55,9 +50,9 @@ Bed Setup - SwasthaCare
 
     <div
         class="bed-form-card"
-        id="bedFormCard"
-        style="display: none;"
+        style="display: block;"
     >
+
 
         <!-- FORM HEADER -->
 
@@ -66,7 +61,7 @@ Bed Setup - SwasthaCare
             <div>
 
                 <h2>
-                    Add New Bed
+                    Bed Information
                 </h2>
 
                 <p>
@@ -75,23 +70,21 @@ Bed Setup - SwasthaCare
 
             </div>
 
-
-            <button
-                type="button"
-                class="bed-close-btn"
-                id="closeBedFormBtn"
-            >
-                ×
-            </button>
-
         </div>
 
 
-        <!-- FORM -->
+        <!-- ==========================================
+             FORM
+        =========================================== -->
 
-        <form id="bedForm">
+        <form
+            id="bedForm"
+            method="POST"
+            action="{{ url_for('bed.add_bed') }}"
+        >
 
             <div class="bed-form-grid">
+
 
                 <!-- ==================================
                      ROOM
@@ -100,8 +93,10 @@ Bed Setup - SwasthaCare
                 <div class="bed-field">
 
                     <label for="bedRoom">
+
                         Room
                         <span>*</span>
+
                     </label>
 
 
@@ -125,8 +120,13 @@ Bed Setup - SwasthaCare
                         <option
                             value="{{ room.id }}"
                         >
+
                             {{ room.room_name }}
-                            ({{ room.room_code }})
+
+                            {% if room.room_code %}
+                                ({{ room.room_code }})
+                            {% endif %}
+
                         </option>
 
                         {% endfor %}
@@ -143,8 +143,10 @@ Bed Setup - SwasthaCare
                 <div class="bed-field">
 
                     <label for="bedCode">
+
                         Bed Code
                         <span>*</span>
+
                     </label>
 
 
@@ -168,8 +170,10 @@ Bed Setup - SwasthaCare
                 <div class="bed-field">
 
                     <label for="bedName">
+
                         Bed Name
                         <span>*</span>
+
                     </label>
 
 
@@ -193,7 +197,9 @@ Bed Setup - SwasthaCare
                 <div class="bed-field">
 
                     <label for="bedPrice">
+
                         Bed Charge
+
                     </label>
 
 
@@ -223,8 +229,10 @@ Bed Setup - SwasthaCare
                 <div class="bed-field">
 
                     <label for="bedType">
+
                         Bed Type
                         <span>*</span>
+
                     </label>
 
 
@@ -294,7 +302,9 @@ Bed Setup - SwasthaCare
                 <div class="bed-field">
 
                     <label for="bedStatus">
+
                         Status
+
                     </label>
 
 
@@ -303,7 +313,10 @@ Bed Setup - SwasthaCare
                         name="status"
                     >
 
-                        <option value="Available">
+                        <option
+                            value="Available"
+                            selected
+                        >
                             Available
                         </option>
 
@@ -336,14 +349,16 @@ Bed Setup - SwasthaCare
                 >
 
                     <label for="bedDescription">
+
                         Description
+
                     </label>
 
 
                     <textarea
                         id="bedDescription"
                         name="description"
-                        rows="3"
+                        rows="4"
                         placeholder="Enter bed description..."
                     ></textarea>
 
@@ -358,13 +373,13 @@ Bed Setup - SwasthaCare
 
             <div class="bed-form-actions">
 
-                <button
-                    type="button"
+
+                <a
+                    href="{{ url_for('bed.bed_setup') }}"
                     class="bed-cancel-btn"
-                    id="cancelBedBtn"
                 >
                     Cancel
-                </button>
+                </a>
 
 
                 <button
@@ -375,265 +390,10 @@ Bed Setup - SwasthaCare
                     Save Bed
                 </button>
 
+
             </div>
 
         </form>
-
-    </div>
-
-
-    <!-- ==========================================
-         BED LIST
-    =========================================== -->
-
-    <div class="bed-list-card">
-
-        <!-- LIST HEADER -->
-
-        <div class="bed-list-header">
-
-            <div>
-
-                <h2>
-                    Bed List
-                </h2>
-
-                <p>
-                    Registered hospital beds
-                </p>
-
-            </div>
-
-
-            <div class="bed-count">
-
-                {{ beds|length }}
-
-                Bed{% if beds|length != 1 %}s{% endif %}
-
-            </div>
-
-        </div>
-
-
-        <!-- TABLE -->
-
-        <div class="bed-table-wrapper">
-
-            <table class="bed-table">
-
-                <thead>
-
-                    <tr>
-
-                        <th>
-                            S.N.
-                        </th>
-
-
-                        <th>
-                            BED CODE
-                        </th>
-
-
-                        <th>
-                            BED NAME
-                        </th>
-
-
-                        <th>
-                            ROOM
-                        </th>
-
-
-                        <th>
-                            BED TYPE
-                        </th>
-
-
-                        <th>
-                            BED CHARGE
-                        </th>
-
-
-                        <th>
-                            STATUS
-                        </th>
-
-
-                        <th>
-                            CREATED AT
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-
-                <tbody id="bedTableBody">
-
-                    {% if beds %}
-
-                        {% for bed in beds %}
-
-                        <tr>
-
-                            <!-- S.N. -->
-
-                            <td>
-                                {{ loop.index }}
-                            </td>
-
-
-                            <!-- BED CODE -->
-
-                            <td>
-
-                                <span class="bed-code">
-                                    {{ bed.bed_code }}
-                                </span>
-
-                            </td>
-
-
-                            <!-- BED NAME -->
-
-                            <td>
-
-                                <strong>
-                                    {{ bed.bed_name }}
-                                </strong>
-
-                            </td>
-
-
-                            <!-- ROOM -->
-
-                            <td>
-
-                                {% if bed.room %}
-
-                                    {{ bed.room.room_name }}
-
-                                {% else %}
-
-                                    —
-
-                                {% endif %}
-
-                            </td>
-
-
-                            <!-- BED TYPE -->
-
-                            <td>
-                                {{ bed.bed_type }}
-                            </td>
-
-
-                            <!-- BED CHARGE -->
-
-                            <td>
-
-                                {% if bed.bed_price is not none %}
-
-                                    Rs.
-                                    {{ "%.2f"|format(bed.bed_price) }}
-
-                                {% else %}
-
-                                    —
-
-                                {% endif %}
-
-                            </td>
-
-
-                            <!-- STATUS -->
-
-                            <td>
-
-                                {% if bed.status == "Available" %}
-
-                                    <span
-                                        class="status-badge available"
-                                    >
-                                        Available
-                                    </span>
-
-
-                                {% elif bed.status == "Occupied" %}
-
-                                    <span
-                                        class="status-badge occupied"
-                                    >
-                                        Occupied
-                                    </span>
-
-
-                                {% elif bed.status == "Maintenance" %}
-
-                                    <span
-                                        class="status-badge maintenance"
-                                    >
-                                        Maintenance
-                                    </span>
-
-
-                                {% else %}
-
-                                    <span
-                                        class="status-badge inactive"
-                                    >
-                                        Inactive
-                                    </span>
-
-                                {% endif %}
-
-                            </td>
-
-
-                            <!-- CREATED AT -->
-
-                            <td>
-
-                                {{
-                                    bed.created_at.strftime(
-                                        "%d/%m/%Y %I:%M %p"
-                                    )
-                                    if bed.created_at
-                                    else "—"
-                                }}
-
-                            </td>
-
-                        </tr>
-
-                        {% endfor %}
-
-
-                    {% else %}
-
-                        <!-- EMPTY TABLE -->
-
-                        <tr id="emptyBedRow">
-
-                            <td
-                                colspan="8"
-                                class="bed-empty"
-                            >
-                                No beds have been created yet.
-                            </td>
-
-                        </tr>
-
-                    {% endif %}
-
-                </tbody>
-
-            </table>
-
-        </div>
 
     </div>
 
@@ -717,6 +477,7 @@ Bed Setup - SwasthaCare
 
 </div>
 
+
 {% endblock %}
 
 
@@ -728,4 +489,3 @@ Bed Setup - SwasthaCare
 ></script>
 
 {% endblock %}
-

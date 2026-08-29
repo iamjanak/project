@@ -1,0 +1,450 @@
+{% extends "base.html" %}
+
+{% block title %}
+Add Room - SwasthaCare
+{% endblock %}
+
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/room_setup.css') }}"
+>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="room-page">
+
+    <!-- =====================================================
+         BACK BUTTON
+    ====================================================== -->
+
+
+   <div class="room-header-row">
+
+    <div>
+        <h1>Add New Room</h1>
+        <p>Add a new hospital room and assign it to a ward.</p>
+    </div>
+
+    <a href="{{ url_for('room.room_setup') }}"
+       class="room-cancel-btn">
+        ← Back to Room Setup
+    </a>
+
+</div>
+
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    
+
+
+    <!-- =====================================================
+         ROOM FORM CARD
+    ====================================================== -->
+
+    <div class="room-form-card" style="display: block;">
+
+        <!-- FORM HEADER -->
+
+        <div class="room-form-header">
+
+            <div>
+
+                <h2>
+                    Room Information
+                </h2>
+
+                <p>
+                    Enter the room information below.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             FORM
+        ================================================== -->
+
+        <form
+            id="roomForm"
+            method="POST"
+            action="{{ url_for('room.add_room') }}"
+        >
+
+            <div class="room-form-grid">
+
+
+                <!-- =================================================
+                     WARD
+                ================================================== -->
+
+                <div class="room-field">
+
+                    <label for="roomWard">
+
+                        Ward
+                        <span>*</span>
+
+                    </label>
+
+
+                    <select
+                        id="roomWard"
+                        name="ward_id"
+                        required
+                    >
+
+                        <option
+                            value=""
+                            disabled
+                            selected
+                        >
+                            Select Ward
+                        </option>
+
+
+                        {% for ward in wards %}
+
+                            <option
+                                value="{{ ward.id }}"
+                            >
+
+                                {{ ward.ward_name }}
+
+                                {% if ward.ward_code %}
+                                    ({{ ward.ward_code }})
+                                {% endif %}
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- =================================================
+                     ROOM CODE
+                ================================================== -->
+
+                <div class="room-field">
+
+                    <label for="roomCode">
+
+                        Room Code
+                        <span>*</span>
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="roomCode"
+                        name="room_code"
+                        placeholder="e.g. RM01"
+                        maxlength="50"
+                        autocomplete="off"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- =================================================
+                     ROOM NAME
+                ================================================== -->
+
+                <div class="room-field">
+
+                    <label for="roomName">
+
+                        Room Name
+                        <span>*</span>
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="roomName"
+                        name="room_name"
+                        placeholder="e.g. Room 101"
+                        maxlength="100"
+                        autocomplete="off"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- =================================================
+                     ROOM TYPE
+                ================================================== -->
+
+                <div class="room-field">
+
+                    <label for="roomType">
+
+                        Room Type
+                        <span>*</span>
+
+                    </label>
+
+
+                    <select
+                        id="roomType"
+                        name="room_type"
+                        required
+                    >
+
+                        <option value="" disabled selected>
+                            Select Room Type
+                        </option>
+
+                        <option value="General">
+                            General
+                        </option>
+
+                        <option value="Private">
+                            Private
+                        </option>
+
+                        <option value="Semi Private">
+                            Semi Private
+                        </option>
+
+                        <option value="ICU">
+                            ICU
+                        </option>
+
+                        <option value="Emergency">
+                            Emergency
+                        </option>
+
+                        <option value="Pediatric">
+                            Pediatric
+                        </option>
+
+                        <option value="Maternity">
+                            Maternity
+                        </option>
+
+                        <option value="Surgical">
+                            Surgical
+                        </option>
+
+                        <option value="Other">
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- =================================================
+                     FLOOR
+                ================================================== -->
+
+                <div class="room-field">
+
+                    <label for="roomFloor">
+                        Floor
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="roomFloor"
+                        name="floor"
+                        placeholder="e.g. Ground Floor"
+                        maxlength="50"
+                        autocomplete="off"
+                    >
+
+                </div>
+
+
+                <!-- =================================================
+                     STATUS
+                ================================================== -->
+
+                <div class="room-field">
+
+                    <label for="roomStatus">
+                        Status
+                    </label>
+
+
+                    <select
+                        id="roomStatus"
+                        name="status"
+                    >
+
+                        <option value="Active" selected>
+                            Active
+                        </option>
+
+                        <option value="Inactive">
+                            Inactive
+                        </option>
+
+                        <option value="Maintenance">
+                            Maintenance
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- =================================================
+                     DESCRIPTION
+                ================================================== -->
+
+                <div class="room-field room-field-full">
+
+                    <label for="roomDescription">
+                        Description
+                    </label>
+
+
+                    <textarea
+                        id="roomDescription"
+                        name="description"
+                        rows="4"
+                        placeholder="Enter room description..."
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 FORM ACTIONS
+            ================================================== -->
+
+            <div class="room-form-actions">
+
+
+                <a
+                    href="{{ url_for('room.room_setup') }}"
+                    class="room-cancel-btn"
+                >
+                    Cancel
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="room-save-btn"
+                >
+                    Save Room
+                </button>
+
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     SUCCESS POPUP
+========================================================= -->
+
+<div
+    class="room-popup success"
+    id="roomSuccessPopup"
+>
+
+    <div class="room-popup-icon">
+        ✓
+    </div>
+
+
+    <div class="room-popup-content">
+
+        <strong>
+            Success
+        </strong>
+
+        <span id="roomSuccessMessage">
+            Room added successfully.
+        </span>
+
+    </div>
+
+
+    <button
+        type="button"
+        class="room-popup-close"
+        data-popup="roomSuccessPopup"
+    >
+        ×
+    </button>
+
+</div>
+
+
+<!-- =========================================================
+     ERROR POPUP
+========================================================= -->
+
+<div
+    class="room-popup error"
+    id="roomErrorPopup"
+>
+
+    <div class="room-popup-icon">
+        !
+    </div>
+
+
+    <div class="room-popup-content">
+
+        <strong>
+            Action Failed
+        </strong>
+
+        <span id="roomErrorMessage">
+            Unable to complete the request.
+        </span>
+
+    </div>
+
+
+    <button
+        type="button"
+        class="room-popup-close"
+        data-popup="roomErrorPopup"
+    >
+        ×
+    </button>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script
+    src="{{ url_for('static', filename='js/room_setup.js') }}"
+    data-page-script="true"
+></script>
+
+{% endblock %}

@@ -1022,3 +1022,212 @@ class Bed(db.Model):
         db.Numeric(10, 2),
         nullable=True
     )
+    
+  
+    
+# =========================================================
+# PATIENT ADMISSION / IPD
+# =========================================================
+
+class Admission(db.Model):
+
+    __tablename__ = "admissions"
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    # =====================================================
+    # ADMISSION NUMBER
+    # =====================================================
+
+    admission_no = db.Column(
+        db.String(30),
+        unique=True,
+        nullable=False
+    )
+
+    # =====================================================
+    # PATIENT
+    # =====================================================
+
+    patient_id = db.Column(
+        db.Integer,
+        db.ForeignKey("patients.id"),
+        nullable=False
+    )
+
+    patient_no = db.Column(
+        db.String(30),
+        nullable=False
+    )
+
+    patient_name = db.Column(
+        db.String(150),
+        nullable=False
+    )
+
+    # =====================================================
+    # DEPARTMENT
+    # =====================================================
+
+    department_id = db.Column(
+        db.Integer,
+        db.ForeignKey("departments.id"),
+        nullable=False
+    )
+
+    department_name = db.Column(
+        db.String(150),
+        nullable=False
+    )
+
+    # =====================================================
+    # WARD
+    # =====================================================
+
+    ward_id = db.Column(
+        db.Integer,
+        db.ForeignKey("wards.id"),
+        nullable=False
+    )
+
+    ward_name = db.Column(
+        db.String(150),
+        nullable=False
+    )
+
+    # =====================================================
+    # ROOM
+    # =====================================================
+
+    room_id = db.Column(
+        db.Integer,
+        db.ForeignKey("rooms.id"),
+        nullable=False
+    )
+
+    room_name = db.Column(
+        db.String(150),
+        nullable=False
+    )
+
+    # =====================================================
+    # BED
+    # =====================================================
+
+    bed_id = db.Column(
+        db.Integer,
+        db.ForeignKey("beds.id"),
+        nullable=False
+    )
+
+    bed_name = db.Column(
+        db.String(150),
+        nullable=False
+    )
+
+    # =====================================================
+    # ADMISSION DETAILS
+    # =====================================================
+
+    admission_type = db.Column(
+        db.String(30),
+        nullable=False,
+        default="IPD"
+    )
+
+    admission_date = db.Column(
+        db.DateTime,
+        nullable=False
+    )
+
+    status = db.Column(
+        db.String(30),
+        nullable=False,
+        default="Admitted"
+    )
+
+    reason = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+    remarks = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+    # =====================================================
+    # DISCHARGE DETAILS
+    # These will be used by the discharge module later.
+    # =====================================================
+
+    discharge_date = db.Column(
+        db.DateTime,
+        nullable=True
+    )
+
+    discharge_reason = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+    # =====================================================
+    # AUDIT TIMESTAMPS
+    # =====================================================
+
+    created_at = db.Column(
+        db.DateTime,
+        nullable=False
+    )
+
+    updated_at = db.Column(
+        db.DateTime,
+        nullable=False
+    )
+
+    # =====================================================
+    # RELATIONSHIPS
+    # =====================================================
+
+    patient = db.relationship(
+        "Patient",
+        backref=db.backref(
+            "admissions",
+            lazy=True
+        )
+    )
+
+    department = db.relationship(
+        "Department",
+        backref=db.backref(
+            "admissions",
+            lazy=True
+        )
+    )
+
+    ward = db.relationship(
+        "Ward",
+        backref=db.backref(
+            "admissions",
+            lazy=True
+        )
+    )
+
+    room = db.relationship(
+        "Room",
+        backref=db.backref(
+            "admissions",
+            lazy=True
+        )
+    )
+
+    bed = db.relationship(
+        "Bed",
+        backref=db.backref(
+            "admissions",
+            lazy=True
+        )
+    )

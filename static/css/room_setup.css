@@ -710,3 +710,37 @@ appearance: textfield;
 .room-field input[type="number"]::-webkit-outer-spin-button {
 opacity: 1;
 }
+
+
+
+/* back buttom */
+
+.room-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.room-cancel-btn {
+    display: inline-block;
+    background-color: #2563eb;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.room-cancel-btn:hover {
+    background-color: #2563eb;
+    color: #ffffff;
+}
+
+.room-cancel-btn:visited {
+    color: #ffffff;
+}

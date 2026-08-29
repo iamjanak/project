@@ -39,7 +39,11 @@
    ========================================================= */
 
 .bed-add-btn {
-    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 45px;
     padding: 0 18px;
 
     border: none;
@@ -48,8 +52,10 @@
     background: #2563eb;
     color: #ffffff;
 
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
+
+    text-decoration: none;   /* removes the underline */
 
     cursor: pointer;
 
@@ -59,6 +65,12 @@
 
 .bed-add-btn:hover {
     background: #1d4ed8;
+    color: #ffffff;          /* prevents color flicker on hover if it's a link */
+    text-decoration: none;
+}
+
+.bed-add-btn:visited {
+    color: #ffffff;           /* prevents purple color if it's a visited link */
 }
 
 .bed-add-btn:active {
@@ -813,3 +825,37 @@
         width: auto;
     }
 }   
+
+
+/* 
+back button */
+
+.bed-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.bed-cancel-btn {
+    display: inline-block;
+    background-color: #2563eb;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.bed-cancel-btn:hover {
+    background-color: #2563eb;
+    color: #ffffff;
+}
+
+.bed-cancel-btn:visited {
+    color: #ffffff;
+}

@@ -1,0 +1,1520 @@
+{% extends "base.html" %}
+
+{% block title %}
+Patient Admission - SwasthaCare
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+    /* =====================================================
+       PAGE
+    ====================================================== */
+
+    .admission-page {
+        padding: 24px 30px;
+    }
+
+
+    /* =====================================================
+       HEADER
+    ====================================================== */
+
+    .admission-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+
+    .admission-header h1 {
+        margin: 0;
+        font-size: 30px;
+    }
+
+    .admission-header p {
+        margin: 7px 0 0;
+        color: #6b7280;
+        font-size: 15px;
+    }
+
+
+    /* =====================================================
+       CARD
+    ====================================================== */
+
+    .admission-card {
+        background: #ffffff;
+        border: 1px solid #e1e5eb;
+        border-radius: 14px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .admission-card h2 {
+        margin: 0;
+        font-size: 21px;
+    }
+
+    .admission-card-description {
+        margin: 7px 0 22px;
+        color: #737b87;
+        font-size: 14px;
+    }
+
+
+    /* =====================================================
+       SEARCH
+    ====================================================== */
+
+    .search-row {
+        display: flex;
+        gap: 12px;
+        align-items: stretch;
+    }
+
+    .search-input-wrapper {
+        flex: 1;
+    }
+
+    .search-input-wrapper label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 7px;
+    }
+
+    .search-input-wrapper label span {
+        color: red;
+    }
+
+    .search-input-wrapper input {
+        width: 100%;
+        height: 48px;
+        box-sizing: border-box;
+        padding: 0 15px;
+        border: 1px solid #cfd5dd;
+        border-radius: 8px;
+        font-size: 15px;
+        outline: none;
+    }
+
+    .search-input-wrapper input:focus {
+        border-color: #2f80ed;
+    }
+
+    .search-button-wrapper {
+        display: flex;
+        align-items: flex-end;
+    }
+
+    .search-patient-btn {
+        height: 48px;
+        padding: 0 25px;
+        border: none;
+        border-radius: 8px;
+        background: #2f80ed;
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .search-patient-btn:hover {
+        opacity: 0.9;
+    }
+
+
+    /* =====================================================
+       PATIENT LIST
+    ====================================================== */
+
+    .patient-list-card {
+        background: #ffffff;
+        border: 1px solid #e1e5eb;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .patient-list-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 22px 25px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .patient-list-header h2 {
+        margin: 0;
+        font-size: 21px;
+    }
+
+    .patient-list-header p {
+        margin: 5px 0 0;
+        color: #737b87;
+        font-size: 14px;
+    }
+
+    .patient-count {
+        background: #eef4ff;
+        color: #2f80ed;
+        padding: 8px 14px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+
+    /* =====================================================
+       TABLE
+    ====================================================== */
+
+    .patient-table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .patient-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 900px;
+    }
+
+    .patient-table th {
+        background: #f8fafc;
+        padding: 14px 16px;
+        text-align: left;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        color: #596273;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .patient-table td {
+        padding: 15px 16px;
+        border-bottom: 1px solid #edf0f3;
+        font-size: 14px;
+        vertical-align: middle;
+    }
+
+    .patient-table tbody tr:hover {
+        background: #fafcff;
+    }
+
+
+    /* =====================================================
+       HOSPITAL NUMBER
+    ====================================================== */
+
+    .hospital-number {
+        font-weight: 600;
+        color: #2f80ed;
+    }
+
+
+    /* =====================================================
+       PATIENT NAME
+    ====================================================== */
+
+    .patient-name {
+        font-weight: 600;
+        color: #20252b;
+    }
+
+
+    /* =====================================================
+       ADMIT BUTTON
+    ====================================================== */
+
+    .admit-btn {
+        border: none;
+        padding: 8px 16px;
+        border-radius: 7px;
+        background: #198754;
+        color: white;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .admit-btn:hover {
+        opacity: 0.9;
+    }
+
+
+    /* =====================================================
+       SELECTED PATIENT
+    ====================================================== */
+
+    .selected-patient-card {
+        display: none;
+        background: #f1f8f4;
+        border: 1px solid #b9dfc7;
+        border-radius: 10px;
+        padding: 18px;
+        margin-top: 20px;
+    }
+
+    .selected-patient-title {
+        font-weight: 700;
+        margin-bottom: 14px;
+        color: #198754;
+    }
+
+    .selected-patient-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+    }
+
+    .selected-patient-item {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .selected-patient-item small {
+        color: #6b7280;
+    }
+
+    .selected-patient-item strong {
+        color: #20252b;
+    }
+
+
+    /* =====================================================
+       ADMISSION FORM
+    ====================================================== */
+
+    #admissionDetailsCard {
+        display: none;
+    }
+
+    .admission-form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .admission-field {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .admission-field-full {
+        grid-column: 1 / -1;
+    }
+
+    .admission-field label {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 7px;
+    }
+
+    .admission-field label span {
+        color: red;
+    }
+
+    .admission-field select,
+    .admission-field textarea {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 11px 13px;
+        border: 1px solid #cfd5dd;
+        border-radius: 8px;
+        font-size: 14px;
+        outline: none;
+        background: white;
+    }
+
+    .admission-field select:focus,
+    .admission-field textarea:focus {
+        border-color: #2f80ed;
+    }
+
+    .admission-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 25px;
+    }
+
+    .reset-admission-btn {
+        border: none;
+        padding: 11px 22px;
+        border-radius: 8px;
+        background: #e9ecef;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    .save-admission-btn {
+        border: none;
+        padding: 11px 25px;
+        border-radius: 8px;
+        background: #198754;
+        color: white;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    .save-admission-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+
+    /* =====================================================
+       EMPTY LIST
+    ====================================================== */
+
+    .patient-empty {
+        text-align: center;
+        padding: 45px 20px !important;
+        color: #777;
+    }
+
+
+    /* =====================================================
+       RESPONSIVE
+    ====================================================== */
+
+    @media (max-width: 900px) {
+
+        .admission-form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .admission-field-full {
+            grid-column: auto;
+        }
+
+        .selected-patient-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+    }
+
+
+    @media (max-width: 600px) {
+
+        .admission-page {
+            padding: 18px;
+        }
+
+        .search-row {
+            flex-direction: column;
+        }
+
+        .search-button-wrapper {
+            align-items: stretch;
+        }
+
+        .search-patient-btn {
+            width: 100%;
+        }
+
+        .selected-patient-grid {
+            grid-template-columns: 1fr;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="admission-page">
+
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <div class="admission-header">
+
+        <div>
+
+            <h1>
+                Patient Admission
+            </h1>
+
+            <p>
+                Admit an OPD patient to the inpatient department.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         SEARCH PATIENT
+    ====================================================== -->
+
+    <div class="admission-card">
+
+        <h2>
+            Search Patient
+        </h2>
+
+        <p class="admission-card-description">
+            Enter the patient's hospital number to find the registered patient.
+        </p>
+
+
+        <div class="search-row">
+
+            <div class="search-input-wrapper">
+
+                <label for="patientNo">
+
+                    Hospital Number
+                    <span>*</span>
+
+                </label>
+
+                <input
+                    type="text"
+                    id="patientNo"
+                    placeholder="Enter hospital number e.g. 20260008"
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+            <div class="search-button-wrapper">
+
+                <button
+                    type="button"
+                    class="search-patient-btn"
+                    id="searchPatientBtn"
+                >
+                    🔍 Search Patient
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             SELECTED PATIENT
+        ================================================== -->
+
+        <div
+            class="selected-patient-card"
+            id="selectedPatientCard"
+        >
+
+            <div class="selected-patient-title">
+                Selected Patient
+            </div>
+
+
+            <div class="selected-patient-grid">
+
+
+                <div class="selected-patient-item">
+
+                    <small>
+                        Hospital Number
+                    </small>
+
+                    <strong id="selectedPatientNo">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="selected-patient-item">
+
+                    <small>
+                        Patient Name
+                    </small>
+
+                    <strong id="selectedPatientName">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="selected-patient-item">
+
+                    <small>
+                        Age
+                    </small>
+
+                    <strong id="selectedPatientAge">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="selected-patient-item">
+
+                    <small>
+                        Gender
+                    </small>
+
+                    <strong id="selectedPatientGender">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="selected-patient-item">
+
+                    <small>
+                        Department
+                    </small>
+
+                    <strong id="selectedPatientDepartment">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="selected-patient-item">
+
+                    <small>
+                        Doctor
+                    </small>
+
+                    <strong id="selectedPatientDoctor">
+                        —
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         PATIENT LIST
+    ====================================================== -->
+
+    <div
+        class="patient-list-card"
+        id="patientListCard"
+    >
+
+        <div class="patient-list-header">
+
+            <div>
+
+                <h2>
+                    Registered Patient List
+                </h2>
+
+                <p>
+                    Select a registered OPD patient for admission.
+                </p>
+
+            </div>
+
+
+            <div class="patient-count">
+
+                {{ patients|length }}
+
+                Patient{% if patients|length != 1 %}s{% endif %}
+
+            </div>
+
+        </div>
+
+
+        <div class="patient-table-wrapper">
+
+            <table class="patient-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            S.N.
+                        </th>
+
+                        <th>
+                            Hospital No.
+                        </th>
+
+                        <th>
+                            Patient Name
+                        </th>
+
+                        <th>
+                            Age
+                        </th>
+
+                        <th>
+                            Gender
+                        </th>
+
+                        <th>
+                            Department
+                        </th>
+
+                        <th>
+                            Doctor
+                        </th>
+
+                        <th>
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="patientTableBody">
+
+                    {% if patients %}
+
+                        {% for patient in patients %}
+
+                        <tr>
+
+                            <td>
+                                {{ loop.index }}
+                            </td>
+
+
+                            <td>
+
+                                <span class="hospital-number">
+
+                                    {{ patient.patient_no }}
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="patient-name">
+
+                                    {{ patient.full_name }}
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+                                {{ patient.age or "—" }}
+                            </td>
+
+
+                            <td>
+                                {{ patient.gender or "—" }}
+                            </td>
+
+
+                            <td>
+                                {{ patient.department or "—" }}
+                            </td>
+
+
+                            <td>
+                                {{ patient.doctor or "—" }}
+                            </td>
+
+
+                            <td>
+
+                                <button
+                                    type="button"
+                                    class="admit-btn"
+                                    data-patient-id="{{ patient.id }}"
+                                    data-patient-no="{{ patient.patient_no }}"
+                                    data-patient-name="{{ patient.full_name }}"
+                                    data-patient-age="{{ patient.age or '' }}"
+                                    data-patient-gender="{{ patient.gender or '' }}"
+                                    data-patient-department="{{ patient.department or '' }}"
+                                    data-patient-doctor="{{ patient.doctor or '' }}"
+                                >
+                                    Admit
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <tr>
+
+                            <td
+                                colspan="8"
+                                class="patient-empty"
+                            >
+                                No registered patients found.
+                            </td>
+
+                        </tr>
+
+                    {% endif %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         ADMISSION DETAILS
+    ====================================================== -->
+
+    <div
+        class="admission-card"
+        id="admissionDetailsCard"
+    >
+
+        <h2>
+            Admission Details
+        </h2>
+
+        <p class="admission-card-description">
+            Select the department, ward, room and bed for this patient.
+        </p>
+
+
+        <form id="admissionForm">
+
+
+            <input
+                type="hidden"
+                id="patientId"
+                name="patient_id"
+            >
+
+
+            <div class="admission-form-grid">
+
+
+                <!-- DEPARTMENT -->
+
+                <div class="admission-field">
+
+                    <label for="department">
+
+                        Department
+                        <span>*</span>
+
+                    </label>
+
+                    <select
+                        id="department"
+                        name="department_id"
+                        required
+                    >
+
+                        <option
+                            value=""
+                            selected
+                            disabled
+                        >
+                            Select Department
+                        </option>
+
+
+                        {% for department in departments %}
+
+                        <option value="{{ department.id }}">
+
+                            {{ department.department_name }}
+
+                            {% if department.dep_code %}
+                                ({{ department.dep_code }})
+                            {% endif %}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- ADMISSION TYPE -->
+
+                <div class="admission-field">
+
+                    <label for="admissionType">
+                        Admission Type
+                    </label>
+
+                    <select
+                        id="admissionType"
+                        name="admission_type"
+                    >
+
+                        <option value="IPD">
+                            IPD
+                        </option>
+
+                        <option value="Emergency">
+                            Emergency
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- WARD -->
+
+                <div class="admission-field">
+
+                    <label for="ward">
+
+                        Ward
+                        <span>*</span>
+
+                    </label>
+
+                    <select
+                        id="ward"
+                        name="ward_id"
+                        required
+                    >
+
+                        <option
+                            value=""
+                            selected
+                            disabled
+                        >
+                            Select Ward
+                        </option>
+
+
+                        {% for ward in wards %}
+
+                        <option value="{{ ward.id }}">
+
+                            {{ ward.ward_name }}
+
+                            {% if ward.ward_code %}
+                                ({{ ward.ward_code }})
+                            {% endif %}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- ROOM -->
+
+                <div class="admission-field">
+
+                    <label for="room">
+
+                        Room
+                        <span>*</span>
+
+                    </label>
+
+                    <select
+                        id="room"
+                        name="room_id"
+                        required
+                        disabled
+                    >
+
+                        <option value="">
+                            Select Ward First
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- BED -->
+
+                <div class="admission-field">
+
+                    <label for="bed">
+
+                        Bed
+                        <span>*</span>
+
+                    </label>
+
+                    <select
+                        id="bed"
+                        name="bed_id"
+                        required
+                        disabled
+                    >
+
+                        <option value="">
+                            Select Room First
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- REMARKS -->
+
+                <div class="admission-field admission-field-full">
+
+                    <label for="remarks">
+                        Remarks
+                    </label>
+
+                    <textarea
+                        id="remarks"
+                        name="remarks"
+                        rows="3"
+                        placeholder="Enter admission remarks..."
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <div class="admission-actions">
+
+                <button
+                    type="button"
+                    class="reset-admission-btn"
+                    id="resetAdmissionBtn"
+                >
+                    Reset
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="save-admission-btn"
+                    id="admitPatientBtn"
+                    disabled
+                >
+                    Admit Patient
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const patientNoInput =
+        document.getElementById("patientNo");
+
+    const searchPatientBtn =
+        document.getElementById("searchPatientBtn");
+
+    const selectedPatientCard =
+        document.getElementById("selectedPatientCard");
+
+    const admissionDetailsCard =
+        document.getElementById("admissionDetailsCard");
+
+    const patientIdInput =
+        document.getElementById("patientId");
+
+    const wardSelect =
+        document.getElementById("ward");
+
+    const roomSelect =
+        document.getElementById("room");
+
+    const bedSelect =
+        document.getElementById("bed");
+
+    const departmentSelect =
+        document.getElementById("department");
+
+    const admitPatientBtn =
+        document.getElementById("admitPatientBtn");
+
+
+    // =====================================================
+    // SELECT PATIENT FROM LIST
+    // =====================================================
+
+    document.querySelectorAll(".admit-btn").forEach(
+        function (button) {
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    selectPatient({
+                        id:
+                            this.dataset.patientId,
+
+                        patient_no:
+                            this.dataset.patientNo,
+
+                        full_name:
+                            this.dataset.patientName,
+
+                        age:
+                            this.dataset.patientAge,
+
+                        gender:
+                            this.dataset.patientGender,
+
+                        department:
+                            this.dataset.patientDepartment,
+
+                        doctor:
+                            this.dataset.patientDoctor
+                    });
+
+                }
+            );
+
+        }
+    );
+
+
+    // =====================================================
+    // SEARCH PATIENT
+    // =====================================================
+
+    searchPatientBtn.addEventListener(
+        "click",
+        async function () {
+
+            const number =
+                patientNoInput.value.trim();
+
+
+            if (!number) {
+
+                alert(
+                    "Please enter hospital number."
+                );
+
+                return;
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `/admission/search_patient/${encodeURIComponent(number)}`
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!data.success) {
+
+                    alert(
+                        data.message ||
+                        "Patient not found."
+                    );
+
+                    return;
+                }
+
+
+                selectPatient(
+                    data.patient
+                );
+
+            }
+            catch (error) {
+
+                console.error(error);
+
+                alert(
+                    "Unable to connect to server."
+                );
+
+            }
+
+        }
+    );
+
+
+    // =====================================================
+    // SELECT PATIENT
+    // =====================================================
+
+    function selectPatient(patient) {
+
+        patientIdInput.value =
+            patient.id;
+
+
+        patientNoInput.value =
+            patient.patient_no || "";
+
+
+        document.getElementById(
+            "selectedPatientNo"
+        ).textContent =
+            patient.patient_no || "—";
+
+
+        document.getElementById(
+            "selectedPatientName"
+        ).textContent =
+            patient.full_name || "—";
+
+
+        document.getElementById(
+            "selectedPatientAge"
+        ).textContent =
+            patient.age || "—";
+
+
+        document.getElementById(
+            "selectedPatientGender"
+        ).textContent =
+            patient.gender || "—";
+
+
+        document.getElementById(
+            "selectedPatientDepartment"
+        ).textContent =
+            patient.department || "—";
+
+
+        document.getElementById(
+            "selectedPatientDoctor"
+        ).textContent =
+            patient.doctor || "—";
+
+
+        selectedPatientCard.style.display =
+            "block";
+
+
+        admissionDetailsCard.style.display =
+            "block";
+
+
+        admissionDetailsCard.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+
+        checkAdmissionReady();
+
+    }
+
+
+    // =====================================================
+    // WARD → ROOM
+    // =====================================================
+
+    wardSelect.addEventListener(
+        "change",
+        async function () {
+
+            const wardId =
+                this.value;
+
+
+            roomSelect.innerHTML =
+                '<option value="">Loading rooms...</option>';
+
+            roomSelect.disabled =
+                true;
+
+
+            bedSelect.innerHTML =
+                '<option value="">Select Room First</option>';
+
+            bedSelect.disabled =
+                true;
+
+
+            if (!wardId) {
+                return;
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `/admission/rooms/${wardId}`
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                roomSelect.innerHTML =
+                    '<option value="">Select Room</option>';
+
+
+                if (
+                    data.success &&
+                    data.rooms.length
+                ) {
+
+                    data.rooms.forEach(
+                        function (room) {
+
+                            const option =
+                                document.createElement(
+                                    "option"
+                                );
+
+                            option.value =
+                                room.id;
+
+                            option.textContent =
+                                `${room.room_name} (${room.room_code})`;
+
+                            roomSelect.appendChild(
+                                option
+                            );
+
+                        }
+                    );
+
+                    roomSelect.disabled =
+                        false;
+
+                }
+                else {
+
+                    roomSelect.innerHTML =
+                        '<option value="">No rooms available</option>';
+
+                }
+
+            }
+            catch (error) {
+
+                console.error(error);
+
+                roomSelect.innerHTML =
+                    '<option value="">Unable to load rooms</option>';
+
+            }
+
+        }
+    );
+
+
+    // =====================================================
+    // ROOM → BED
+    // =====================================================
+
+    roomSelect.addEventListener(
+        "change",
+        async function () {
+
+            const roomId =
+                this.value;
+
+
+            bedSelect.innerHTML =
+                '<option value="">Loading beds...</option>';
+
+            bedSelect.disabled =
+                true;
+
+
+            if (!roomId) {
+                return;
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `/admission/beds/${roomId}`
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                bedSelect.innerHTML =
+                    '<option value="">Select Bed</option>';
+
+
+                if (
+                    data.success &&
+                    data.beds.length
+                ) {
+
+                    data.beds.forEach(
+                        function (bed) {
+
+                            const option =
+                                document.createElement(
+                                    "option"
+                                );
+
+                            option.value =
+                                bed.id;
+
+                            option.textContent =
+                                `${bed.bed_name} (${bed.bed_code})`;
+
+                            bedSelect.appendChild(
+                                option
+                            );
+
+                        }
+                    );
+
+                    bedSelect.disabled =
+                        false;
+
+                }
+                else {
+
+                    bedSelect.innerHTML =
+                        '<option value="">No available beds</option>';
+
+                }
+
+            }
+            catch (error) {
+
+                console.error(error);
+
+                bedSelect.innerHTML =
+                    '<option value="">Unable to load beds</option>';
+
+            }
+
+        }
+    );
+
+
+    // =====================================================
+    // CHECK FORM
+    // =====================================================
+
+    function checkAdmissionReady() {
+
+        admitPatientBtn.disabled =
+            !patientIdInput.value ||
+            !departmentSelect.value ||
+            !wardSelect.value ||
+            !roomSelect.value ||
+            !bedSelect.value;
+
+    }
+
+
+    departmentSelect.addEventListener(
+        "change",
+        checkAdmissionReady
+    );
+
+
+    bedSelect.addEventListener(
+        "change",
+        checkAdmissionReady
+    );
+
+
+    // =====================================================
+    // RESET
+    // =====================================================
+
+    document.getElementById(
+        "resetAdmissionBtn"
+    ).addEventListener(
+        "click",
+        function () {
+
+            patientIdInput.value = "";
+
+            patientNoInput.value = "";
+
+            selectedPatientCard.style.display =
+                "none";
+
+            admissionDetailsCard.style.display =
+                "none";
+
+            departmentSelect.value = "";
+
+            wardSelect.value = "";
+
+            roomSelect.innerHTML =
+                '<option value="">Select Ward First</option>';
+
+            roomSelect.disabled =
+                true;
+
+            bedSelect.innerHTML =
+                '<option value="">Select Room First</option>';
+
+            bedSelect.disabled =
+                true;
+
+            admitPatientBtn.disabled =
+                true;
+
+        }
+    );
+
+
+});
+
+</script>
+
+{% endblock %}

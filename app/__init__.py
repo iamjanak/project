@@ -20,40 +20,80 @@ def create_app():
 
     app.config.from_object(Config)
 
+    # =====================================================
+    # DATABASE
+    # =====================================================
+
     db.init_app(app)
 
     migrate.init_app(app, db)
 
-    # Load models
+    # =====================================================
+    # LOAD MODELS
+    # =====================================================
+
     from app import models
 
-    # Main routes
+    # =====================================================
+    # MAIN ROUTES
+    # =====================================================
+
     from app.routes import main
 
-    # Follow-up routes
+    # =====================================================
+    # FOLLOW-UP ROUTES
+    # =====================================================
+
     from app.followup_routes import followup_bp
 
-    # Patient Info Correction routes
+    # =====================================================
+    # PATIENT INFO CORRECTION ROUTES
+    # =====================================================
+
     from app.patient_correction import patient_correction
 
-    # Ward  Route
+    # =====================================================
+    # WARD ROUTES
+    # =====================================================
+
     from app.ward_routes import ward_bp
-    
-    # For room Route
+
+    # =====================================================
+    # ROOM ROUTES
+    # =====================================================
+
     from app.room_routes import room_bp
-    
-    # For Bed Route 
+
+    # =====================================================
+    # BED ROUTES
+    # =====================================================
+
     from app.bed import bed_bp
-    
-    
-    # Register blueprints
+
+    # =====================================================
+    # PATIENT ADMISSION ROUTES
+    # =====================================================
+
+    from app.admission_routes import admission_bp
+
+    # =====================================================
+    # REGISTER BLUEPRINTS
+    # =====================================================
+
     app.register_blueprint(main)
+
     app.register_blueprint(followup_bp)
+
     app.register_blueprint(patient_correction)
+
     app.register_blueprint(ward_bp)
+
     app.register_blueprint(room_bp)
+
     app.register_blueprint(bed_bp)
-    
+
+    app.register_blueprint(admission_bp)
+
     return app
 
 
