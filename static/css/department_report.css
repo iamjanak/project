@@ -1,0 +1,501 @@
+/* =========================================================
+   DEPARTMENT REPORT — PROFESSIONAL STYLE
+   ========================================================= */
+
+.department-report-page {
+    padding: 24px 28px 60px;
+    color: #1f2937;
+    font-family: "Segoe UI", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ---------------------------------------------------------
+   HEADER
+--------------------------------------------------------- */
+
+.report-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 22px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.report-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 4px;
+}
+
+.report-header p {
+    font-size: 13.5px;
+    color: #6b7280;
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-today {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 18px;
+    font-size: 13.5px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.05s ease;
+}
+
+.btn-primary {
+    background: #2563eb;
+    color: #ffffff;
+    box-shadow: 0 1px 2px rgba(37, 99, 235, 0.35);
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+
+.btn-secondary {
+    background: #ffffff;
+    color: #374151;
+    border: 1px solid #d1d5db;
+}
+
+.btn-secondary:hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
+}
+
+.btn-today {
+    background: #eef2ff;
+    color: #4338ca;
+    border: 1px solid #c7d2fe;
+    padding: 9px 16px;
+}
+
+.btn-today:hover {
+    background: #e0e7ff;
+}
+
+.btn-primary:active,
+.btn-secondary:active,
+.btn-today:active {
+    transform: translateY(1px);
+}
+
+/* ---------------------------------------------------------
+   DATE FILTER CARD
+--------------------------------------------------------- */
+
+.filter-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 22px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.date-filter {
+    display: flex;
+    align-items: flex-end;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+.date-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.date-field label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.date-field input[type="date"] {
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 13.5px;
+    color: #111827;
+    background: #ffffff;
+    min-width: 160px;
+}
+
+.date-field input[type="date"]:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.filter-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.report-period {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px dashed #e5e7eb;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.report-period strong {
+    color: #111827;
+}
+
+/* ---------------------------------------------------------
+   SUMMARY CARDS
+--------------------------------------------------------- */
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.summary-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-left: 4px solid #2563eb;
+    border-radius: 10px;
+    padding: 16px 18px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.summary-card .card-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: 8px;
+}
+
+.summary-card .card-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.summary-card:nth-child(2) { border-left-color: #16a34a; }
+.summary-card:nth-child(3) { border-left-color: #dc2626; }
+.summary-card:nth-child(4) { border-left-color: #7c3aed; }
+.summary-card:nth-child(5) { border-left-color: #0891b2; }
+.summary-card:nth-child(6) { border-left-color: #ca8a04; }
+.summary-card:nth-child(7) { border-left-color: #db2777; }
+
+.summary-card.revenue-card {
+    border-left-color: #059669;
+    background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 60%);
+}
+
+.summary-card.revenue-card .card-value {
+    color: #047857;
+}
+
+/* ---------------------------------------------------------
+   SECTION CARDS
+--------------------------------------------------------- */
+
+.section-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px 22px 22px;
+    margin-bottom: 22px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.section-header h2 {
+    font-size: 16.5px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 3px;
+}
+
+.section-header p {
+    font-size: 12.5px;
+    color: #6b7280;
+    margin: 0;
+}
+
+/* ---------------------------------------------------------
+   DEPARTMENT TABLE
+--------------------------------------------------------- */
+
+.table-wrapper {
+    overflow-x: auto;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+}
+
+.department-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 820px;
+}
+
+.department-table thead th {
+    background: #f8fafc;
+    color: #475569;
+    font-weight: 600;
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    text-align: left;
+    padding: 11px 14px;
+    border-bottom: 1px solid #e5e7eb;
+    white-space: nowrap;
+}
+
+.department-table tbody td {
+    padding: 11px 14px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #1f2937;
+    vertical-align: middle;
+}
+
+.department-table tbody tr:hover {
+    background: #f9fafb;
+}
+
+.department-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.department-name strong {
+    color: #111827;
+    font-weight: 600;
+}
+
+.number-cell {
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.revenue-cell {
+    text-align: right;
+    font-weight: 600;
+    color: #047857;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 600;
+}
+
+.status-badge.active {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.status-badge.inactive {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.no-data {
+    text-align: center;
+    padding: 30px;
+    color: #9ca3af;
+    font-size: 13.5px;
+}
+
+.total-row td {
+    background: #f8fafc;
+    border-top: 2px solid #e5e7eb;
+    font-weight: 700;
+    color: #111827;
+}
+
+.total-row .revenue-cell {
+    color: #047857;
+}
+
+/* ---------------------------------------------------------
+   REPORT SUMMARY LIST
+--------------------------------------------------------- */
+
+.summary-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 13.5px;
+}
+
+.summary-row:last-child {
+    border-bottom: none;
+}
+
+.summary-row span {
+    color: #6b7280;
+}
+
+.summary-row strong {
+    color: #111827;
+    font-weight: 700;
+}
+
+.summary-row.revenue-summary {
+    margin-top: 6px;
+    padding-top: 16px;
+    border-top: 2px solid #e5e7eb;
+    font-size: 15px;
+}
+
+.summary-row.revenue-summary strong {
+    color: #047857;
+    font-size: 17px;
+}
+
+/* ---------------------------------------------------------
+   RESPONSIVE
+--------------------------------------------------------- */
+
+@media (max-width: 1200px) {
+    .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .report-header {
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .date-filter {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-actions {
+        justify-content: stretch;
+    }
+
+    .filter-actions .btn-primary,
+    .filter-actions .btn-today {
+        flex: 1;
+        text-align: center;
+    }
+}
+
+/* ---------------------------------------------------------
+   PRINT — HIDE SIDEBAR / TOPBAR / CONTROLS
+--------------------------------------------------------- */
+
+@media print {
+
+    /* Common sidebar/topbar selectors used across hospital
+       dashboard templates — keep whichever matches your
+       base.html and delete the rest. */
+    .sidebar,
+    .side-nav,
+    #sidebar,
+    nav.sidebar,
+    aside.sidebar,
+    .topbar,
+    .top-bar,
+    .navbar,
+    header.app-header {
+        display: none !important;
+    }
+
+    /* Expand main content to full width once sidebar is gone */
+    .main-content,
+    .content-wrapper,
+    .page-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding: 0 !important;
+    }
+
+    .department-report-page {
+        padding: 0 12px;
+    }
+
+    /* Hide interactive controls that make no sense on paper */
+    .header-actions,
+    .filter-card form .filter-actions,
+    .filter-card form button,
+    .filter-card form a.btn-today {
+        display: none !important;
+    }
+
+    /* Keep the "Showing data from ... to ..." line visible */
+    .filter-card {
+        border: none;
+        box-shadow: none;
+        padding: 0 0 10px;
+        margin-bottom: 14px;
+    }
+
+    .summary-card,
+    .section-card {
+        box-shadow: none !important;
+        border: 1px solid #d1d5db !important;
+        break-inside: avoid;
+    }
+
+    .summary-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .department-table {
+        min-width: 0;
+    }
+
+    .table-wrapper {
+        overflow: visible;
+    }
+
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+}

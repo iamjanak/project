@@ -1,0 +1,646 @@
+{% extends "base.html" %}
+
+{% block title %}
+Department Report
+{% endblock %}
+
+
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/department_report.css'
+    ) }}"
+>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="department-report-page">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <div class="report-header">
+
+        <div class="header-left">
+
+            <h1>
+                Department Report
+            </h1>
+
+            <p>
+                Department-wise hospital statistics and information
+            </p>
+
+        </div>
+
+
+        <div class="header-actions">
+
+            <button
+                type="button"
+                class="btn-secondary"
+                onclick="window.print()"
+            >
+                Print
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         DATE FILTER
+    ====================================================== -->
+
+    <div class="filter-card">
+
+        <form
+            method="GET"
+            action="{{ url_for('main.department_report') }}"
+            class="date-filter"
+        >
+
+            <div class="date-field">
+
+                <label for="start_date">
+                    From Date
+                </label>
+
+                <input
+                    type="date"
+                    id="start_date"
+                    name="start_date"
+                    value="{{ start_date.strftime('%Y-%m-%d') }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="date-field">
+
+                <label for="end_date">
+                    To Date
+                </label>
+
+                <input
+                    type="date"
+                    id="end_date"
+                    name="end_date"
+                    value="{{ end_date.strftime('%Y-%m-%d') }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="filter-actions">
+
+                <button
+                    type="submit"
+                    class="btn-primary"
+                >
+                    View Report
+                </button>
+
+
+                <a
+                    href="{{ url_for('main.department_report') }}"
+                    class="btn-today"
+                >
+                    Today
+                </a>
+
+            </div>
+
+        </form>
+
+
+        <div class="report-period">
+
+            Showing data from
+
+            <strong>
+                {{ start_date.strftime('%d/%m/%Y') }}
+            </strong>
+
+            to
+
+            <strong>
+                {{ end_date.strftime('%d/%m/%Y') }}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         SUMMARY CARDS
+    ====================================================== -->
+
+    <div class="summary-grid">
+
+
+        <!-- TOTAL DEPARTMENTS -->
+
+        <div class="summary-card">
+
+            <div class="card-label">
+                Total Departments
+            </div>
+
+            <div class="card-value">
+                {{ total_departments }}
+            </div>
+
+        </div>
+
+
+        <!-- ACTIVE DEPARTMENTS -->
+
+        <div class="summary-card">
+
+            <div class="card-label">
+                Active Departments
+            </div>
+
+            <div class="card-value">
+                {{ active_departments }}
+            </div>
+
+        </div>
+
+
+        <!-- INACTIVE DEPARTMENTS -->
+
+        <div class="summary-card">
+
+            <div class="card-label">
+                Inactive Departments
+            </div>
+
+            <div class="card-value">
+                {{ inactive_departments }}
+            </div>
+
+        </div>
+
+
+        <!-- TOTAL DOCTORS -->
+
+        <div class="summary-card">
+
+            <div class="card-label">
+                Total Doctors
+            </div>
+
+            <div class="card-value">
+                {{ total_doctors }}
+            </div>
+
+        </div>
+
+
+        <!-- TOTAL PATIENTS -->
+
+        <div class="summary-card">
+
+            <div class="card-label">
+                Total Patients
+            </div>
+
+            <div class="card-value">
+                {{ total_patients }}
+            </div>
+
+        </div>
+
+
+        <!-- TOTAL FOLLOW UPS -->
+
+        <div class="summary-card">
+
+            <div class="card-label">
+                Total Follow-ups
+            </div>
+
+            <div class="card-value">
+                {{ total_followups }}
+            </div>
+
+        </div>
+
+
+        <!-- TOTAL ADMISSIONS -->
+
+        <div class="summary-card">
+
+            <div class="card-label">
+                Total Admissions
+            </div>
+
+            <div class="card-value">
+                {{ total_admissions }}
+            </div>
+
+        </div>
+
+
+        <!-- TOTAL REVENUE -->
+
+        <div class="summary-card revenue-card">
+
+            <div class="card-label">
+                Total Revenue
+            </div>
+
+            <div class="card-value">
+
+                Rs.
+                {{ "{:,.2f}".format(
+                    total_revenue or 0
+                ) }}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         DEPARTMENT DETAILS
+    ====================================================== -->
+
+    <div class="section-card">
+
+        <div class="section-header">
+
+            <div>
+
+                <h2>
+                    Department Details
+                </h2>
+
+                <p>
+                    Department-wise statistics and revenue
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             TABLE
+        ================================================== -->
+
+        <div class="table-wrapper">
+
+            <table class="department-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            SN
+                        </th>
+
+                        <th>
+                            Department Code
+                        </th>
+
+                        <th>
+                            Department Name
+                        </th>
+
+                        <th>
+                            Department Type
+                        </th>
+
+                        <th>
+                            Doctors
+                        </th>
+
+                        <th>
+                            Patients
+                        </th>
+
+                        <th>
+                            Follow-ups
+                        </th>
+
+                        <th>
+                            Admissions
+                        </th>
+
+                        <th>
+                            Revenue
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% if departments %}
+
+                        {% for department in departments %}
+
+                        <tr>
+
+                            <!-- SN -->
+
+                            <td>
+                                {{ loop.index }}
+                            </td>
+
+
+                            <!-- DEPARTMENT CODE -->
+
+                            <td>
+                                {{ department.code }}
+                            </td>
+
+
+                            <!-- DEPARTMENT NAME -->
+
+                            <td class="department-name">
+
+                                <strong>
+                                    {{ department.name }}
+                                </strong>
+
+                            </td>
+
+
+                            <!-- DEPARTMENT TYPE -->
+
+                            <td>
+                                {{ department.type }}
+                            </td>
+
+
+                            <!-- DOCTORS -->
+
+                            <td class="number-cell">
+                                {{ department.doctors }}
+                            </td>
+
+
+                            <!-- PATIENTS -->
+
+                            <td class="number-cell">
+                                {{ department.patients }}
+                            </td>
+
+
+                            <!-- FOLLOW UPS -->
+
+                            <td class="number-cell">
+                                {{ department.followups }}
+                            </td>
+
+
+                            <!-- ADMISSIONS -->
+
+                            <td class="number-cell">
+                                {{ department.admissions }}
+                            </td>
+
+
+                            <!-- REVENUE -->
+
+                            <td class="revenue-cell">
+
+                                Rs.
+                                {{ "{:,.2f}".format(
+                                    department.revenue or 0
+                                ) }}
+
+                            </td>
+
+
+                            <!-- STATUS -->
+
+                            <td>
+
+                                {% if department.status|lower == "active" %}
+
+                                    <span class="status-badge active">
+                                        Active
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="status-badge inactive">
+                                        {{ department.status }}
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+
+                        <!-- =================================
+                             TOTAL ROW
+                        ================================== -->
+
+                        <tr class="total-row">
+
+                            <td colspan="4">
+
+                                <strong>
+                                    Total
+                                </strong>
+
+                            </td>
+
+
+                            <td class="number-cell">
+
+                                <strong>
+                                    {{ total_doctors }}
+                                </strong>
+
+                            </td>
+
+
+                            <td class="number-cell">
+
+                                <strong>
+                                    {{ total_patients }}
+                                </strong>
+
+                            </td>
+
+
+                            <td class="number-cell">
+
+                                <strong>
+                                    {{ total_followups }}
+                                </strong>
+
+                            </td>
+
+
+                            <td class="number-cell">
+
+                                <strong>
+                                    {{ total_admissions }}
+                                </strong>
+
+                            </td>
+
+
+                            <td class="revenue-cell">
+
+                                <strong>
+
+                                    Rs.
+                                    {{ "{:,.2f}".format(
+                                        total_revenue or 0
+                                    ) }}
+
+                                </strong>
+
+                            </td>
+
+
+                            <td>
+                                -
+                            </td>
+
+                        </tr>
+
+
+                    {% else %}
+
+                        <tr>
+
+                            <td
+                                colspan="10"
+                                class="no-data"
+                            >
+
+                                No departments found.
+
+                            </td>
+
+                        </tr>
+
+                    {% endif %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const startDate =
+            document.getElementById(
+                "start_date"
+            );
+
+        const endDate =
+            document.getElementById(
+                "end_date"
+            );
+
+
+        if (
+            !startDate ||
+            !endDate
+        ) {
+            return;
+        }
+
+
+        // =================================================
+        // FROM DATE CHANGE
+        // =================================================
+
+        startDate.addEventListener(
+            "change",
+            function () {
+
+                if (
+                    endDate.value &&
+                    startDate.value > endDate.value
+                ) {
+
+                    endDate.value =
+                        startDate.value;
+
+                }
+
+            }
+        );
+
+
+        // =================================================
+        // TO DATE CHANGE
+        // =================================================
+
+        endDate.addEventListener(
+            "change",
+            function () {
+
+                if (
+                    startDate.value &&
+                    endDate.value < startDate.value
+                ) {
+
+                    alert(
+                        "To Date cannot be earlier than From Date."
+                    );
+
+                    endDate.value =
+                        startDate.value;
+
+                }
+
+            }
+        );
+
+    }
+);
+
+</script>
+
+{% endblock %}

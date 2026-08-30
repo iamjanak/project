@@ -1023,7 +1023,6 @@ class Bed(db.Model):
         nullable=True
     )
     
-  
     
 # =========================================================
 # PATIENT ADMISSION / IPD
@@ -1140,3 +1139,4 @@ class Admission(db.Model):
         db.DateTime,
         nullable=False
     )
+

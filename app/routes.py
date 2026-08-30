@@ -15,6 +15,7 @@ from io import BytesIO
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment
 from openpyxl.utils import get_column_letter
+from .models import Bill
 
 from app.models import (
     Patient,
@@ -27,6 +28,8 @@ from app.models import (
     Test,
     Deposit,
     BillRefund,
+    FollowUp,
+    Admission,
 )
 
 from app.database import db
@@ -3993,7 +3996,9 @@ def export_billing_report_excel():
 
         }), 500
 
-
+# =========================================================
+# Daily Collection Report
+# =========================================================
 # =========================================================
 # Daily Collection Report
 # =========================================================
@@ -4001,24 +4006,53 @@ def export_billing_report_excel():
 @main.route("/daily_collection_report")
 def daily_collection_report():
 
+    # =========================================================
+    # SESSION CHECK
+    # =========================================================
+
     if "user" not in session:
         return redirect(url_for("main.login"))
 
-    selected_date = request.args.get("date")
+    # =========================================================
+    # REPORT DATE
+    # =========================================================
+
+    selected_date = request.args.get("date", "").strip()
 
     if selected_date:
         try:
             report_date = datetime.strptime(
-                selected_date, "%Y-%m-%d"
+                selected_date,
+                "%Y-%m-%d"
             ).date()
         except ValueError:
-            report_date = datetime.today().date()
+            report_date = datetime.now().date()
     else:
-        report_date = datetime.today().date()
+       report_date = datetime.now().date()
 
-    # Bills
+    # =========================================================
+    # START / END OF REPORT DAY
+    # =========================================================
+
+    start_datetime = datetime.combine(
+        report_date,
+        datetime.min.time()
+    )
+
+    end_datetime = datetime.combine(
+        report_date,
+        datetime.max.time()
+    )
+
+    # =========================================================
+    # BILLS
+    # =========================================================
+
     bills = Bill.query.filter(
-        db.func.date(Bill.created_at) == report_date
+        Bill.bill_date >= start_datetime,
+        Bill.bill_date <= end_datetime
+    ).order_by(
+        Bill.bill_date.desc()
     ).all()
 
     total_bills = len(bills)
@@ -4038,9 +4072,15 @@ def daily_collection_report():
         for bill in bills
     )
 
-    # Deposits
+    # =========================================================
+    # DEPOSITS
+    # =========================================================
+
     deposits = Deposit.query.filter(
-        db.func.date(Deposit.created_at) == report_date
+        Deposit.deposit_date >= start_datetime,
+        Deposit.deposit_date <= end_datetime
+    ).order_by(
+        Deposit.deposit_date.desc()
     ).all()
 
     total_deposit = sum(
@@ -4048,9 +4088,15 @@ def daily_collection_report():
         for deposit in deposits
     )
 
-    # Refunds
+    # =========================================================
+    # REFUNDS
+    # =========================================================
+
     refunds = BillRefund.query.filter(
-        db.func.date(BillRefund.refund_date) == report_date
+        BillRefund.created_at >= start_datetime,
+        BillRefund.created_at <= end_datetime
+    ).order_by(
+        BillRefund.created_at.desc()
     ).all()
 
     total_refund = sum(
@@ -4058,14 +4104,20 @@ def daily_collection_report():
         for refund in refunds
     )
 
-    # Net collection
+    # =========================================================
+    # NET COLLECTION
+    # =========================================================
+
     net_collection = (
         net_billing
         + total_deposit
         - total_refund
     )
 
-    # Payment types
+    # =========================================================
+    # PAYMENT TYPES
+    # =========================================================
+
     cash_collection = 0
     card_collection = 0
     online_collection = 0
@@ -4074,12 +4126,21 @@ def daily_collection_report():
     for bill in bills:
 
         amount = float(bill.total or 0)
-        pay_type = (bill.pay_type or "").lower().strip()
+
+        pay_type = (
+            bill.pay_type or ""
+        ).lower().strip()
 
         if pay_type == "cash":
+
             cash_collection += amount
 
-        elif pay_type in ["card", "credit card", "debit card"]:
+        elif pay_type in [
+            "card",
+            "credit card",
+            "debit card"
+        ]:
+
             card_collection += amount
 
         elif pay_type in [
@@ -4088,74 +4149,833 @@ def daily_collection_report():
             "khalti",
             "online payment"
         ]:
+
             online_collection += amount
 
         else:
+
             other_collection += amount
 
-    # Transactions
+    # =========================================================
+    # TRANSACTIONS
+    # =========================================================
+
     transactions = []
 
+    # =========================================================
+    # BILL TRANSACTIONS
+    # =========================================================
+
     for bill in bills:
+
+        patient_no = "-"
+        patient_name = "-"
+
+        if bill.patient:
+
+            patient_no = (
+                bill.patient.patient_no
+                or "-"
+            )
+
+            patient_name = (
+                bill.patient.full_name
+                or "-"
+            )
+
         transactions.append({
-            "date": bill.created_at,
+
+            "date": bill.bill_date,
+
             "type": "Bill",
+
             "reference": bill.bill_no,
-            "patient_no": bill.patient_no,
-            "patient_name": bill.patient_name,
-            "payment_type": bill.pay_type or "-",
-            "amount": float(bill.total or 0),
+
+            "patient_no": patient_no,
+
+            "patient_name": patient_name,
+
+            "payment_type": (
+                bill.pay_type
+                or "-"
+            ),
+
+            "amount": float(
+                bill.total or 0
+            ),
+
             "refund": 0,
-            "net": float(bill.total or 0)
+
+            "net": float(
+                bill.total or 0
+            )
         })
+
+    # =========================================================
+    # DEPOSIT TRANSACTIONS
+    # =========================================================
 
     for deposit in deposits:
+
         transactions.append({
-            "date": deposit.created_at,
+
+            "date": deposit.deposit_date,
+
             "type": "Deposit",
-            "reference": deposit.deposit_no,
-            "patient_no": deposit.patient_no,
-            "patient_name": deposit.patient_name,
+
+            "reference": deposit.receipt_no,
+
+            "patient_no": (
+                deposit.patient_no
+                or "-"
+            ),
+
+            "patient_name": (
+                deposit.patient_name
+                or "-"
+            ),
+
             "payment_type": "Deposit",
-            "amount": float(deposit.amount or 0),
+
+            "amount": float(
+                deposit.amount or 0
+            ),
+
             "refund": 0,
-            "net": float(deposit.amount or 0)
+
+            "net": float(
+                deposit.amount or 0
+            )
         })
+
+    # =========================================================
+    # REFUND TRANSACTIONS
+    # =========================================================
 
     for refund in refunds:
+
         transactions.append({
-            "date": refund.refund_date,
+
+            "date": refund.created_at,
+
             "type": "Refund",
+
             "reference": refund.refund_no,
-            "patient_no": refund.patient_no,
-            "patient_name": refund.patient_name,
+
+            "patient_no": (
+                refund.patient_no
+                or "-"
+            ),
+
+            "patient_name": (
+                refund.patient_name
+                or "-"
+            ),
+
             "payment_type": "Refund",
+
             "amount": 0,
-            "refund": float(refund.refund_amount or 0),
-            "net": -float(refund.refund_amount or 0)
+
+            "refund": float(
+                refund.refund_amount or 0
+            ),
+
+            "net": -float(
+                refund.refund_amount or 0
+            )
         })
 
+    # =========================================================
+    # SORT TRANSACTIONS
+    # =========================================================
+
     transactions.sort(
-        key=lambda x: x["date"] or datetime.min,
+        key=lambda x: (
+            x["date"] or datetime.min
+        ),
         reverse=True
     )
 
+    # =========================================================
+    # DEBUG
+    # =========================================================
+
+    print("========================================")
+    print("DAILY COLLECTION REPORT")
+    print("Report Date:", report_date)
+    print("Start:", start_datetime)
+    print("End:", end_datetime)
+    print("Bills:", len(bills))
+    print("Deposits:", len(deposits))
+    print("Refunds:", len(refunds))
+    print("Transactions:", len(transactions))
+    print("========================================")
+
+    # =========================================================
+    # RENDER
+    # =========================================================
+
     return render_template(
+
         "reports/daily_collection_report.html",
+
         report_date=report_date,
+
         total_bills=total_bills,
+
         gross_billing=gross_billing,
+
         total_discount=total_discount,
+
         net_billing=net_billing,
+
         total_deposit=total_deposit,
+
         total_refund=total_refund,
+
         net_collection=net_collection,
+
         cash_collection=cash_collection,
+
         card_collection=card_collection,
+
         online_collection=online_collection,
+
         other_collection=other_collection,
+
         transactions=transactions
     )
+
+
+
+# =========================================================
+# DEPARTMENT REPORT
+# =========================================================
+
+@main.route("/department_report")
+def department_report():
+
+    # =====================================================
+    # SESSION CHECK
+    # =====================================================
+
+    if "user" not in session:
+        return redirect(url_for("main.login"))
+
+    # =====================================================
+    # DATE FILTER
+    # =====================================================
+
+    today = datetime.today().date()
+
+    start_date_str = request.args.get(
+        "start_date",
+        ""
+    ).strip()
+
+    end_date_str = request.args.get(
+        "end_date",
+        ""
+    ).strip()
+
+    # -----------------------------------------------------
+    # Default = Today
+    # -----------------------------------------------------
+
+    if not start_date_str:
+        start_date = today
+    else:
+        try:
+            start_date = datetime.strptime(
+                start_date_str,
+                "%Y-%m-%d"
+            ).date()
+        except ValueError:
+            start_date = today
+
+    if not end_date_str:
+        end_date = today
+    else:
+        try:
+            end_date = datetime.strptime(
+                end_date_str,
+                "%Y-%m-%d"
+            ).date()
+        except ValueError:
+            end_date = today
+
+    # -----------------------------------------------------
+    # Prevent invalid date range
+    # -----------------------------------------------------
+
+    if start_date > end_date:
+        start_date, end_date = end_date, start_date
+
+    # =====================================================
+    # GET ALL DEPARTMENTS
+    # =====================================================
+    #
+    # IMPORTANT:
+    # Do NOT filter by status here.
+    #
+    # This ensures every department created in the
+    # Department Setup page appears in the report.
+    #
+    # =====================================================
+
+    departments = Department.query.order_by(
+        Department.id.asc()
+    ).all()
+
+    # =====================================================
+    # DEPARTMENT SUMMARY COUNTS
+    # =====================================================
+
+    total_departments = len(departments)
+
+    active_departments = sum(
+        1
+        for department in departments
+        if (
+            department.status or ""
+        ).strip().lower() == "active"
+    )
+
+    inactive_departments = sum(
+        1
+        for department in departments
+        if (
+            department.status or ""
+        ).strip().lower() != "active"
+    )
+
+    # =====================================================
+    # DEPARTMENT DETAILS
+    # =====================================================
+
+    department_data = []
+
+    for department in departments:
+
+        # =================================================
+        # BASIC DEPARTMENT INFORMATION
+        # =================================================
+
+        department_name = (
+            department.department_name or ""
+        ).strip()
+
+        department_code = (
+            department.dep_code or "-"
+        ).strip()
+
+        department_type = (
+            department.dep_type or "-"
+        ).strip()
+
+        department_status = (
+            department.status or "-"
+        ).strip()
+
+        # =================================================
+        # DOCTORS
+        # =================================================
+
+        doctor_count = 0
+
+        try:
+
+            # ------------------------------------------------
+            # If Doctor has department_id
+            # ------------------------------------------------
+
+            if hasattr(Doctor, "department_id"):
+
+                doctor_count = Doctor.query.filter(
+                    Doctor.department_id == department.id
+                ).count()
+
+            # ------------------------------------------------
+            # If Doctor has relationship with Department
+            # ------------------------------------------------
+
+            elif hasattr(Doctor, "department"):
+
+                try:
+
+                    doctor_count = Doctor.query.filter(
+                        Doctor.department.has(
+                            Department.id == department.id
+                        )
+                    ).count()
+
+                except Exception:
+
+                    doctor_count = 0
+
+        except Exception as e:
+
+            print(
+                "Doctor count error:",
+                department_name,
+                e
+            )
+
+            doctor_count = 0
+
+        # =================================================
+        # PATIENTS
+        # =================================================
+
+        patient_count = 0
+
+        if department_name:
+
+            try:
+
+                patient_query = Patient.query.filter(
+                    Patient.department == department_name
+                )
+
+                # ------------------------------------------------
+                # Apply date filter only if created_at exists
+                # ------------------------------------------------
+
+                if hasattr(Patient, "created_at"):
+
+                    patient_query = patient_query.filter(
+                        db.func.date(
+                            Patient.created_at
+                        ) >= start_date,
+
+                        db.func.date(
+                            Patient.created_at
+                        ) <= end_date
+                    )
+
+                patient_count = patient_query.count()
+
+            except Exception as e:
+
+                print(
+                    "Patient count error:",
+                    department_name,
+                    e
+                )
+
+                patient_count = 0
+
+        # =================================================
+        # FOLLOW-UPS
+        # =================================================
+
+        followup_count = 0
+
+        try:
+
+            if hasattr(FollowUp, "department_id"):
+
+                followup_query = FollowUp.query.filter(
+                    FollowUp.department_id == department.id
+                )
+
+                # ---------------------------------------------
+                # Follow-up created date
+                # ---------------------------------------------
+
+                if hasattr(FollowUp, "created_at"):
+
+                    followup_query = followup_query.filter(
+                        db.func.date(
+                            FollowUp.created_at
+                        ) >= start_date,
+
+                        db.func.date(
+                            FollowUp.created_at
+                        ) <= end_date
+                    )
+
+                # ---------------------------------------------
+                # Follow-up date
+                # ---------------------------------------------
+
+                elif hasattr(FollowUp, "followup_date"):
+
+                    followup_query = followup_query.filter(
+                        db.func.date(
+                            FollowUp.followup_date
+                        ) >= start_date,
+
+                        db.func.date(
+                            FollowUp.followup_date
+                        ) <= end_date
+                    )
+
+                followup_count = followup_query.count()
+
+        except Exception as e:
+
+            print(
+                "Follow-up count error:",
+                department_name,
+                e
+            )
+
+            followup_count = 0
+
+        # =================================================
+        # ADMISSIONS
+        # =================================================
+
+        admission_count = 0
+
+        # -------------------------------------------------
+        # Check whether Admission model exists
+        # -------------------------------------------------
+
+        if "Admission" in globals():
+
+            try:
+
+                admission_query = Admission.query
+
+                # ---------------------------------------------
+                # Department ID
+                # ---------------------------------------------
+
+                if hasattr(
+                    Admission,
+                    "department_id"
+                ):
+
+                    admission_query = admission_query.filter(
+                        Admission.department_id
+                        == department.id
+                    )
+
+                # ---------------------------------------------
+                # Department name
+                # ---------------------------------------------
+
+                elif hasattr(
+                    Admission,
+                    "department"
+                ):
+
+                    admission_query = admission_query.filter(
+                        Admission.department
+                        == department_name
+                    )
+
+                # ---------------------------------------------
+                # Admission date
+                # ---------------------------------------------
+
+                if hasattr(
+                    Admission,
+                    "admission_date"
+                ):
+
+                    admission_query = admission_query.filter(
+                        db.func.date(
+                            Admission.admission_date
+                        ) >= start_date,
+
+                        db.func.date(
+                            Admission.admission_date
+                        ) <= end_date
+                    )
+
+                # ---------------------------------------------
+                # Created date
+                # ---------------------------------------------
+
+                elif hasattr(
+                    Admission,
+                    "created_at"
+                ):
+
+                    admission_query = admission_query.filter(
+                        db.func.date(
+                            Admission.created_at
+                        ) >= start_date,
+
+                        db.func.date(
+                            Admission.created_at
+                        ) <= end_date
+                    )
+
+                admission_count = admission_query.count()
+
+            except Exception as e:
+
+                print(
+                    "Admission count error:",
+                    department_name,
+                    e
+                )
+
+                admission_count = 0
+
+        # =================================================
+        # REVENUE
+        # =================================================
+
+        revenue = 0
+
+        if department_name:
+
+            try:
+
+                # ------------------------------------------------
+                # Bills are linked to Patient.
+                #
+                # Patient.department contains department name.
+                # ------------------------------------------------
+
+                revenue_query = (
+                    Bill.query
+                    .join(
+                        Patient,
+                        Bill.patient_id == Patient.id
+                    )
+                    .filter(
+                        Patient.department
+                        == department_name
+                    )
+                )
+
+                # ------------------------------------------------
+                # Bill date
+                # ------------------------------------------------
+
+                if hasattr(Bill, "bill_date"):
+
+                    revenue_query = revenue_query.filter(
+                        db.func.date(
+                            Bill.bill_date
+                        ) >= start_date,
+
+                        db.func.date(
+                            Bill.bill_date
+                        ) <= end_date
+                    )
+
+                elif hasattr(Bill, "created_at"):
+
+                    revenue_query = revenue_query.filter(
+                        db.func.date(
+                            Bill.created_at
+                        ) >= start_date,
+
+                        db.func.date(
+                            Bill.created_at
+                        ) <= end_date
+                    )
+
+                # ------------------------------------------------
+                # Total revenue
+                # ------------------------------------------------
+
+                revenue = (
+                    revenue_query
+                    .with_entities(
+                        db.func.coalesce(
+                            db.func.sum(Bill.total),
+                            0
+                        )
+                    )
+                    .scalar()
+                    or 0
+                )
+
+            except Exception as e:
+
+                print(
+                    "Department revenue error:",
+                    department_name,
+                    e
+                )
+
+                revenue = 0
+
+        # =================================================
+        # ADD DEPARTMENT TO REPORT
+        # =================================================
+
+        department_data.append({
+
+            "code": department_code,
+
+            "name": (
+                department_name
+                if department_name
+                else "(No Name)"
+            ),
+
+            "type": department_type,
+
+            "doctors": doctor_count,
+
+            "patients": patient_count,
+
+            "followups": followup_count,
+
+            "admissions": admission_count,
+
+            "revenue": float(
+                revenue or 0
+            ),
+
+            "status": department_status
+        })
+
+    # =====================================================
+    # TOTALS
+    # =====================================================
+
+    total_doctors = sum(
+        item["doctors"]
+        for item in department_data
+    )
+
+    total_patients = sum(
+        item["patients"]
+        for item in department_data
+    )
+
+    total_followups = sum(
+        item["followups"]
+        for item in department_data
+    )
+
+    total_admissions = sum(
+        item["admissions"]
+        for item in department_data
+    )
+
+    total_revenue = sum(
+        item["revenue"]
+        for item in department_data
+    )
+
+    # =====================================================
+    # DEBUG
+    # =====================================================
+
+    print("\n" + "=" * 70)
+    print("DEPARTMENT REPORT")
+    print("=" * 70)
+
+    print(
+        "DATE:",
+        start_date,
+        "TO",
+        end_date
+    )
+
+    print(
+        "DEPARTMENTS FOUND:",
+        len(departments)
+    )
+
+    print(
+        "ROWS BUILT:",
+        len(department_data)
+    )
+
+    print(
+        "TOTAL DEPARTMENTS:",
+        total_departments
+    )
+
+    print(
+        "ACTIVE DEPARTMENTS:",
+        active_departments
+    )
+
+    print(
+        "INACTIVE DEPARTMENTS:",
+        inactive_departments
+    )
+
+    print(
+        "TOTAL DOCTORS:",
+        total_doctors
+    )
+
+    print(
+        "TOTAL PATIENTS:",
+        total_patients
+    )
+
+    print(
+        "TOTAL FOLLOWUPS:",
+        total_followups
+    )
+
+    print(
+        "TOTAL ADMISSIONS:",
+        total_admissions
+    )
+
+    print(
+        "TOTAL REVENUE:",
+        total_revenue
+    )
+
+    print("-" * 70)
+
+    for index, item in enumerate(
+        department_data,
+        start=1
+    ):
+
+        print(
+            f"{index}. "
+            f"{item['code']} | "
+            f"{item['name']} | "
+            f"{item['type']} | "
+            f"Doctors={item['doctors']} | "
+            f"Patients={item['patients']} | "
+            f"Followups={item['followups']} | "
+            f"Admissions={item['admissions']} | "
+            f"Revenue={item['revenue']} | "
+            f"Status={item['status']}"
+        )
+
+    print("=" * 70 + "\n")
+
+    # =====================================================
+    # RENDER
+    # =====================================================
+
+    return render_template(
+        "reports/department_report.html",
+
+        start_date=start_date,
+
+        end_date=end_date,
+
+        total_departments=total_departments,
+
+        active_departments=active_departments,
+
+        inactive_departments=inactive_departments,
+
+        total_doctors=total_doctors,
+
+        total_patients=total_patients,
+
+        total_followups=total_followups,
+
+        total_admissions=total_admissions,
+
+        total_revenue=total_revenue,
+
+        departments=department_data
+    )
+
 
 
 # ==============================

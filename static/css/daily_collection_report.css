@@ -403,3 +403,319 @@ tbody tr:hover {
         background: white;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media print {
+
+    /* -----------------------------------------------------
+       HIDE SIDEBAR
+    ----------------------------------------------------- */
+
+    .sidebar,
+    #sidebar,
+    .sidebar-container,
+    .side-bar,
+    .app-sidebar,
+    aside {
+        display: none !important;
+    }
+
+
+    /* -----------------------------------------------------
+       HIDE TOP HEADER
+    ----------------------------------------------------- */
+
+    .app-header,
+    .top-header,
+    .topbar,
+    .top-bar,
+    .navbar,
+    .navbar-container,
+    header {
+        display: none !important;
+    }
+
+
+    /* -----------------------------------------------------
+       HIDE NAVIGATION
+    ----------------------------------------------------- */
+
+    nav,
+    .navigation,
+    .nav,
+    .main-nav {
+        display: none !important;
+    }
+
+
+    /* -----------------------------------------------------
+       HIDE NOTIFICATION
+    ----------------------------------------------------- */
+
+    .notification,
+    .notification-area,
+    .notification-icon,
+    .notifications,
+    .bell,
+    .admin-notification {
+        display: none !important;
+    }
+
+
+    /* -----------------------------------------------------
+       HIDE ADMIN / USER AREA
+    ----------------------------------------------------- */
+
+    .admin-info,
+    .admin,
+    .user-info,
+    .user-menu,
+    .profile,
+    .profile-menu {
+        display: none !important;
+    }
+
+
+    /* -----------------------------------------------------
+       HIDE LOGOUT
+    ----------------------------------------------------- */
+
+    .logout,
+    .logout-btn,
+    .logout-button {
+        display: none !important;
+    }
+
+
+    /* -----------------------------------------------------
+       HIDE ALL BUTTONS
+    ----------------------------------------------------- */
+
+    button,
+    .billing-report-actions,
+    .print-btn,
+    .print-button,
+    .btn-print,
+    .excel-btn,
+    #printBtn {
+        display: none !important;
+    }
+
+
+    /* -----------------------------------------------------
+       HIDE FILTER SECTION
+    ----------------------------------------------------- */
+
+    .billing-filter-card,
+    .billing-report-filters,
+    .report-filters,
+    .filter-section,
+    .search-section {
+        display: none !important;
+    }
+
+
+    /* -----------------------------------------------------
+       REMOVE APP LAYOUT
+    ----------------------------------------------------- */
+
+    html,
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        background: white !important;
+    }
+
+
+    main,
+    .main-content,
+    .content,
+    .page-content,
+    #page-content {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        left: 0 !important;
+        transform: none !important;
+    }
+
+
+    /* -----------------------------------------------------
+       REPORT CONTAINER
+    ----------------------------------------------------- */
+
+    .billing-report-page,
+    .billing-reports-page,
+    .report-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+
+    /* -----------------------------------------------------
+       REPORT HEADER
+       Keep Billing Reports title
+    ----------------------------------------------------- */
+
+    .billing-report-header {
+        display: flex !important;
+        margin-bottom: 20px !important;
+    }
+
+    .billing-report-header h1 {
+        font-size: 22px !important;
+        color: #000 !important;
+    }
+
+    .billing-report-header p {
+        color: #000 !important;
+    }
+
+
+    /* -----------------------------------------------------
+       SUMMARY
+    ----------------------------------------------------- */
+
+    .billing-summary-grid {
+        display: grid !important;
+        grid-template-columns: repeat(6, 1fr) !important;
+        gap: 8px !important;
+        margin-bottom: 20px !important;
+    }
+
+    .summary-card {
+        min-height: auto !important;
+        padding: 10px !important;
+        border: 1px solid #000 !important;
+        box-shadow: none !important;
+    }
+
+    .summary-card span {
+        color: #000 !important;
+        font-size: 10px !important;
+    }
+
+    .summary-card strong {
+        color: #000 !important;
+        font-size: 14px !important;
+    }
+
+
+    /* -----------------------------------------------------
+       TABLE CARDS
+    ----------------------------------------------------- */
+
+    .billing-table-card {
+        width: 100% !important;
+        margin-bottom: 20px !important;
+        border: none !important;
+        box-shadow: none !important;
+        overflow: visible !important;
+        break-inside: avoid;
+    }
+
+
+    .table-header {
+        padding: 8px 0 !important;
+        border-bottom: 1px solid #000 !important;
+    }
+
+    .table-header h2 {
+        color: #000 !important;
+        font-size: 15px !important;
+    }
+
+
+    /* -----------------------------------------------------
+       TABLE WRAPPER
+    ----------------------------------------------------- */
+
+    .table-wrapper {
+        width: 100% !important;
+        overflow: visible !important;
+    }
+
+
+    /* -----------------------------------------------------
+       TABLE
+    ----------------------------------------------------- */
+
+    .billing-table {
+        width: 100% !important;
+        min-width: 0 !important;
+        border-collapse: collapse !important;
+    }
+
+    .billing-table th,
+    .billing-table td {
+        border: 1px solid #000 !important;
+        color: #000 !important;
+        padding: 5px 6px !important;
+        font-size: 9px !important;
+        white-space: normal !important;
+    }
+
+    .billing-table th {
+        background: #f2f2f2 !important;
+        font-weight: 700 !important;
+    }
+
+    .billing-table tbody tr:hover {
+        background: transparent !important;
+    }
+
+
+    /* -----------------------------------------------------
+       PAGE BREAK
+    ----------------------------------------------------- */
+
+    tr {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .billing-table-card {
+        page-break-inside: avoid !important;
+    }
+
+
+    /* -----------------------------------------------------
+       REMOVE SHADOWS
+    ----------------------------------------------------- */
+
+    * {
+        box-shadow: none !important;
+    }
+
+
+    /* -----------------------------------------------------
+       LINKS
+    ----------------------------------------------------- */
+
+    a {
+        color: #000 !important;
+        text-decoration: none !important;
+    }
+}
