@@ -191,3 +191,489 @@ body {
             border-radius: 8px;
         
 }
+
+/* Header */
+
+
+/* =========================================================
+   SWASTHACARE - PROFESSIONAL TOP HEADER
+   ========================================================= */
+
+.top-header {
+    width: 100%;
+    height: 72px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 28px;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    box-sizing: border-box;
+
+    position: relative;
+    z-index: 100;
+}
+
+
+/* =========================================================
+   LEFT SIDE
+   ========================================================= */
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.hospital-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+
+/* =========================================================
+   HOSPITAL LOGO
+   ========================================================= */
+
+.hospital-logo {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: #eaf3ff;
+
+    border: 1px solid #d6e7ff;
+
+    box-sizing: border-box;
+}
+
+.medical-cross {
+    width: 24px;
+    height: 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 6px;
+
+    background: #2563eb;
+
+    color: #ffffff;
+
+    font-size: 23px;
+    font-weight: 500;
+
+    line-height: 1;
+}
+
+
+/* =========================================================
+   HOSPITAL INFORMATION
+   ========================================================= */
+
+.hospital-info {
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+}
+
+.hospital-info h3 {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: 17px;
+    font-weight: 700;
+
+    line-height: 1.25;
+
+    letter-spacing: -0.2px;
+}
+
+.hospital-info span {
+    margin-top: 3px;
+
+    color: #94a3b8;
+
+    font-size: 10.5px;
+    font-weight: 500;
+
+    line-height: 1.3;
+
+    letter-spacing: 0.15px;
+}
+
+
+/* =========================================================
+   RIGHT SIDE
+   ========================================================= */
+
+.header-right {
+    display: flex;
+    align-items: center;
+
+    gap: 16px;
+
+    margin-left: auto;
+}
+
+
+/* =========================================================
+   NOTIFICATION BUTTON
+   ========================================================= */
+
+.notification-btn {
+    position: relative;
+
+    width: 42px;
+    height: 42px;
+
+    padding: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    color: #64748b;
+
+    cursor: pointer;
+
+    box-sizing: border-box;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.notification-btn:hover {
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    border-color: #bfdbfe;
+
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+}
+
+
+/* =========================================================
+   NOTIFICATION SVG
+   ========================================================= */
+
+.notification-icon {
+    width: 20px;
+    height: 20px;
+
+    display: block;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   NOTIFICATION BADGE
+   ========================================================= */
+
+.notification-badge {
+    position: absolute;
+
+    top: -5px;
+    right: -5px;
+
+    min-width: 18px;
+    height: 18px;
+
+    padding: 0 4px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box;
+
+    border-radius: 50%;
+
+    background: #ef4444;
+
+    border: 2px solid #ffffff;
+
+    color: #ffffff;
+
+    font-size: 9px;
+    font-weight: 700;
+
+    line-height: 1;
+
+    z-index: 2;
+}
+
+
+/* =========================================================
+   HEADER DIVIDER
+   ========================================================= */
+
+.header-divider {
+    width: 1px;
+    height: 36px;
+
+    background: #e5e7eb;
+
+    margin: 0 2px;
+}
+
+
+/* =========================================================
+   USER MENU
+   ========================================================= */
+
+.user-menu {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+/* =========================================================
+   USER AVATAR
+   ========================================================= */
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #2563eb;
+
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    box-shadow:
+        0 3px 8px rgba(37, 99, 235, 0.20);
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   USER DETAILS
+   ========================================================= */
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+
+    min-width: 90px;
+}
+
+.user-name {
+    color: #1e293b;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    line-height: 1.25;
+}
+
+.user-role {
+    margin-top: 3px;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+    font-weight: 500;
+
+    line-height: 1.2;
+}
+
+
+/* =========================================================
+   PROFESSIONAL LOGOUT BUTTON
+   ========================================================= */
+
+.logout-btn {
+    height: 38px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    padding: 0 14px;
+
+    border-radius: 8px;
+
+    background: #fff1f2;
+
+    border: 1px solid #fecdd3;
+
+    color: #dc2626;
+
+    text-decoration: none;
+
+    font-size: 12px;
+    font-weight: 650;
+
+    box-sizing: border-box;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.15s ease;
+}
+
+.logout-btn:hover {
+    background: #dc2626;
+
+    border-color: #dc2626;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 4px 12px rgba(220, 38, 38, 0.20);
+
+    transform: translateY(-1px);
+}
+
+.logout-btn:active {
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   LOGOUT ICON
+   ========================================================= */
+
+.logout-icon {
+    width: 16px;
+    height: 16px;
+
+    flex-shrink: 0;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .top-header {
+        padding: 0 18px;
+    }
+
+    .hospital-info span {
+        display: none;
+    }
+
+    .user-details {
+        min-width: auto;
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 720px) {
+
+    .hospital-info h3 {
+        font-size: 15px;
+    }
+
+    .header-right {
+        gap: 10px;
+    }
+
+    .header-divider {
+        display: none;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .top-header {
+        height: 64px;
+
+        padding: 0 14px;
+    }
+
+    .hospital-logo {
+        width: 38px;
+        height: 38px;
+    }
+
+    .medical-cross {
+        width: 22px;
+        height: 22px;
+
+        font-size: 20px;
+    }
+
+    .hospital-info h3 {
+        font-size: 14px;
+    }
+
+    .user-details {
+        display: none;
+    }
+
+    .notification-btn {
+        width: 38px;
+        height: 38px;
+    }
+
+    .logout-btn {
+        width: 38px;
+        height: 38px;
+
+        padding: 0;
+    }
+
+    .logout-btn span {
+        display: none;
+    }
+
+}

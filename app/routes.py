@@ -94,19 +94,19 @@ def login_post():
 # Dashboard
 # ==============================
 
-@main.route("/dashboard")
-def dashboard():
+# @main.route("/dashboard")
+# def dashboard():
 
-    if "user" not in session:
-        return redirect("/")
+#     if "user" not in session:
+#         return redirect("/")
 
-    return render_template(
-        "dashboard.html",
-        active_page="dashboard",
-        patient_count=348,
-        doctor_count=78,
-        bill_count=52
-    )
+#     return render_template(
+#         "dashboard.html",
+#         active_page="dashboard",
+#         patient_count=348,
+#         doctor_count=78,
+#         bill_count=52
+#     )
     
 # ==============================
 # Patient Registration

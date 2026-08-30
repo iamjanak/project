@@ -82,6 +82,13 @@ def create_app():
     # # =====================================================
 
     # from app.routes.billing_reports import billing_reports_bp
+    
+    # =====================================================
+    # Dashboard
+    # =====================================================
+    
+    from .dashboard import dashboard_bp
+
 
     # =====================================================
     # REGISTER BLUEPRINTS
@@ -102,6 +109,8 @@ def create_app():
     app.register_blueprint(admission_bp)
 
     # app.register_blueprint(billing_reports_bp)
+    
+    app.register_blueprint(dashboard_bp)
 
     return app
 
