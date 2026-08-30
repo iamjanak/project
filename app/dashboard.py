@@ -45,6 +45,11 @@ dashboard_bp = Blueprint(
 # =========================================================
 # NEPAL TIME
 # =========================================================
+# Nepal Standard Time = UTC +05:45
+#
+# Using timezone() instead of ZoneInfo avoids the
+# "Asia/Kathmandu" tzdata error on Windows.
+# =========================================================
 
 NEPAL_TZ = timezone(
     timedelta(
@@ -57,7 +62,6 @@ NEPAL_TZ = timezone(
 def nepal_now():
     """
     Return current date and time in Nepal.
-    Nepal Standard Time = UTC +05:45
     """
     return datetime.now(NEPAL_TZ)
 
@@ -68,10 +72,12 @@ def nepal_now():
 
 def percentage_change(current, previous):
     try:
+
         current = float(current or 0)
         previous = float(previous or 0)
 
         if previous == 0:
+
             if current > 0:
                 return 100
 
@@ -83,6 +89,7 @@ def percentage_change(current, previous):
         )
 
     except (TypeError, ValueError):
+
         return 0
 
 
@@ -98,6 +105,7 @@ def dashboard():
     # =====================================================
 
     if "user" not in session:
+
         return redirect(
             url_for("main.login")
         )
@@ -113,7 +121,7 @@ def dashboard():
     tomorrow = today + timedelta(days=1)
 
     # =====================================================
-    # DATE RANGES
+    # TODAY DATE RANGE
     # =====================================================
 
     today_start = datetime.combine(
@@ -130,7 +138,9 @@ def dashboard():
     # CURRENT MONTH
     # =====================================================
 
-    month_start = today.replace(day=1)
+    month_start = today.replace(
+        day=1
+    )
 
     month_start_dt = datetime.combine(
         month_start,
@@ -142,11 +152,14 @@ def dashboard():
     # =====================================================
 
     previous_month_end = (
-        month_start - timedelta(days=1)
+        month_start
+        - timedelta(days=1)
     )
 
     previous_month_start = (
-        previous_month_end.replace(day=1)
+        previous_month_end.replace(
+            day=1
+        )
     )
 
     previous_month_start_dt = datetime.combine(
@@ -158,13 +171,17 @@ def dashboard():
     # PATIENTS
     # =====================================================
 
-    total_patients = Patient.query.count()
+    total_patients = (
+        Patient.query.count()
+    )
 
     # =====================================================
     # DOCTORS
     # =====================================================
 
-    total_doctors = Doctor.query.count()
+    total_doctors = (
+        Doctor.query.count()
+    )
 
     active_doctors = (
         Doctor.query
@@ -176,8 +193,10 @@ def dashboard():
         .count()
     )
 
-    inactive_doctors = (
-        total_doctors - active_doctors
+    inactive_doctors = max(
+        total_doctors
+        - active_doctors,
+        0,
     )
 
     # =====================================================
@@ -198,9 +217,10 @@ def dashboard():
         .count()
     )
 
-    inactive_departments = (
+    inactive_departments = max(
         total_departments
-        - active_departments
+        - active_departments,
+        0,
     )
 
     # =====================================================
@@ -290,7 +310,7 @@ def dashboard():
     )
 
     # =====================================================
-    # DISCHARGES
+    # DISCHARGES TODAY
     # =====================================================
 
     discharged_today = (
@@ -306,7 +326,9 @@ def dashboard():
     # BEDS
     # =====================================================
 
-    total_beds = Bed.query.count()
+    total_beds = (
+        Bed.query.count()
+    )
 
     occupied_beds = (
         Bed.query
@@ -336,6 +358,7 @@ def dashboard():
     )
 
     if total_beds > 0:
+
         bed_occupancy = round(
             (
                 occupied_beds
@@ -343,14 +366,18 @@ def dashboard():
             ) * 100,
             1,
         )
+
     else:
+
         bed_occupancy = 0
 
     # =====================================================
     # WARDS
     # =====================================================
 
-    total_wards = Ward.query.count()
+    total_wards = (
+        Ward.query.count()
+    )
 
     active_wards = (
         Ward.query
@@ -366,7 +393,9 @@ def dashboard():
     # ROOMS
     # =====================================================
 
-    total_rooms = Room.query.count()
+    total_rooms = (
+        Room.query.count()
+    )
 
     available_rooms = (
         Room.query
@@ -455,11 +484,14 @@ def dashboard():
     # =====================================================
     # TODAY'S DEPOSIT
     # =====================================================
-    # Deposit model uses created_at
-
+    #
+    # IMPORTANT:
+    # Deposit model uses created_at.
+    #
+    # Do NOT use:
+    # Deposit.deposit_date
+    #
     # =====================================================
-# TODAY'S DEPOSIT
-# =====================================================
 
     today_deposit = (
         db.session.query(
@@ -470,7 +502,7 @@ def dashboard():
         )
         .filter(
             Deposit.deposit_date >= today_start,
-            Deposit.deposit_date < tomorrow_start
+            Deposit.deposit_date < tomorrow_start,
         )
         .scalar()
         or 0
@@ -525,7 +557,9 @@ def dashboard():
 
     for i in range(13, -1, -1):
 
-        day = today - timedelta(days=i)
+        day = today - timedelta(
+            days=i
+        )
 
         day_start = datetime.combine(
             day,
@@ -550,7 +584,9 @@ def dashboard():
             day.strftime("%d %b")
         )
 
-        admission_values.append(count)
+        admission_values.append(
+            count
+        )
 
     # =====================================================
     # REVENUE TREND
@@ -562,7 +598,9 @@ def dashboard():
 
     for i in range(13, -1, -1):
 
-        day = today - timedelta(days=i)
+        day = today - timedelta(
+            days=i
+        )
 
         day_start = datetime.combine(
             day,
@@ -577,7 +615,9 @@ def dashboard():
         amount = (
             db.session.query(
                 func.coalesce(
-                    func.sum(Bill.total),
+                    func.sum(
+                        Bill.total
+                    ),
                     0,
                 )
             )
@@ -677,12 +717,17 @@ def dashboard():
             .count()
         )
 
-        department_labels.append(name)
+        department_labels.append(
+            name
+        )
 
-        department_values.append(count)
+        department_values.append(
+            count
+        )
 
     # =====================================================
     # TOP DOCTORS
+    # CURRENT MONTH FOLLOW-UP VISITS
     # =====================================================
 
     top_doctors_raw = (
@@ -693,7 +738,9 @@ def dashboard():
             Department.department_name,
             func.count(
                 FollowUp.id
-            ).label("visit_count"),
+            ).label(
+                "visit_count"
+            ),
         )
         .outerjoin(
             FollowUp,
@@ -734,14 +781,17 @@ def dashboard():
                     doctor.doc_name
                     or "-"
                 ),
+
                 "specialization": (
                     doctor.specialization
                     or "General"
                 ),
+
                 "department": (
                     doctor.department_name
                     or "Unassigned"
                 ),
+
                 "visits": (
                     doctor.visit_count
                     or 0
@@ -772,30 +822,37 @@ def dashboard():
                     admission.patient_no
                     or "-"
                 ),
+
                 "patient_name": (
                     admission.patient_name
                     or "-"
                 ),
+
                 "department": (
                     admission.department_name
                     or "-"
                 ),
+
                 "ward": (
                     admission.ward_name
                     or "-"
                 ),
+
                 "room": (
                     admission.room_name
                     or "-"
                 ),
+
                 "bed": (
                     admission.bed_name
                     or "-"
                 ),
+
                 "status": (
                     admission.status
                     or "-"
                 ),
+
                 "date": (
                     admission.admission_date.strftime(
                         "%d/%m/%Y %I:%M %p"
@@ -829,18 +886,22 @@ def dashboard():
                     bill.bill_no
                     or "-"
                 ),
+
                 "patient_name": (
                     bill.patient.full_name
                     if bill.patient
                     else "-"
                 ),
+
                 "amount": float(
                     bill.total or 0
                 ),
+
                 "pay_type": (
                     bill.pay_type
                     or "-"
                 ),
+
                 "date": (
                     bill.bill_date.strftime(
                         "%d/%m/%Y %I:%M %p"
@@ -856,78 +917,147 @@ def dashboard():
     # =====================================================
 
     return render_template(
+
         "dashboard.html",
 
+        # -------------------------------------------------
         # DATE / TIME
+        # -------------------------------------------------
+
         today=today,
+
         current_time=now,
 
+        # -------------------------------------------------
         # PATIENTS
+        # -------------------------------------------------
+
         total_patients=total_patients,
 
+        # -------------------------------------------------
         # DOCTORS
+        # -------------------------------------------------
+
         total_doctors=total_doctors,
+
         active_doctors=active_doctors,
+
         inactive_doctors=inactive_doctors,
 
+        # -------------------------------------------------
         # DEPARTMENTS
+        # -------------------------------------------------
+
         total_departments=total_departments,
+
         active_departments=active_departments,
+
         inactive_departments=inactive_departments,
 
+        # -------------------------------------------------
         # FOLLOW UPS
+        # -------------------------------------------------
+
         followups_today=followups_today,
+
         followups_this_month=followups_this_month,
+
         followups_change=followups_change,
 
+        # -------------------------------------------------
         # ADMISSIONS
+        # -------------------------------------------------
+
         admissions_today=admissions_today,
+
         admissions_this_month=admissions_this_month,
+
         admissions_change=admissions_change,
+
         current_admissions=current_admissions,
+
         discharged_today=discharged_today,
 
+        # -------------------------------------------------
         # BEDS
+        # -------------------------------------------------
+
         total_beds=total_beds,
+
         occupied_beds=occupied_beds,
+
         available_beds=available_beds,
+
         other_beds=other_beds,
+
         bed_occupancy=bed_occupancy,
 
+        # -------------------------------------------------
         # WARDS
+        # -------------------------------------------------
+
         total_wards=total_wards,
+
         active_wards=active_wards,
 
+        # -------------------------------------------------
         # ROOMS
+        # -------------------------------------------------
+
         total_rooms=total_rooms,
+
         available_rooms=available_rooms,
 
+        # -------------------------------------------------
         # REVENUE
+        # -------------------------------------------------
+
         total_revenue=total_revenue,
+
         previous_month_revenue=previous_month_revenue,
+
         revenue_change=revenue_change,
 
         today_billing=today_billing,
+
         today_deposit=today_deposit,
+
         today_refund=today_refund,
+
         net_collection=net_collection,
 
+        # -------------------------------------------------
         # CHARTS
+        # -------------------------------------------------
+
         admission_labels=admission_labels,
+
         admission_values=admission_values,
 
         revenue_labels=revenue_labels,
+
         revenue_values=revenue_values,
 
-        admission_status_labels=admission_status_labels,
-        admission_status_values=admission_status_values,
+        admission_status_labels=(
+            admission_status_labels
+        ),
+
+        admission_status_values=(
+            admission_status_values
+        ),
 
         department_labels=department_labels,
+
         department_values=department_values,
 
+        # -------------------------------------------------
         # TABLES
+        # -------------------------------------------------
+
         top_doctors=top_doctors,
+
         recent_activity=recent_activity,
+
         billing_activity=billing_activity,
     )
 
