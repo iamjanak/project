@@ -1,0 +1,52 @@
+services:
+
+# =========================================================
+
+# Flask Application
+
+# =========================================================
+
+web:
+build: .
+container_name: swasthacare_web
+
+```
+environment:
+  DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+  SECRET_KEY: ${SECRET_KEY}
+
+ports:
+  - "5000:5000"
+
+depends_on:
+  - db
+
+
+# =========================================================
+
+# PostgreSQL Database
+
+# =========================================================
+
+db:
+image: postgres:16
+container_name: swasthacare_db
+
+
+environment:
+  POSTGRES_DB: ${POSTGRES_DB}
+  POSTGRES_USER: ${POSTGRES_USER}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+volumes:
+  - postgres_data:/var/lib/postgresql/data
+
+
+# =========================================================
+
+# Persistent PostgreSQL Volume
+
+# =========================================================
+
+volumes:
+postgres_data:
